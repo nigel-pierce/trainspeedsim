@@ -3,27 +3,28 @@ from collections import namedtuple
 MaxSpeed = namedtuple("MaxSpeed", ["milepost", "speed"])
 
 
-if __name__ == "main":
+def mainthing():
     raw_maxspeeds = load_maxspeeds()
     #maxspeeds = insert_speed_changes(raw_maxspeeds)
     maxspeeds = raw_maxspeeds
     
     segment_length = 0.1 # this stuff's in miles for some reason
     accel = 1.25; # for speeding up; braking will come later Also its f/s^2
-
+    print("yolo")
     bestspeeds = sim_speed(maxspeeds, segment_length, accel)
 
     print(bestspeeds)
+    print("swag")
 
 def load_maxspeeds():
     import csv
-    maxspeeds = [maxspeed for maxspeed in map (MaxSpeed._make, csv.reader(open("sprinter_maxspeeds.csv" "rb")))]
+    maxspeeds = [maxspeed for maxspeed in map (MaxSpeed._make, csv.reader(open("sprinter_maxspeeds.csv", "r"), delimiter='	', quoting=csv.QUOTE_NONNUMERIC))]
     return maxspeeds
 
 
 def sim_speed(maxspeeds, seg_len, accel):
     bestspeeds = []
-    route_len = 5280 * (maxspeeds[-1].milepost - maxspeeds[0].milepost)
+    route_len = int(maxspeeds[-1].milepost - maxspeeds[0].milepost)
     position = 0 # in ft
     for segment_point in range(0, route_len, seg_len):
         sim_segment(bestspeeds, maxspeeds, position, seg_len, accel)
@@ -70,3 +71,6 @@ def lowest_applicable_max_speed(maxspeeds, mile):
     return maxprevs[-1]
 
     
+
+if __name__ == "__main__":
+    mainthing()
