@@ -8,7 +8,7 @@ def mainthing():
     #maxspeeds = insert_speed_changes(raw_maxspeeds)
     maxspeeds = raw_maxspeeds
     
-    segment_length = 0.1 # this stuff's in miles for some reason
+    segment_length = int(0.1*5280) # this stuff's in miles for some reason
     accel = 1.25; # for speeding up; braking will come later Also its f/s^2
     print("yolo")
     bestspeeds = sim_speed(maxspeeds, segment_length, accel)
@@ -35,7 +35,7 @@ def sim_speed(maxspeeds, seg_len, accel):
 # simulates speed at given point, taking into account prev point's speed
 # and max speed at point
 def sim_segment(bestspeeds, maxspeeds, index, seg_len, accel):
-    if segment_point == 0:
+    if index == 0:
         len_from_prev = 0
         return
     else:
