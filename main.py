@@ -5,6 +5,7 @@ MaxSpeed = namedtuple("MaxSpeed", ["milepost", "speed"])
 
 def mainthing():
     raw_maxspeeds = load_maxspeeds()
+    print(raw_maxspeeds)
     #maxspeeds = insert_speed_changes(raw_maxspeeds)
     maxspeeds = raw_maxspeeds
     
@@ -23,7 +24,7 @@ def load_maxspeeds():
 
 
 def sim_speed(maxspeeds, seg_len, accel):
-    bestspeeds = []
+    bestspeeds = ["lololol"]
     route_len = int(maxspeeds[-1].milepost - maxspeeds[0].milepost)
     position = 0 # in ft
     for segment_point in range(0, route_len, seg_len):
