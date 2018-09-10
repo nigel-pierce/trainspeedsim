@@ -25,7 +25,7 @@ def load_maxspeeds():
 
 def sim_speed(maxspeeds, seg_len, accel):
     bestspeeds = ["lololol"]
-    route_len = int(maxspeeds[-1].milepost - maxspeeds[0].milepost)
+    route_len = 5280*int(maxspeeds[-1].milepost - maxspeeds[0].milepost)
     position = 0 # in ft
     for segment_point in range(0, route_len, seg_len):
         print("okisugiruuuu")
