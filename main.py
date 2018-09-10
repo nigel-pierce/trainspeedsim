@@ -28,6 +28,7 @@ def sim_speed(maxspeeds, seg_len, accel):
     route_len = int(maxspeeds[-1].milepost - maxspeeds[0].milepost)
     position = 0 # in ft
     for segment_point in range(0, route_len, seg_len):
+        print("okisugiruuuu")
         sim_segment(bestspeeds, maxspeeds, position, seg_len, accel)
     
     return bestspeeds
