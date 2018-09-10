@@ -29,7 +29,7 @@ def sim_speed(maxspeeds, seg_len, accel):
     position = 0 # in ft
     for segment_point in range(0, route_len, seg_len):
         print("okisugiruuuu")
-        sim_segment(bestspeeds, maxspeeds, position, seg_len, accel)
+        sim_segment(bestspeeds, maxspeeds, int(segment_point/seg_len), seg_len, accel)
     
     return bestspeeds
 
@@ -41,9 +41,10 @@ def sim_segment(bestspeeds, maxspeeds, index, seg_len, accel):
         len_from_prev = 0
         return
     else:
-        len_from_prev = segment_length
+        len_from_prev = seg_len
         
     v_init = bestspeeds[index-1]
+    print(type(v_init), v_init)
     v_max = lowest_current_max_speed(maxspeeds, index, seg_len, accel)
     #v_next = lowest_upcoming_max_speed(maxspeeds, index, seg_len, accel)
     v_next = 1000000 # whatever will decelerate later
@@ -70,7 +71,7 @@ def lowest_applicable_max_speed(maxspeeds, mile):
     # throw out all speed limits ahead of us
     maxprevs = [x for x in maxspeeds if x.milepost <= mile]
     # now last in maxprevs is the one that applies yup
-    return maxprevs[-1]
+    return maxprevs[-1].speed
 
     
 
