@@ -35,27 +35,21 @@ def sim_segment(bestspeeds, maxspeeds, index, seg_len, accel):
         
     v_init = bestspeeds[index-1]
     v_max = lowest_current_max_speed(maxspeeds, index, seg_len, accel)
-    v_next = lowest_upcoming_max_speed(maxspeeds, index, seg_len, accel)
+    #v_next = lowest_upcoming_max_speed(maxspeeds, index, seg_len, accel)
+    v_next = 1000000 # whatever will decelerate later
 
     v_target = min(v_max, v_next)
 
 def lowest_current_max_speed(maxspeeds, index, seg_len, accel)
-    candidates = []
+    #candidates = []
     candidates = lowest_applicable_max_speed(maxspeeds, index * seg_len)
-
+    return candidates # sloppy & I didn't mean to layerize this but oh well
 
 
 def lowest_applicable_max_speed(maxspeeds, mile):
     # throw out all speed limits ahead of us
     maxprevs = [x for x in maxspeeds if x.milepost <= mile]
-    # sort by speed, then dist from mile
-    closest = sorted(sorted(maxspeeds, key = lambda speedlimit: speedlimit.speed), key=lambda speedlimit: abs(mile - speedlimit.milepost)
-    # if on change of speed, lower one is the one
-    if mile == closest[0].milepost:
-        # first one should be closest & lowest speed, yeah
-        return closest[0]
-    # if between changes of speed, higher one is the one
-    else:
-        
+    # now last in maxprevs is the one that applies yup
+    return maxprevs[-1]
 
     
