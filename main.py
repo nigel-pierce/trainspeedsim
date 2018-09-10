@@ -1,17 +1,24 @@
 
-
+from collections import namedtuple
+MaxSpeed = namedtuple("MaxSpeed", ["milepost", "speed"])
 
 
 if __name__ == "main":
     raw_maxspeeds = load_maxspeeds()
-    maxspeeds = insert_speed_changes(raw_maxspeeds)
+    #maxspeeds = insert_speed_changes(raw_maxspeeds)
+    maxspeeds = raw_maxspeeds
     
     segment_length = 0.1 # this stuff's in miles for some reason
     accel = 1.25; # for speeding up; braking will come later Also its f/s^2
 
-    bestspeeds = sim_speed(maxspeeds, segment_length)
+    bestspeeds = sim_speed(maxspeeds, segment_length, accel)
 
     print(bestspeeds)
+
+def load_maxspeeds():
+    import csv
+    maxspeeds = [maxspeed for maxspeed in map (MaxSpeed._make, csv.reader(open("sprinter_maxspeeds.csv" "rb")))]
+    return maxspeeds
 
 
 def sim_speed(maxspeeds, seg_len, accel):
@@ -40,7 +47,17 @@ def sim_segment(bestspeeds, maxspeeds, index, seg_len, accel):
 
     v_target = min(v_max, v_next)
 
-def lowest_current_max_speed(maxspeeds, index, seg_len, accel)
+    bestspeeds.append(min(v_max, accel_to_target(v_target, accel, v_init, seg_len * 5280)))
+
+
+# takes all units in feet units
+def accel_to_target(v_target, acc, v_i, d):
+    if v_target >= v_i: # which it SHOULD be
+        t = ( -v_i + sqrt(v_i**2 - 4 * (1/2) * acc * -d) ) / (2*(1/2)*acc)
+        v_f = acc * t + v_i
+        return v_f
+
+def lowest_current_max_speed(maxspeeds, index, seg_len, accel):
     #candidates = []
     candidates = lowest_applicable_max_speed(maxspeeds, index * seg_len)
     return candidates # sloppy & I didn't mean to layerize this but oh well
