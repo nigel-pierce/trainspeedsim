@@ -31,6 +31,7 @@ def sim_speed(maxspeeds, seg_len, accel):
     #    print("okisugiruuuu")
         sim_segment(bestspeeds, maxspeeds, int(segment_point/seg_len), seg_len, accel)
     
+    bestspeeds = [x * 3600/5280 for x in bestspeeds]
     return bestspeeds
 
 
