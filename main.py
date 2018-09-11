@@ -45,7 +45,7 @@ def sim_segment(bestspeeds, maxspeeds, index, seg_len, accel):
         len_from_prev = seg_len
         
     v_init = bestspeeds[index-1]
-    print("for index", index, "v_init is", v_init)
+    #print("for index", index, "v_init is", v_init)
     v_max = lowest_current_max_speed(maxspeeds, index, seg_len, accel) * 5280/3600
     #print(v_max)
     #v_next = lowest_upcoming_max_speed(maxspeeds, index, seg_len, accel)
@@ -54,9 +54,9 @@ def sim_segment(bestspeeds, maxspeeds, index, seg_len, accel):
     v_target = min(v_max, v_next) * 5280 / 3600 # needs to be in fps
 
     unbounded_v = accel_to_target(v_target, accel, v_init, seg_len)
-    print("for index", index, "unbounded speed is", unbounded_v, 'f/s')
+    #print("for index", index, "unbounded speed is", unbounded_v, 'f/s')
     bounded_v = min(v_max, unbounded_v)
-    print("for index", index, "bounded speed is  ", bounded_v, "f/s")
+    #print("for index", index, "bounded speed is  ", bounded_v, "f/s")
     bestspeeds.append(bounded_v)
 
 
@@ -65,7 +65,7 @@ def accel_to_target(v_target, acc, v_i, d):
     #if v_target >= v_i: # which it SHOULD be? nah don't be conditional
         from math import sqrt
         t = ( -v_i + sqrt(v_i**2 - 4.0 * 0.5 * acc * -d) ) / (2.0*0.5*acc)
-        print("sec from prev index point segment guy:", t)
+        #print("sec from prev index point segment guy:", t)
         v_f = acc * t + v_i
         return v_f
 
@@ -80,7 +80,7 @@ def lowest_applicable_max_speed(maxspeeds, mile):
     # throw out all speed limits ahead of us
     maxprevs = [x for x in maxspeeds if x.milepost <= mile]
     # now last in maxprevs is the one that applies yup
-    print("maxprevs[-1] (expect a speed thing): ", maxprevs[-1])
+    #print("maxprevs[-1] (expect a speed thing): ", maxprevs[-1])
     return maxprevs[-1].speed
 
     
