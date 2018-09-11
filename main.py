@@ -45,8 +45,9 @@ def sim_segment(bestspeeds, maxspeeds, index, seg_len, accel):
         len_from_prev = seg_len
         
     v_init = bestspeeds[index-1]
-    print(type(v_init), v_init)
+    #print(type(v_init), v_init)
     v_max = lowest_current_max_speed(maxspeeds, index, seg_len, accel)
+    print(v_max)
     #v_next = lowest_upcoming_max_speed(maxspeeds, index, seg_len, accel)
     v_next = 1000000 # whatever will decelerate later
 
@@ -57,7 +58,7 @@ def sim_segment(bestspeeds, maxspeeds, index, seg_len, accel):
 
 # takes all units in feet units
 def accel_to_target(v_target, acc, v_i, d):
-    if v_target >= v_i: # which it SHOULD be
+    #if v_target >= v_i: # which it SHOULD be? nah don't be conditional
         from math import sqrt
         t = ( -v_i + sqrt(v_i**2 - 4 * (1/2) * acc * -d) ) / (2*(1/2)*acc)
         v_f = acc * t + v_i
@@ -65,7 +66,8 @@ def accel_to_target(v_target, acc, v_i, d):
 
 def lowest_current_max_speed(maxspeeds, index, seg_len, accel):
     #candidates = []
-    candidates = lowest_applicable_max_speed(maxspeeds, index * seg_len)
+    start_mile = maxspeeds[0].milepost
+    candidates = lowest_applicable_max_speed(maxspeeds, start_mile + index * seg_len / 5280) # uhh in miles i guess?
     return candidates # sloppy & I didn't mean to layerize this but oh well
 
 
@@ -73,6 +75,7 @@ def lowest_applicable_max_speed(maxspeeds, mile):
     # throw out all speed limits ahead of us
     maxprevs = [x for x in maxspeeds if x.milepost <= mile]
     # now last in maxprevs is the one that applies yup
+    print("maxprevs[-1] (expect a speed thing): ", maxprevs[-1])
     return maxprevs[-1].speed
 
     
