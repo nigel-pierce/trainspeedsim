@@ -58,6 +58,7 @@ def sim_segment(bestspeeds, maxspeeds, index, seg_len, accel):
 # takes all units in feet units
 def accel_to_target(v_target, acc, v_i, d):
     if v_target >= v_i: # which it SHOULD be
+        from math import sqrt
         t = ( -v_i + sqrt(v_i**2 - 4 * (1/2) * acc * -d) ) / (2*(1/2)*acc)
         v_f = acc * t + v_i
         return v_f
