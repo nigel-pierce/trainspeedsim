@@ -31,6 +31,12 @@ def sim_speed(maxspeeds, seg_len, accel):
     #    print("okisugiruuuu")
         bestspeeds.append(sim_segment(bestspeeds, maxspeeds, int(segment_point/seg_len), seg_len, accel))
     
+    # "reverse" of that for braking
+    bestspeeds_rev = []
+    maxspeeds_rev = reverse_maxspeeds(maxspeeds) # can't just reverse maxspeeds
+    for segment_point in range(0, route_len, seg_len):
+        bestspeeds_rev.append(sim_segment(bestspeeds_rev, maxspeeds_rev, int(segment_point/seg_len), seg_len, accel))
+    
     bestspeeds = [x * 3600/5280 for x in bestspeeds]
     return bestspeeds
 
@@ -85,6 +91,31 @@ def lowest_applicable_max_speed(maxspeeds, mile):
     return maxprevs[-1].speed
 
     
+def reverse_maxspeeds(maxspeeds):
+    # maxspeed has a structure like this: (mp, speed) ... <- implied 
+    # until ... (mp later, speed) ... <- implied until ... etc.
+    # so simply reversing it and using it would imply: implied -> ... (mp, 
+    # speed) ... implied -> ... (mp earlier, speed) ... etc.
+    # which is incorrect.
+    # we need (mp, speed=0) ... <- implied until... (mp earlier, speed) ...
+    # <- implied until ... etc.
+
+    # basically we need to reverse maxspeeds, separate mp and speed into 
+    # parallel lists, & shift speed to next-earlier speed change place
+    # bah let me just do the code
+
+    maxspeeds_rev = [dude for dude in reversed(maxspeeds)]
+
+    mp_rev = [dude.milepost for dude in maxspeeds_rev]
+    spd_rev = [dude.speed for dude in maxspeeds_rev]
+    
+    maxspeeds_rev = [] # we will rebuild it
+    #for dude in mp_rev:
+        #maxspeeds_rev.append(dude, 
+    # hey let's use map() uh oh
+    maxspeeds_rev = list(map(lambda x,y: MaxSpeed(x,y), mp_rev[:-1], spd_rev[1:]))
+    # [:-1] there so same length. Not sure if problem to ignore last mp_rev guy.
+    return maxspeeds_rev
 
 if __name__ == "__main__":
     mainthing()
