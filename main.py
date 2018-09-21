@@ -40,7 +40,7 @@ def sim_speed(maxspeeds, seg_len, accel):
 def sim_segment(bestspeeds, maxspeeds, index, seg_len, accel):
     if index == 0:
         len_from_prev = 0
-        bestspeeds.append(0)
+        #bestspeeds.append(0)
         return 0
     else:
         len_from_prev = seg_len
