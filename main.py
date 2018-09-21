@@ -14,7 +14,7 @@ def mainthing():
     print("yolo")
     bestspeeds = sim_speed(maxspeeds, segment_length, accel)
 
-    print(bestspeeds)
+    #print(bestspeeds)
     print("swag")
 
 def load_maxspeeds():
@@ -118,6 +118,7 @@ def reverse_maxspeeds(maxspeeds):
     # hey let's use map() uh oh
     maxspeeds_rev = list(map(lambda x,y: MaxSpeed(x,y), mp_rev[:-1], spd_rev[1:]))
     # [:-1] there so same length. Not sure if problem to ignore last mp_rev guy.
+    print("maxspeeds_rev:", maxspeeds_rev)
     return maxspeeds_rev
 
 if __name__ == "__main__":
