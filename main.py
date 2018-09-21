@@ -29,7 +29,7 @@ def sim_speed(maxspeeds, seg_len, accel):
     position = 0 # in ft
     for segment_point in range(0, route_len, seg_len):
     #    print("okisugiruuuu")
-        sim_segment(bestspeeds, maxspeeds, int(segment_point/seg_len), seg_len, accel)
+        bestspeeds.append(sim_segment(bestspeeds, maxspeeds, int(segment_point/seg_len), seg_len, accel))
     
     bestspeeds = [x * 3600/5280 for x in bestspeeds]
     return bestspeeds
@@ -41,7 +41,7 @@ def sim_segment(bestspeeds, maxspeeds, index, seg_len, accel):
     if index == 0:
         len_from_prev = 0
         bestspeeds.append(0)
-        return
+        return 0
     else:
         len_from_prev = seg_len
         
@@ -58,7 +58,7 @@ def sim_segment(bestspeeds, maxspeeds, index, seg_len, accel):
     #print("for index", index, "unbounded speed is", unbounded_v, 'f/s')
     bounded_v = min(v_max, unbounded_v)
     #print("for index", index, "bounded speed is  ", bounded_v, "f/s")
-    bestspeeds.append(bounded_v)
+    return bounded_v
 
 
 # takes all units in feet units
