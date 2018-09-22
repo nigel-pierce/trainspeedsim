@@ -34,8 +34,8 @@ def sim_speed(maxspeeds, seg_len, accel):
     # "reverse" of that for braking
     bestspeeds_rev = []
     maxspeeds_rev = reverse_maxspeeds(maxspeeds) # can't just reverse maxspeeds
-    for segment_point in range(0, route_len, seg_len):
-        bestspeeds_rev.append(sim_segment(bestspeeds_rev, maxspeeds_rev, int(segment_point/seg_len), seg_len, accel))
+    #for segment_point in range(0, route_len, seg_len):
+    #    bestspeeds_rev.append(sim_segment(bestspeeds_rev, maxspeeds_rev, int(segment_point/seg_len), seg_len, accel))
     
     bestspeeds_rev = [x * 3600/5280 for x in bestspeeds_rev]
     print(bestspeeds_rev)
@@ -82,15 +82,28 @@ def accel_to_target(v_target, acc, v_i, d):
 def lowest_current_max_speed(maxspeeds, index, seg_len, accel):
     #candidates = []
     start_mile = maxspeeds[0].milepost
-    candidates = lowest_applicable_max_speed(maxspeeds, start_mile + index * seg_len / 5280) # uhh in miles i guess?
+    end_mile = maxspeeds[-1].milepost
+    if start_mile <= end_mile:
+        current_mile = start_mile + index * seg_len  / 5280
+    else:
+        current_mile = start_mile - index * seg_len / 5280
+    candidates = lowest_applicable_max_speed(maxspeeds, current_mile) # uhh in miles i guess?
     return candidates # sloppy & I didn't mean to layerize this but oh well
 
 
 def lowest_applicable_max_speed(maxspeeds, mile):
-    # throw out all speed limits ahead of us
-    maxprevs = [x for x in maxspeeds if x.milepost <= mile]
+    #determine what "ahead" is
+    if maxspeeds[0].milepost <= maxspeeds[-1].milepost:
+        ahead = lambda x,y: x > y
+    else:
+        ahead = lambda x,y: x < y
+    for x in maxspeeds:
+        print("ahead(", x.milepost, ",", mile, "):", ahead(x.milepost, mile))
+    # throw out all speed limits ahead of us (i.e. KEEP ones not ahead)
+    maxprevs = [x for x in maxspeeds if not ahead(x.milepost, mile)]
     # now last in maxprevs is the one that applies yup
     #print("maxprevs[-1] (expect a speed thing): ", maxprevs[-1])
+    print(maxprevs)
     return maxprevs[-1].speed
 
     
