@@ -14,7 +14,7 @@ def mainthing():
     print("yolo")
     bestspeeds = sim_speed(maxspeeds, segment_length, accel)
 
-    #print(bestspeeds)
+    print(bestspeeds)
     print("swag")
 
 def load_maxspeeds():
@@ -31,6 +31,8 @@ def sim_speed(maxspeeds, seg_len, accel):
     #    print("okisugiruuuu")
         bestspeeds.append(sim_segment(bestspeeds, maxspeeds, int(segment_point/seg_len), seg_len, accel))
     
+    bestspeeds = [x * 3600/5280 for x in bestspeeds]
+
     # "reverse" of that for braking
     bestspeeds_rev = []
     maxspeeds_rev = reverse_maxspeeds(maxspeeds) # can't just reverse maxspeeds
@@ -38,9 +40,11 @@ def sim_speed(maxspeeds, seg_len, accel):
         bestspeeds_rev.append(sim_segment(bestspeeds_rev, maxspeeds_rev, int(segment_point/seg_len), seg_len, accel))
     
     bestspeeds_rev = [x * 3600/5280 for x in bestspeeds_rev]
-    print(bestspeeds_rev)
+    print("bestspeeds_rev:", bestspeeds_rev)
 
-    bestspeeds = [x * 3600/5280 for x in bestspeeds]
+    # combine them
+    bestspeeds = [min(paired) for paired in zip(bestspeeds, reversed(bestspeeds_rev))]
+    
     return bestspeeds
 
 
