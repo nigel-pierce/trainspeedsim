@@ -34,11 +34,11 @@ def sim_speed(maxspeeds, seg_len, accel):
     # "reverse" of that for braking
     bestspeeds_rev = []
     maxspeeds_rev = reverse_maxspeeds(maxspeeds) # can't just reverse maxspeeds
-    #for segment_point in range(0, route_len, seg_len):
-    #    bestspeeds_rev.append(sim_segment(bestspeeds_rev, maxspeeds_rev, int(segment_point/seg_len), seg_len, accel))
+    for segment_point in range(0, route_len, seg_len):
+        bestspeeds_rev.append(sim_segment(bestspeeds_rev, maxspeeds_rev, int(segment_point/seg_len), seg_len, accel))
     
-    #bestspeeds_rev = [x * 3600/5280 for x in bestspeeds_rev]
-    #print(bestspeeds_rev)
+    bestspeeds_rev = [x * 3600/5280 for x in bestspeeds_rev]
+    print(bestspeeds_rev)
 
     bestspeeds = [x * 3600/5280 for x in bestspeeds]
     return bestspeeds
