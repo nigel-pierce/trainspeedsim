@@ -37,8 +37,8 @@ def sim_speed(maxspeeds, seg_len, accel):
     #for segment_point in range(0, route_len, seg_len):
     #    bestspeeds_rev.append(sim_segment(bestspeeds_rev, maxspeeds_rev, int(segment_point/seg_len), seg_len, accel))
     
-    bestspeeds_rev = [x * 3600/5280 for x in bestspeeds_rev]
-    print(bestspeeds_rev)
+    #bestspeeds_rev = [x * 3600/5280 for x in bestspeeds_rev]
+    #print(bestspeeds_rev)
 
     bestspeeds = [x * 3600/5280 for x in bestspeeds]
     return bestspeeds
@@ -97,13 +97,13 @@ def lowest_applicable_max_speed(maxspeeds, mile):
         ahead = lambda x,y: x > y
     else:
         ahead = lambda x,y: x < y
-    for x in maxspeeds:
-        print("ahead(", x.milepost, ",", mile, "):", ahead(x.milepost, mile))
+    #for x in maxspeeds:
+    #    print("ahead(", x.milepost, ",", mile, "):", ahead(x.milepost, mile))
     # throw out all speed limits ahead of us (i.e. KEEP ones not ahead)
     maxprevs = [x for x in maxspeeds if not ahead(x.milepost, mile)]
     # now last in maxprevs is the one that applies yup
-    #print("maxprevs[-1] (expect a speed thing): ", maxprevs[-1])
-    print(maxprevs)
+    print("maxprevs[-1] (expect a speed thing): ", maxprevs[-1])
+    #print(maxprevs)
     return maxprevs[-1].speed
 
     
