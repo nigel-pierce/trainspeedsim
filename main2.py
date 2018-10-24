@@ -21,7 +21,7 @@ def mainthing():
         for simseg in range(0, int(seg.length), SIM_SEG):
             seg_start = pos
             pos += SIM_SEG
-            speed = accel_to_target(seg.speed, 1.5, speed, SIM_SEG)
+            speed = min(seg.speed, accel(seg.speed, 1.5, speed, SIM_SEG))
             bestspeeds.append(TrackSeg(seg_start, pos, SIM_SEG, speed))
 
     for seg in bestspeeds:
@@ -45,14 +45,12 @@ def load_maxspeeds():
     return maxspeedsegs
         
 # takes all units in feet units
-def accel_to_target(v_target, acc, v_i, d):
-    if v_target >= v_i:
-        nacc = acc
-    if v_target < v_i:
-        nacc = -acc
+def accel(v_target, acc, v_i, d):
+    nacc = acc
     from math import sqrt
     t = ( -v_i + sqrt(v_i**2 - 4.0 * 0.5 * nacc * -d) ) / (2.0*0.5*nacc)
-    print("sec from prev index point segment guy:", t)
+    #print("sec from prev index point segment guy:", t)
+    print("target speed", v_target, "fps (",(v_target*3600/5280.0),"mph)")
     v_f = nacc * t + v_i
     return v_f
 
