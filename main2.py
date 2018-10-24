@@ -39,7 +39,7 @@ def load_maxspeeds():
         mp1 = maxguy.milepost * 5280
         maxguy2 = raw_maxspeeds[x+1]
         mp2 = maxguy2.milepost * 5280
-        seg = TrackSeg(mp1, mp2, mp2-mp1, maxguy.speed * 3600 / 5280)
+        seg = TrackSeg(mp1, mp2, mp2-mp1, maxguy.speed * 5280 / 3600)
         maxspeedsegs.append(seg)
 
     return maxspeedsegs
