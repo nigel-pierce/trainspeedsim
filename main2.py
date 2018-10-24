@@ -24,7 +24,7 @@ def mainthing():
         for simseg in range(0, int(seg.length), SIM_SEG):
             seg_start = pos
             pos += SIM_SEG
-            speed = min(seg.speed, accel(seg.speed, 1.5, speed, SIM_SEG))
+            speed = min(seg.speed, accel(seg.speed, 1.25, speed, SIM_SEG))
             bestspeeds.append(TrackSeg(seg_start, pos, SIM_SEG, speed))
 
     for seg in bestspeeds:
