@@ -46,12 +46,15 @@ def load_maxspeeds():
         
 # takes all units in feet units
 def accel_to_target(v_target, acc, v_i, d):
-    #if v_target >= v_i: # which it SHOULD be? nah don't be conditional
-        from math import sqrt
-        t = ( -v_i + sqrt(v_i**2 - 4.0 * 0.5 * acc * -d) ) / (2.0*0.5*acc)
-        #print("sec from prev index point segment guy:", t)
-        v_f = acc * t + v_i
-        return v_f
+    if v_target >= v_i:
+        nacc = acc
+    if v_target < v_i:
+        nacc = -acc
+    from math import sqrt
+    t = ( -v_i + sqrt(v_i**2 - 4.0 * 0.5 * nacc * -d) ) / (2.0*0.5*nacc)
+    print("sec from prev index point segment guy:", t)
+    v_f = nacc * t + v_i
+    return v_f
 
 if __name__ == "__main__":
     mainthing()
