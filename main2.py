@@ -28,7 +28,7 @@ def mainthing():
             bestspeeds.append(TrackSeg(seg_start, pos, SIM_SEG, speed))
 
     for seg in bestspeeds:
-        print(seg.end/5280.0, ":", seg.speed, "fps (", seg.speed * 3600/5280, "mph)")
+        print(seg.end/5280.0, " ", seg.speed * 3600/5280)
 
 
 def load_maxspeeds():
