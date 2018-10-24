@@ -18,7 +18,8 @@ def mainthing():
     pos = 0
     for seg in maxspeeds:
         # assumes seg len in multiples of 528
-        for simseg in range(0, int(seg.length), SIM_SEG):
+        # +1 b/c range(0,0) == []
+        for simseg in range(0, int(seg.length+1), SIM_SEG):
             seg_start = pos
             pos += SIM_SEG
             speed = min(seg.speed, accel(seg.speed, 1.5, speed, SIM_SEG))
