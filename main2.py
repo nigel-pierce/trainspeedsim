@@ -19,14 +19,16 @@ def mainthing():
     for seg in maxspeeds:
         # assumes seg len in multiples of 528
         # +1 b/c range(0,0) == []
-        for simseg in range(0, int(seg.length+1), SIM_SEG):
+        if int(seg.length) == 0:
+            bestspeeds.append(TrackSeg(pos, pos, 0, seg.speed))
+        for simseg in range(0, int(seg.length), SIM_SEG):
             seg_start = pos
             pos += SIM_SEG
             speed = min(seg.speed, accel(seg.speed, 1.5, speed, SIM_SEG))
             bestspeeds.append(TrackSeg(seg_start, pos, SIM_SEG, speed))
 
     for seg in bestspeeds:
-        print(seg.start/5280.0, ":", seg.speed, "fps (", seg.speed * 3600/5280, "mph)")
+        print(seg.end/5280.0, ":", seg.speed, "fps (", seg.speed * 3600/5280, "mph)")
 
 
 def load_maxspeeds():
