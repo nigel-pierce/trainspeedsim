@@ -27,7 +27,25 @@ def mainthing():
             speed = min(seg.speed, accel(seg.speed, 1.25, speed, SIM_SEG))
             bestspeeds.append(TrackSeg(seg_start, pos, SIM_SEG, speed))
 
-    for seg in bestspeeds:
+    bestspeeds_rev = []
+    maxspeeds_rev = reversed(maxspeeds)
+    for seg in maxspeeds_rev:
+        # assumes seg len in multiples of 528
+        if int(seg.length) == 0:
+            bestspeeds_rev.append(TrackSeg(pos, pos, 0, seg.speed))
+        for simseg in range(0, int(seg.length), SIM_SEG):
+            seg_start = pos
+            pos -= SIM_SEG
+            speed = min(seg.speed, accel(seg.speed, 1.25, speed, SIM_SEG))
+            bestspeeds_rev.append(TrackSeg(seg_start, pos, SIM_SEG, speed))
+
+    final_bestspeeds = []
+    for paired in zip(bestspeeds, reversed(bestspeeds_rev)):
+        lower_speed = min(paired[0].speed, paired[1].speed)
+        seg = paired[0]
+        final_bestspeeds.append(TrackSeg(seg.start, seg.end, SIM_SEG, lower_speed))
+
+    for seg in final_bestspeeds:
         print(seg.end/5280.0, " ", seg.speed * 3600/5280)
 
 
