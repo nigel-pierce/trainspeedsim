@@ -29,6 +29,7 @@ def mainthing():
     bestspeeds_rev = []
     maxspeeds_rev = reversed(maxspeeds)
     speed = 0
+    print(pos, maxspeeds[-1].end, list(maxspeeds_rev)[0].end)
     for seg in maxspeeds_rev:
         # assumes seg len in multiples of 528
         if int(seg.length) == 0:
