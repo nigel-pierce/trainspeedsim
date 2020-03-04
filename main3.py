@@ -74,7 +74,7 @@ def accel(v_target, acc, v_i, d):
     from math import sqrt
     t = ( -v_i + sqrt(v_i**2 - 4.0 * 0.5 * nacc * -d) ) / (2.0*0.5*nacc)
     #print("sec from prev index point segment guy:", t)
-    print("target speed", v_target, "fps (",(v_target*3600/5280.0),"mph)")
+    #print("target speed", v_target, "fps (",(v_target*3600/5280.0),"mph)")
     v_f = nacc * t + v_i
     return v_f
 
