@@ -22,9 +22,10 @@ def mainthing():
         if int(seg.length) == 0:
             bestspeeds.append(TrackSeg(seg.start, seg.start, 0, seg.speed))
         for simseg in range(0, int(seg.length), SIM_SEG):
+            simseg_start = pos
             pos += SIM_SEG
             speed = min(seg.speed, accel(seg.speed, 1.25, speed, SIM_SEG))
-            bestspeeds.append(TrackSeg(seg.start, pos, SIM_SEG, speed))
+            bestspeeds.append(TrackSeg(simseg_start, pos, SIM_SEG, speed))
 
     bestspeeds_rev = []
     maxspeeds_rev = reversed(maxspeeds)
