@@ -50,6 +50,8 @@ def mainthing():
     for seg in final_bestspeeds:
         print(seg.end/5280.0, " ", seg.speed * 3600/5280)
 
+    print("len(final_bestspeeds) (expect 222) (one for starting (0-length) seg, 220 for intermediate, one for ending 0-length):", len(final_bestspeeds))
+
 
 def load_maxspeeds():
     import csv
