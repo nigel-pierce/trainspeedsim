@@ -55,20 +55,16 @@ def load_maxspeeds():
     
     # generate segments from that
     maxspeedsegs = []
-    #lastmp = 0
     for x in range(0, len(raw_maxspeeds)-1):
         maxguy = raw_maxspeeds[x]
         mp1 = maxguy.milepost * 5280
         maxguy2 = raw_maxspeeds[x+1]
         mp2 = maxguy2.milepost * 5280
-        seg = TrackSeg(mp1, mp2, mp2-mp1, maxguy.speed * 5280 / 3600)
+        if maxguy2.speed != 0:
+            seg = TrackSeg(mp1, mp2, mp2-mp1, maxguy.speed * 5280 / 3600)
+        else:
+            seg = TrackSeg(mp1, mp2, mp2-mp1, maxguy2.speed)
         maxspeedsegs.append(seg)
-        #lastmp = mp2
-
-    # we really do need a 0 mph segment at the end
-    #maxspeedsegs.append(TrackSeg(lastmp, lastmp, 0, 0))
-    # NOT I just changed sprinter speeds csv to have symmetrical ends
-    # and changed filename to sprinter_maxspeeds3.csv
 
     return maxspeedsegs
         
