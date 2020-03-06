@@ -42,7 +42,12 @@ def mainthing():
             bestspeeds_rev.append(TrackSeg(seg_start, pos, SIM_SEG, speed))
 
     final_bestspeeds = []
-    for paired in zip(bestspeeds, reversed(bestspeeds_rev)):
+    rev_bestspeeds_rev = list(reversed(bestspeeds_rev))
+    # remove first segment in rev_bestspeeds_rev and last in bestpeeds so that
+    # segments are properly aligned
+    rev_bestspeeds_rev.pop(0)
+    bestspeeds.pop()
+    for paired in zip(bestspeeds, rev_bestspeeds_rev):
         lower_speed = min(paired[0].speed, paired[1].speed)
         seg = paired[0]
         other = paired[1]
@@ -53,8 +58,6 @@ def mainthing():
     print("--------------------------------")
     for seg in final_bestspeeds:
         print(seg.end/5280.0, " ", seg.speed * 3600/5280)
-
-    print("len(final_bestspeeds) (expect 222) (220 for segs, one for each end):", len(final_bestspeeds))
 
 
 def load_maxspeeds():
