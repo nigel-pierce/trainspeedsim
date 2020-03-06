@@ -45,12 +45,16 @@ def mainthing():
     for paired in zip(bestspeeds, reversed(bestspeeds_rev)):
         lower_speed = min(paired[0].speed, paired[1].speed)
         seg = paired[0]
+        other = paired[1]
+        comparo = "{} - {} @ {:.1f} vs {} - {} @ {:.1f}".format(seg.start/5280, seg.end/5280, seg.speed*3600/5280, other.start/5280, other.end/5280, other.speed*3600/5280)
+        print(comparo)
         final_bestspeeds.append(TrackSeg(seg.start, seg.end, SIM_SEG, lower_speed))
 
+    print("--------------------------------")
     for seg in final_bestspeeds:
         print(seg.end/5280.0, " ", seg.speed * 3600/5280)
 
-    print("len(final_bestspeeds) (expect 221) (220 for segs, one for fencepost):", len(final_bestspeeds))
+    print("len(final_bestspeeds) (expect 222) (220 for segs, one for each end):", len(final_bestspeeds))
 
 
 def load_maxspeeds():
