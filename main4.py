@@ -43,10 +43,10 @@ def mainthing():
 
     final_bestspeeds = []
     rev_bestspeeds_rev = list(reversed(bestspeeds_rev))
-    # remove first segment in rev_bestspeeds_rev and last in bestpeeds so that
-    # segments are properly aligned
-    rev_bestspeeds_rev.pop(0)
-    bestspeeds.pop()
+    ## remove first segment in rev_bestspeeds_rev and last in bestpeeds so that
+    ## segments are properly aligned
+    #rev_bestspeeds_rev.pop(0)
+    #bestspeeds.pop()
     for paired in zip(bestspeeds, rev_bestspeeds_rev):
         lower_speed = min(paired[0].speed, paired[1].speed)
         seg = paired[0]
