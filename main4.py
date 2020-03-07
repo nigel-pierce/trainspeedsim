@@ -21,6 +21,7 @@ def mainthing():
         # +1 b/c range(0,0) == []
         if int(seg.length) == 0:
             bestspeeds.append(TrackSeg(seg.start, seg.start, 0, seg.speed))
+            speed = seg.speed
         for simseg in range(0, int(seg.length), SIM_SEG):
             simseg_start = pos
             pos += SIM_SEG
