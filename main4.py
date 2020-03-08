@@ -36,6 +36,7 @@ def mainthing():
         # assumes seg len in multiples of 528
         if int(seg.length) == 0:
             bestspeeds_rev.append(TrackSeg(seg.end, seg.end, 0, seg.speed))
+            speed = seg.speed
         for simseg in range(0, int(seg.length), SIM_SEG):
             seg_start = pos
             pos -= SIM_SEG
