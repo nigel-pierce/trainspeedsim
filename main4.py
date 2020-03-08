@@ -56,8 +56,19 @@ def mainthing():
         print(comparo)
         final_bestspeeds.append(TrackSeg(seg.start, seg.end, SIM_SEG, lower_speed))
 
+    really_final_bestspeeds = []
+    for x in range(0, len(final_bestspeeds)):
+        if (x == 0):
+            really_final_bestspeeds.append(final_bestspeeds[x])
+            continue
+        else:
+            current_seg = final_bestspeeds[x]
+            prev_seg = final_bestspeeds[x-1]
+            if ( not (current_seg.end == prev_seg.end and current_seg.speed == prev_seg.speed)):
+                really_final_bestspeeds.append(final_bestspeeds[x])
+
     print("--------------------------------")
-    for seg in final_bestspeeds:
+    for seg in really_final_bestspeeds:
         print(seg.end/5280.0, " ", seg.speed * 3600/5280)
 
 
