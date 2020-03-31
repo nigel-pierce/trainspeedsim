@@ -37,3 +37,7 @@ if __name__ == "__main__":
     print("seg1:", seg1)
     
     print("seg.length(): expect 528", seg.length())
+    print("seg.get_index(): expect 0", seg.get_index())
+    print("seg.get_start(): expect 0", seg.get_start())
+    print("seg.get_end(): expect 528", seg.get_end())
+    print("seg.get_speed(): expect", 25*5280/3600, seg.get_speed())
