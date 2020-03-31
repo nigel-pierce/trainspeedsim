@@ -33,7 +33,8 @@ class TrackSeg:
 class Track:
     def __init__(self, filename):
         # load the file into TrackSegs into
-        self._track = self._load_maxspeeds(filename)
+        #self._track = self._load_maxspeeds(filename)
+        self._track = []
         # and throw if anything goes wrong
 
     def __str__(self):
@@ -42,6 +43,11 @@ class Track:
             out += str(seg) + "\n"
         out += "]"
         return out
+
+    def get_first_seg(self):
+        #try:
+            return self._track[0]
+        #except e:
 
     def _load_maxspeeds(self, filename):
         import csv
@@ -79,5 +85,7 @@ if __name__ == "__main__":
     print("seg.get_speed(): expect", 25*5280/3600, seg.get_speed())
 
     track = Track("sprinter_maxspeeds4.csv")
+    for s in track._track: del s
+    track.get_first_seg()
 
     print(track)
