@@ -1,4 +1,7 @@
 
+from collections import namedtuple
+MaxSpeed = namedtuple("MaxSpeed", ["milepost", "speed"])
+
 class TrackSeg:
     def __init__(self, index, start, end, speed):
         self._index = index
@@ -27,6 +30,39 @@ class TrackSeg:
     def length(self):
         return self._end - self._start
     
+class Track:
+    def __init__(self, filename):
+        # load the file into TrackSegs into
+        self._track = self._load_maxspeeds(filename)
+        # and throw if anything goes wrong
+
+    def __str__(self):
+        out = "[\n"
+        for seg in self._track:
+            out += str(seg) + "\n"
+        out += "]"
+        return out
+
+    def _load_maxspeeds(self, filename):
+        import csv
+        raw_maxspeeds = [maxspeed for maxspeed in map (MaxSpeed._make, csv.reader(open(filename, "r"), delimiter='	', quoting=csv.QUOTE_NONNUMERIC))]
+        
+        # generate segments from that
+        maxspeedsegs = []
+        for x in range(0, len(raw_maxspeeds)-1):
+            maxguy = raw_maxspeeds[x]
+            mp1 = maxguy.milepost * 5280
+            maxguy2 = raw_maxspeeds[x+1]
+            mp2 = maxguy2.milepost * 5280
+            #if maxguy2.speed != 0:
+            seg = TrackSeg(x, mp1, mp2, maxguy.speed * 5280 / 3600)
+            if (x+1 == len(raw_maxspeeds)-1):
+                seg = TrackSeg(x, mp1, mp2, maxguy2.speed * 5280/3600)
+            maxspeedsegs.append(seg)
+
+        return maxspeedsegs
+ 
+
 
 if __name__ == "__main__":
     seg = TrackSeg(0, 0, 0.1*5280, 25*5280/3600)
@@ -41,3 +77,7 @@ if __name__ == "__main__":
     print("seg.get_start(): expect 0", seg.get_start())
     print("seg.get_end(): expect 528", seg.get_end())
     print("seg.get_speed(): expect", 25*5280/3600, seg.get_speed())
+
+    track = Track("sprinter_maxspeeds4.csv")
+
+    print(track)
