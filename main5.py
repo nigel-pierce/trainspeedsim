@@ -2,8 +2,8 @@
 class TrackSeg:
     def __init__(self, index, start, end, speed):
         self._index = index
-        self._start = start
-        self._end   = end
+        self._start = int(start)
+        self._end   = int(end)
         self._speed = speed
     
     def __str__(self):
