@@ -56,7 +56,10 @@ class Track:
         elif direction == "-": d = -1
         else: # raise something something I should probably use an enum
             raise ArgumentError('Direction can be only "+" or "-"')
-        return self._track(index + direction)
+        
+        if index + d < 0: raise IndexError("Next segment index out of bounds")
+
+        return self._track[index + d]
 
     def _load_maxspeeds(self, filename):
         import csv
@@ -97,4 +100,17 @@ if __name__ == "__main__":
 
     print(track)
     print(track.get_first_seg())
-    print(track.get_next_seg(0, "?"))
+    try:
+        print(track.get_next_seg(0, "?"))
+    except ArgumentError as e:
+        print(e)
+    
+    try:
+        print(track.get_next_seg(0, "-"))
+    except IndexError as e:
+        print(e)
+    
+    try:
+        print(track.get_next_seg(63, "+"))
+    except IndexError as e:
+        print(e)
