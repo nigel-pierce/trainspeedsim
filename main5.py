@@ -1,4 +1,8 @@
 
+class ArgumentError(Exception):
+    def __init__(self, msg):
+        Exception.__init__(self, msg)
+
 from collections import namedtuple
 MaxSpeed = namedtuple("MaxSpeed", ["milepost", "speed"])
 
@@ -46,6 +50,14 @@ class Track:
     def get_first_seg(self):
         return self._track[0]
 
+    # throws IndexError and ArgumentError
+    def get_next_seg(self, index, direction):
+        if direction == "+": d = 1
+        elif direction == "-": d = -1
+        else: # raise something something I should probably use an enum
+            raise ArgumentError('Direction can be only "+" or "-"')
+        return self._track(index + direction)
+
     def _load_maxspeeds(self, filename):
         import csv
         raw_maxspeeds = [maxspeed for maxspeed in map (MaxSpeed._make, csv.reader(open(filename, "r"), delimiter='	', quoting=csv.QUOTE_NONNUMERIC))]
@@ -85,3 +97,4 @@ if __name__ == "__main__":
 
     print(track)
     print(track.get_first_seg())
+    print(track.get_next_seg(0, "?"))
