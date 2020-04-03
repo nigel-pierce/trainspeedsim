@@ -3,9 +3,6 @@ class ArgumentError(Exception):
     def __init__(self, msg):
         Exception.__init__(self, msg)
 
-from collections import namedtuple
-MaxSpeed = namedtuple("MaxSpeed", ["milepost", "speed"])
-
 class TrackSeg:
     def __init__(self, index, start, end, speed):
         self._index = index
@@ -35,6 +32,9 @@ class TrackSeg:
         return self._end - self._start
     
 class Track:
+    from collections import namedtuple
+    MaxSpeed = namedtuple("MaxSpeed", ["milepost", "speed"])
+
     def __init__(self, filename):
         # load the file into TrackSegs into
         self._track = self._load_maxspeeds(filename)
@@ -63,7 +63,7 @@ class Track:
 
     def _load_maxspeeds(self, filename):
         import csv
-        raw_maxspeeds = [maxspeed for maxspeed in map (MaxSpeed._make, csv.reader(open(filename, "r"), delimiter='	', quoting=csv.QUOTE_NONNUMERIC))]
+        raw_maxspeeds = [maxspeed for maxspeed in map (self.MaxSpeed._make, csv.reader(open(filename, "r"), delimiter='	', quoting=csv.QUOTE_NONNUMERIC))]
         
         # generate segments from that
         maxspeedsegs = []
@@ -167,46 +167,30 @@ class Train:
                 self._finished_seg = True
         return self._finished_seg
 
+class Simulation:
+    from collections import namedtuple
+    PosSpeed = namedtuple("PosSpeed", ["pos", "speed"])
+
+    def __init__(self, filename, accel, resolution):
+        self._resolution = resolution
+        self._track = Track(filename)
+        self._train = Train(self._track, accel, self._resolution)
+        self._best_speeds = []
+
+    def run(self):
+
+        print(self._train)
+        for i in range(10):
+            self._train.travel_seg()
+            print(self._train)
+        self._train.set_dir("-")
+        print("--------- REVERSING COURSE ----------")
+        for i in range(10):
+            self._train.travel_seg()
+            print(self._train)
+            
+    
 if __name__ == "__main__":
-    seg = TrackSeg(0, 0, 0.1*5280, 25*5280/3600)
-    print("seg: ", seg)
-    print("seg: ", str(seg))
-    print("seg: ", repr(seg))
-    seg1 = eval(repr(seg))
-    print("seg1:", seg1)
-    
-    print("seg.length(): expect 528", seg.length())
-    print("seg.get_index(): expect 0", seg.get_index())
-    print("seg.get_start(): expect 0", seg.get_start())
-    print("seg.get_end(): expect 528", seg.get_end())
-    print("seg.get_speed(): expect", 25*5280/3600, seg.get_speed())
+    sim = Simulation("sprinter_maxspeeds4.csv", 1.25, 528)
 
-    track = Track("sprinter_maxspeeds4.csv")
-
-    print(track)
-    print(track.get_first_seg())
-    try:
-        print(track.get_next_seg(0, "?"))
-    except ArgumentError as e:
-        print(e)
-    
-    try:
-        print(track.get_next_seg(0, "-"))
-    except IndexError as e:
-        print(e)
-    
-    try:
-        print(track.get_next_seg(63, "+"))
-    except IndexError as e:
-        print(e)
-
-    train = Train(track, 1.25, 528)
-    print(train)
-    for i in range(10):
-        train.travel_seg()
-        print(train)
-    train.set_dir("-")
-    print("--------- REVERSING COURSE ----------")
-    for i in range(10):
-        train.travel_seg()
-        print(train)
+    sim.run()
