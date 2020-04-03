@@ -207,9 +207,13 @@ class Simulation:
         print("And finally...", self._train)
         self._train.set_dir("-")
         print("--------- REVERSING COURSE ----------")
+        rev_best_speeds = reversed(self._best_speeds)
         while not self._train.at_end_of_track():
             self._train.travel_seg()
             print(self._train)
+            # reverse doesn't have the problem with repeated last seg guy
+            nextpoint = next(rev_best_speeds)
+            nextpoint.speed = min(nextpoint.speed, self._train.get_speed())
         print("And finally...", self._train)
             
     def output(self):
