@@ -120,6 +120,8 @@ class Train:
             else:
                 # well I guess we're instantly finished with a 0-length seg
                 self._finished_seg = True
+                # Oh wait! a 0-length seg can still affect our speed
+                self._speed = min(self._seg.get_speed(), self._speed)
 
             if self._finished_seg == True:
                 # load next seg
