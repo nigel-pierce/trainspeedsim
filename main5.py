@@ -212,9 +212,9 @@ class Simulation:
         while not self._train.at_end_of_track():
             self._train.travel_seg()
             print(self._train)
-            # reverse doesn't have the problem with repeated last seg guy
-            rev_best_speeds.append(self.PosSpeed(self._train.get_pos(), \
-                self._train.get_speed()))
+            if not self._train.at_end_of_track():
+                rev_best_speeds.append(self.PosSpeed(self._train.get_pos(), \
+                    self._train.get_speed()))
         print("And finally...", self._train)
 
         for paired in zip(fwd_best_speeds, reversed(rev_best_speeds)):
