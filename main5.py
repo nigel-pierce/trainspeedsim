@@ -121,6 +121,7 @@ class Train:
     def set_dir(self, direction):
         assert direction == "+" or direction == "-"
         self._dir = direction
+        self._finished_seg = False
 
     # kind of does everything
     # travels along 1 resolution of track each call
