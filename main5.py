@@ -110,32 +110,25 @@ class Train:
     # automatically loads the next TrackSeg when at end of current one
     # only returns false when it's finished the last seg in Track
     def travel_seg(self):
-        if (self._finished_seg == False):
-            # accelerate() over one resolution of distance? I didn't think this 
-            # far ahead.
-            self._speed = self._accelerate(self._seg.get_speed(), self._acceleration, self._speed, self._resolution)
-
-            # always travels over seg at least *once*, even if zero-length
-            assert self._dir == "+" or self._dir == "-"
-            if self._dir == "+":
-                self._pos += self._resolution
-                if self._pos == self._seg.get_end():
-                    self._finished_seg = True
-            elif self._dir == "-":
-                self._pos -= self._resolution
-                if self._pos == self._seg.get_start():
-                    self._finished_seg = True
+        if self._finished_seg == False:
+            if (self._seg.length() != 0):
+                self._finished_seg = self._travel_non0_seg()
+            else:
+                # well I guess we're instantly finished with a 0-length seg
+                self._finished_seg = True
 
             if self._finished_seg == True:
                 # load next seg
                 try:
-                    self._seg = self._track.get_next_seg(self._seg.get_id(), self._dir)
+                    self._seg = self._track.get_next_seg(\
+                        self._seg.get_index(), self._dir)
                     self._finished_seg = False
                 except IndexError:
                     # must be at one end of the track
                     return False
-
-            return True
+                return True
+        # if we come into this with finished_seg == True, we must be finished
+        # with all segs (at end of track)
         return False
 
     # takes all units in feet units
@@ -147,6 +140,25 @@ class Train:
         #print("target speed", v_target, "fps (",(v_target*3600/5280.0),"mph)")
         v_f = nacc * t + v_i
         return v_f
+
+    def _travel_non0_seg():
+        assert self._seg.get_length() % self._resolution == 0
+
+        # accelerate() over one resolution of distance? I didn't think 
+        # this far ahead.
+        self._speed = self._accelerate(self._seg.get_speed(), self._acceleration, self._speed, self._resolution)
+
+        # always travels over seg at least *once*, even if zero-length
+        assert self._dir == "+" or self._dir == "-"
+        if self._dir == "+":
+            self._pos += self._resolution
+            if self._pos == self._seg.get_end():
+                self._finished_seg = True
+        elif self._dir == "-":
+            self._pos -= self._resolution
+            if self._pos == self._seg.get_start():
+                self._finished_seg = True
+        return self._finished_seg
 
 if __name__ == "__main__":
     seg = TrackSeg(0, 0, 0.1*5280, 25*5280/3600)
