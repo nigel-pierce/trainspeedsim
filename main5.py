@@ -196,26 +196,26 @@ class Simulation:
 
     def run(self):
 
-        print(self._train)
-        print("The train is leaving the station!")
+        #print(self._train)
+        #print("The train is leaving the station!")
         fwd_best_speeds = []
         while not self._train.at_end_of_track():
             self._train.travel_seg()
-            print(self._train)
+            #print(self._train)
             if not self._train.at_end_of_track(): # prevents repeating last seg
                 fwd_best_speeds.append(self.PosSpeed(self._train.get_pos(), \
                     self._train.get_speed()))
-        print("And finally...", self._train)
+        #print("And finally...", self._train)
         self._train.set_dir("-")
-        print("--------- REVERSING COURSE ----------")
+        #print("--------- REVERSING COURSE ----------")
         rev_best_speeds = []
         while not self._train.at_end_of_track():
             self._train.travel_seg()
-            print(self._train)
+            #print(self._train)
             if not self._train.at_end_of_track():
                 rev_best_speeds.append(self.PosSpeed(self._train.get_pos(), \
                     self._train.get_speed()))
-        print("And finally...", self._train)
+        #print("And finally...", self._train)
 
         # note: all of that up there generated duplicate PosSpeeds for 0mph or 
         # 0-length (not sure which is important) segments
@@ -223,7 +223,7 @@ class Simulation:
 
         lastps = None
         for paired in zip(fwd_best_speeds, reversed(rev_best_speeds)):
-            print(paired[0].pos/5280, "vs", paired[1].pos/5280)
+            #print(paired[0].pos/5280, "vs", paired[1].pos/5280)
             assert paired[0].pos == paired[1].pos
             ps = self.PosSpeed(paired[0].pos, min(paired[0].speed, \
                 paired[1].speed))
@@ -232,9 +232,9 @@ class Simulation:
             lastps = ps
             
     def output(self):
-        print("-----------OUTPUT-------------")
+        #print("-----------OUTPUT-------------")
         for point in self._best_speeds:
-            print("{:.1f} @ {:.2f}".format(point.pos/5280, point.speed*3600/5280))
+            print("{:.1f}, {:.2f}".format(point.pos/5280, point.speed*3600/5280))
     
 
 if __name__ == "__main__":
