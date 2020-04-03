@@ -198,24 +198,30 @@ class Simulation:
 
         print(self._train)
         print("The train is leaving the station!")
+        fwd_best_speeds = []
         while not self._train.at_end_of_track():
             self._train.travel_seg()
             print(self._train)
             if not self._train.at_end_of_track(): # prevents repeating last seg
-                self._best_speeds.append(self.PosSpeed(self._train.get_pos(), \
+                fwd_best_speeds.append(self.PosSpeed(self._train.get_pos(), \
                     self._train.get_speed()))
         print("And finally...", self._train)
         self._train.set_dir("-")
         print("--------- REVERSING COURSE ----------")
-        rev_best_speeds = reversed(self._best_speeds)
+        rev_best_speeds = []
         while not self._train.at_end_of_track():
             self._train.travel_seg()
             print(self._train)
             # reverse doesn't have the problem with repeated last seg guy
-            nextpoint = next(rev_best_speeds)
-            #nextpoint.speed = min(nextpoint.speed, self._train.get_speed())
-            print("{:.1f} @ {:.2f}".format(nextpoint.pos/5280, nextpoint.speed*3600/5280))
+            rev_best_speeds.append(self.PosSpeed(self._train.get_pos(), \
+                self._train.get_speed()))
         print("And finally...", self._train)
+
+        for paired in zip(fwd_best_speeds, reversed(rev_best_speeds)):
+            print(paired[0].pos/5280, "vs", paired[1].pos/5280)
+            assert paired[0].pos == paired[1].pos
+            self._best_speeds.append(self.PosSpeed(paired[0].pos, \
+                min(paired[0].speed, paired[1].speed)))
             
     def output(self):
         print("-----------OUTPUT-------------")
