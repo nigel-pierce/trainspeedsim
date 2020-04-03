@@ -223,7 +223,7 @@ class Simulation:
 
         lastps = None
         for paired in zip(fwd_best_speeds, reversed(rev_best_speeds)):
-            #print(paired[0].pos/5280, "vs", paired[1].pos/5280)
+            print(paired[0].pos/5280, "@", paired[0].speed*3600/5280, "vs", paired[1].pos/5280, "@", paired[1].speed*3600/5280)
             assert paired[0].pos == paired[1].pos
             ps = self.PosSpeed(paired[0].pos, min(paired[0].speed, \
                 paired[1].speed))
@@ -232,7 +232,7 @@ class Simulation:
             lastps = ps
             
     def output(self):
-        #print("-----------OUTPUT-------------")
+        print("-----------OUTPUT-------------")
         for point in self._best_speeds:
             print("{:.1f}, {}".format(point.pos/5280, point.speed*3600/5280))
     
