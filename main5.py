@@ -213,7 +213,8 @@ class Simulation:
             print(self._train)
             # reverse doesn't have the problem with repeated last seg guy
             nextpoint = next(rev_best_speeds)
-            nextpoint.speed = min(nextpoint.speed, self._train.get_speed())
+            #nextpoint.speed = min(nextpoint.speed, self._train.get_speed())
+            print("{:.1f} @ {:.2f}".format(nextpoint.pos/5280, nextpoint.speed*3600/5280))
         print("And finally...", self._train)
             
     def output(self):
