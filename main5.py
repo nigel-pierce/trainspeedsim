@@ -105,6 +105,10 @@ class Train:
     def finished_seg(self):
         return self._finished_seg
 
+    def set_dir(self, direction):
+        assert direction == "+" or direction == "-"
+        self._dir = direction
+
     # kind of does everything
     # travels along 1 resolution of track each call
     # automatically loads the next TrackSeg when at end of current one
@@ -196,6 +200,11 @@ if __name__ == "__main__":
 
     train = Train(track, 1.25, 528)
     print(train)
-    for i in range(5):
+    for i in range(10):
+        train.travel_seg()
+        print(train)
+    train.set_dir("-")
+    print("--------- REVERSING COURSE ----------")
+    for i in range(10):
         train.travel_seg()
         print(train)
