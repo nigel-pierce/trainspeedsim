@@ -234,7 +234,7 @@ class Simulation:
     def output(self):
         #print("-----------OUTPUT-------------")
         for point in self._best_speeds:
-            print("{:.1f}, {:.2f}".format(point.pos/5280, point.speed*3600/5280))
+            print("{:.1f}, {}".format(point.pos/5280, point.speed*3600/5280))
     
 
 if __name__ == "__main__":
