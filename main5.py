@@ -80,7 +80,75 @@ class Track:
 
         return maxspeedsegs
  
+class Train:
+    def __init__(self, track, acceleration, resolution):
+        self._track = track
+        self._acceleration = acceleration
+        self._resolution = resolution
+        # then the derived attributes and defaults
+        self._speed = 0
+        self._seg = self._track.get_first_seg()
+        self._pos = self._seg.get_start()
+        self._dir = "+"
+        self._finished_seg = False
 
+    def __str__(self):
+        return ("track defined: {}, seg: {}, accel: {}, res: {}, dir: {}, "+ \
+            "pos: {}, speed {}, finished {}").format(self._track is not None, \
+            self._seg, self._acceleration, self._resolution, self._dir, \
+            self._pos, self._speed, self._finished_seg)
+
+    def get_pos(self):
+        return self._pos
+
+    def get_speed(self):
+        return self._speed
+
+    def finished_seg(self):
+        return self._finished_seg
+
+    # kind of does everything
+    # travels along 1 resolution of track each call
+    # automatically loads the next TrackSeg when at end of current one
+    # only returns false when it's finished the last seg in Track
+    def travel_seg(self):
+        if (self._finished_seg == False):
+            # accelerate() over one resolution of distance? I didn't think this 
+            # far ahead.
+            self._speed = self._accelerate(self._seg.get_speed(), self._acceleration, self._speed, self._resolution)
+
+            # always travels over seg at least *once*, even if zero-length
+            assert self._dir == "+" or self._dir == "-"
+            if self._dir == "+":
+                self._pos += self._resolution
+                if self._pos == self._seg.get_end():
+                    self._finished_seg = True
+            elif self._dir == "-":
+                self._pos -= self._resolution
+                if self._pos == self._seg.get_start():
+                    self._finished_seg = True
+
+            if self._finished_seg == True:
+                # load next seg
+                try:
+                    self._seg = self._track.get_next_seg(self._seg.get_id(), self._dir)
+                    self._finished_seg = False
+                except IndexError:
+                    # must be at one end of the track
+                    return False
+
+            return True
+        return False
+
+    # takes all units in feet units
+    def _accelerate(self, v_target, acc, v_i, d):
+        nacc = acc
+        from math import sqrt
+        t = ( -v_i + sqrt(v_i**2 - 4.0 * 0.5 * nacc * -d) ) / (2.0*0.5*nacc)
+        #print("sec from prev index point segment guy:", t)
+        #print("target speed", v_target, "fps (",(v_target*3600/5280.0),"mph)")
+        v_f = nacc * t + v_i
+        return v_f
 
 if __name__ == "__main__":
     seg = TrackSeg(0, 0, 0.1*5280, 25*5280/3600)
@@ -114,3 +182,8 @@ if __name__ == "__main__":
         print(track.get_next_seg(63, "+"))
     except IndexError as e:
         print(e)
+
+    train = Train(track, 1.25, 528)
+    print(train)
+    train.travel_seg()
+    print(train)
