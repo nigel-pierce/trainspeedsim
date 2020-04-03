@@ -133,8 +133,7 @@ class Train:
                     # must be at one end of the track
                     return False
                 return True
-        # if we come into this with finished_seg == True, we must be finished
-        # with all segs (at end of track)
+        # this happens when we've actually finished a TrackSeg
         return False
 
     # takes all units in feet units
