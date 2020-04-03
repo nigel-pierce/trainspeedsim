@@ -93,10 +93,8 @@ class Train:
         self._finished_seg = False
 
     def __str__(self):
-        return ("track defined: {}, seg: {}, accel: {}, res: {}, dir: {}, "+ \
-            "pos: {}, speed {}, finished {}").format(self._track is not None, \
-            self._seg, self._acceleration, self._resolution, self._dir, \
-            self._pos, self._speed, self._finished_seg)
+        return ("pos: {}, speed {:.2f}, dir: {}, seg: ({}), accel: {}, "+ \
+            "res: {}, finished {}, track defined: {}").format(self._pos, self._speed, self._dir, self._seg, self._acceleration, self._resolution, self._finished_seg, self._track is not None)
 
     def get_pos(self):
         return self._pos
