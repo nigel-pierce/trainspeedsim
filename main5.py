@@ -195,7 +195,6 @@ if __name__ == "__main__":
 
     train = Train(track, 1.25, 528)
     print(train)
-    train.travel_seg()
-    print(train)
-    train.travel_seg()
-    print(train)
+    for i in range(5):
+        train.travel_seg()
+        print(train)
