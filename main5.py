@@ -201,6 +201,9 @@ class Simulation:
         while not self._train.at_end_of_track():
             self._train.travel_seg()
             print(self._train)
+            if not self._train.at_end_of_track(): # prevents repeating last seg
+                self._best_speeds.append(self.PosSpeed(self._train.get_pos(), \
+                    self._train.get_speed()))
         print("And finally...", self._train)
         self._train.set_dir("-")
         print("--------- REVERSING COURSE ----------")
@@ -209,8 +212,15 @@ class Simulation:
             print(self._train)
         print("And finally...", self._train)
             
+    def output(self):
+        print("-----------OUTPUT-------------")
+        for point in self._best_speeds:
+            print("{:.1f} @ {:.2f}".format(point.pos/5280, point.speed*3600/5280))
     
+
 if __name__ == "__main__":
     sim = Simulation("sprinter_maxspeeds4.csv", 1.25, 528)
 
     sim.run()
+
+    sim.output()
