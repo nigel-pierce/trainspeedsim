@@ -227,7 +227,7 @@ class Simulation:
             assert paired[0].pos == paired[1].pos
             ps = self.PosSpeed(paired[0].pos, min(paired[0].speed, \
                 paired[1].speed))
-            if (lastps is not None and (ps.pos != lastps.pos and ps.speed != lastps.speed)):
+            if (lastps is None or (ps.pos != lastps.pos and ps.speed != lastps.speed)):
                 self._best_speeds.append(ps)
             lastps = ps
             
