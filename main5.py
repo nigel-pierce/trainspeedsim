@@ -146,7 +146,8 @@ class Train:
 
         # accelerate() over one resolution of distance? I didn't think 
         # this far ahead.
-        self._speed = self._accelerate(self._seg.get_speed(), self._acceleration, self._speed, self._resolution)
+        segspeed = self._seg.get_speed()
+        self._speed = min(segspeed, self._accelerate(segspeed, self._acceleration, self._speed, self._resolution))
 
         # always travels over seg at least *once*, even if zero-length
         assert self._dir == "+" or self._dir == "-"
