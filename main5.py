@@ -1,8 +1,4 @@
 
-class ArgumentError(Exception):
-    def __init__(self, msg):
-        Exception.__init__(self, msg)
-
 class TrackSeg:
     def __init__(self, index, start, end, speed):
         self._index = index
@@ -50,12 +46,11 @@ class Track:
     def get_first_seg(self):
         return self._track[0]
 
-    # throws IndexError and ArgumentError
+    # throws IndexError and AssertionError
     def get_next_seg(self, index, direction):
+        assert direction == "+" or direction == "-"
         if direction == "+": d = 1
         elif direction == "-": d = -1
-        else: # raise something something I should probably use an enum
-            raise ArgumentError('Direction can be only "+" or "-"')
         
         if index + d < 0: raise IndexError("Next segment index out of bounds")
 
