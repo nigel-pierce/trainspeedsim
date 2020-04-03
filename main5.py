@@ -180,14 +180,16 @@ class Simulation:
     def run(self):
 
         print(self._train)
-        for i in range(10):
-            self._train.travel_seg()
-            print(self._train)
+        for i in range(250):
+            if self._train.travel_seg():
+                print(self._train)
+        print("And finally...", self._train)
         self._train.set_dir("-")
         print("--------- REVERSING COURSE ----------")
-        for i in range(10):
-            self._train.travel_seg()
-            print(self._train)
+        for i in range(250):
+            if self._train.travel_seg():
+                print(self._train)
+        print("And finally...", self._train)
             
     
 if __name__ == "__main__":
