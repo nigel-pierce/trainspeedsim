@@ -217,11 +217,19 @@ class Simulation:
                     self._train.get_speed()))
         print("And finally...", self._train)
 
+        # note: all of that up there generated duplicate PosSpeeds for 0mph or 
+        # 0-length (not sure which is important) segments
+        # we will need to fix this when building self._best_speeds
+
+        lastps = None
         for paired in zip(fwd_best_speeds, reversed(rev_best_speeds)):
             print(paired[0].pos/5280, "vs", paired[1].pos/5280)
             assert paired[0].pos == paired[1].pos
-            self._best_speeds.append(self.PosSpeed(paired[0].pos, \
-                min(paired[0].speed, paired[1].speed)))
+            ps = self.PosSpeed(paired[0].pos, min(paired[0].speed, \
+                paired[1].speed))
+            if (lastps is not None and (ps.pos != lastps.pos and ps.speed != lastps.speed)):
+                self._best_speeds.append(ps)
+            lastps = ps
             
     def output(self):
         print("-----------OUTPUT-------------")
