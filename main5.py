@@ -183,12 +183,16 @@ class Simulation:
         for i in range(250):
             if self._train.travel_seg():
                 print(self._train)
+            else:
+                print("nope")
         print("And finally...", self._train)
         self._train.set_dir("-")
         print("--------- REVERSING COURSE ----------")
         for i in range(250):
             if self._train.travel_seg():
                 print(self._train)
+            else:
+                print("nope")
         print("And finally...", self._train)
             
     
