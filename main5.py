@@ -192,6 +192,7 @@ class Simulation:
     def run(self):
 
         print(self._train)
+        print("The train is leaving the station!")
         while not self._train.at_end_of_track():
             self._train.travel_seg()
             print(self._train)
