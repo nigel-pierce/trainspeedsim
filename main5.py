@@ -193,18 +193,14 @@ class Simulation:
 
         print(self._train)
         while not self._train.at_end_of_track():
-            if self._train.travel_seg():
-                print(self._train)
-            else:
-                print("nope")
+            self._train.travel_seg()
+            print(self._train)
         print("And finally...", self._train)
         self._train.set_dir("-")
         print("--------- REVERSING COURSE ----------")
         while not self._train.at_end_of_track():
-            if self._train.travel_seg():
-                print(self._train)
-            else:
-                print("nope")
+            self._train.travel_seg()
+            print(self._train)
         print("And finally...", self._train)
             
     
