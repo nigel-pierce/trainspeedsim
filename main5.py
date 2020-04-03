@@ -141,8 +141,8 @@ class Train:
         v_f = nacc * t + v_i
         return v_f
 
-    def _travel_non0_seg():
-        assert self._seg.get_length() % self._resolution == 0
+    def _travel_non0_seg(self):
+        assert self._seg.length() % self._resolution == 0
 
         # accelerate() over one resolution of distance? I didn't think 
         # this far ahead.
@@ -194,6 +194,8 @@ if __name__ == "__main__":
         print(e)
 
     train = Train(track, 1.25, 528)
+    print(train)
+    train.travel_seg()
     print(train)
     train.travel_seg()
     print(train)
