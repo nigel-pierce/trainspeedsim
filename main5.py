@@ -125,29 +125,33 @@ class Train:
     # kind of does everything
     # travels along 1 resolution of track each call
     # automatically loads the next TrackSeg when at end of current one
-    # only returns false when it's finished the last seg in Track
+    # returns false when it's finished the last resolution-length in seg
+    # (i.e. self._finished_seg == True I think)
+    # (except when it's at end of last seg in track, in which case it returns
+    # False even though self._finished_seg is True)
+    # ...
+    # I need to think this through better.
     def travel_seg(self):
+        if self._finished_seg == True:
+            # load next seg
+            try:
+                self._seg = self._track.get_next_seg(\
+                    self._seg.get_index(), self._dir)
+                self._finished_seg = False
+            except IndexError:
+                # must be at one end of the track
+                return False
+            #return True # not sure what this one was here for
+    
         if self._finished_seg == False:
             if (self._seg.length() != 0):
                 self._finished_seg = self._travel_non0_seg()
             else:
+                self._speed = min(self._seg.get_speed(), self._speed)
                 # well I guess we're instantly finished with a 0-length seg
                 self._finished_seg = True
-                # Oh wait! a 0-length seg can still affect our speed
-                self._speed = min(self._seg.get_speed(), self._speed)
 
-            if self._finished_seg == True:
-                # load next seg
-                try:
-                    self._seg = self._track.get_next_seg(\
-                        self._seg.get_index(), self._dir)
-                    self._finished_seg = False
-                except IndexError:
-                    # must be at one end of the track
-                    return False
-                return True
-        # this happens when we've actually finished a TrackSeg
-        return False
+        return self._finished_seg
 
     # takes all units in feet units
     def _accelerate(self, v_target, acc, v_i, d):
