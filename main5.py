@@ -105,6 +105,19 @@ class Train:
     def finished_seg(self):
         return self._finished_seg
 
+    def at_end_of_track(self):
+        assert self._dir == "+" or self._dir == "-"
+        if self._dir == "+":
+            try:
+                self._track.get_next_seg(self._seg.get_index(), self._dir)
+            except IndexError:
+                # we must be at last segment already
+                # check if we are at the end of it
+                return self._pos == self._seg.get_end()
+        else:
+            return self._seg == self._track.get_first_seg() and self._pos == \
+                self._seg.get_start()
+
     def set_dir(self, direction):
         assert direction == "+" or direction == "-"
         self._dir = direction
@@ -179,7 +192,7 @@ class Simulation:
     def run(self):
 
         print(self._train)
-        for i in range(250):
+        while not self._train.at_end_of_track():
             if self._train.travel_seg():
                 print(self._train)
             else:
@@ -187,7 +200,7 @@ class Simulation:
         print("And finally...", self._train)
         self._train.set_dir("-")
         print("--------- REVERSING COURSE ----------")
-        for i in range(250):
+        while not self._train.at_end_of_track():
             if self._train.travel_seg():
                 print(self._train)
             else:
