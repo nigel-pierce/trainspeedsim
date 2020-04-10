@@ -189,19 +189,16 @@ class Simulation:
 
     def run(self):
 
-        fwd_best_speeds = []
-        while not self._train.at_end_of_track():
-            self._train.travel_seg()
-            if not self._train.at_end_of_track(): # prevents repeating last seg
-                fwd_best_speeds.append(self.PosSpeed(self._train.get_pos(), \
-                    self._train.get_speed()))
-        self._train.set_dir("-")
-        rev_best_speeds = []
-        while not self._train.at_end_of_track():
-            self._train.travel_seg()
-            if not self._train.at_end_of_track():
-                rev_best_speeds.append(self.PosSpeed(self._train.get_pos(), \
-                    self._train.get_speed()))
+        fwd_best_speeds = self._gen_best_speeds_dir("+")
+        
+        rev_best_speeds = self._gen_best_speeds_dir("-")
+        #[]
+        # self._train.set_dir("-")
+        #while not self._train.at_end_of_track():
+        #    self._train.travel_seg()
+        #    if not self._train.at_end_of_track():
+        #        rev_best_speeds.append(self.PosSpeed(self._train.get_pos(), \
+        #            self._train.get_speed()))
 
         # note: all of that up there generated duplicate PosSpeeds for 0mph or 
         # 0-length (not sure which is important) segments
@@ -220,6 +217,17 @@ class Simulation:
         for point in self._best_speeds:
             print("{:.1f}, {}".format(point.pos/5280, point.speed*3600/5280))
     
+    def _gen_best_speeds_dir(self, direction):
+        assert direction=="+" or direction=="-"
+        best = []
+        self._train.set_dir(direction)
+        while not self._train.at_end_of_track():
+            self._train.travel_seg()
+            if not self._train.at_end_of_track(): # prevents repeating last seg
+                best.append(self.PosSpeed(self._train.get_pos(), \
+                    self._train.get_speed()))
+        return best
+        
 
 if __name__ == "__main__":
     sim = Simulation("sprinter_maxspeeds4.csv", 1.25, 528)
