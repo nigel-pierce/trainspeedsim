@@ -90,13 +90,13 @@
         <dia:point val="39,16"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="38.95,15.95;57.645,25.85"/>
+        <dia:rectangle val="38.95,15.95;58.8,25.85"/>
       </dia:attribute>
       <dia:attribute name="elem_corner">
         <dia:point val="39,16"/>
       </dia:attribute>
       <dia:attribute name="elem_width">
-        <dia:real val="18.594999999999999"/>
+        <dia:real val="19.75"/>
       </dia:attribute>
       <dia:attribute name="elem_height">
         <dia:real val="9.8000000000000007"/>
@@ -317,7 +317,7 @@
           <dia:attribute name="parameters">
             <dia:composite type="umlparameter">
               <dia:attribute name="name">
-                <dia:string>#id#</dia:string>
+                <dia:string>#index#</dia:string>
               </dia:attribute>
               <dia:attribute name="type">
                 <dia:string>#int#</dia:string>
@@ -1590,8 +1590,8 @@
       </dia:attribute>
       <dia:attribute name="orth_points">
         <dia:point val="20.98,21.1"/>
-        <dia:point val="29.7649,21.1"/>
-        <dia:point val="29.7649,20.9"/>
+        <dia:point val="29.7648,21.1"/>
+        <dia:point val="29.7648,20.9"/>
         <dia:point val="38.9497,20.9"/>
       </dia:attribute>
       <dia:attribute name="orth_orient">
@@ -1636,13 +1636,13 @@
         <dia:point val="-0.2,0"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="-0.25,-0.05;16.135,9.05"/>
+        <dia:rectangle val="-0.25,-0.05;20.755,9.05"/>
       </dia:attribute>
       <dia:attribute name="elem_corner">
         <dia:point val="-0.2,0"/>
       </dia:attribute>
       <dia:attribute name="elem_width">
-        <dia:real val="16.285"/>
+        <dia:real val="20.905000000000001"/>
       </dia:attribute>
       <dia:attribute name="elem_height">
         <dia:real val="9"/>
@@ -1868,6 +1868,23 @@ Track segment lengths must be integer multiples of resolution.#</dia:string>
               </dia:attribute>
               <dia:attribute name="type">
                 <dia:string>#string#</dia:string>
+              </dia:attribute>
+              <dia:attribute name="value">
+                <dia:string>##</dia:string>
+              </dia:attribute>
+              <dia:attribute name="comment">
+                <dia:string>##</dia:string>
+              </dia:attribute>
+              <dia:attribute name="kind">
+                <dia:enum val="0"/>
+              </dia:attribute>
+            </dia:composite>
+            <dia:composite type="umlparameter">
+              <dia:attribute name="name">
+                <dia:string>#accel#</dia:string>
+              </dia:attribute>
+              <dia:attribute name="type">
+                <dia:string>#float#</dia:string>
               </dia:attribute>
               <dia:attribute name="value">
                 <dia:string>##</dia:string>
@@ -2222,18 +2239,18 @@ Track segment lengths must be integer multiples of resolution.#</dia:string>
     </dia:object>
     <dia:object type="UML - Association" version="2" id="O6">
       <dia:attribute name="obj_pos">
-        <dia:point val="16.085,1.9"/>
+        <dia:point val="20.705,1.9"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="15.335,1.04;24.9997,2.74"/>
+        <dia:rectangle val="19.955,1.04;24.9997,2.74"/>
       </dia:attribute>
       <dia:attribute name="meta">
         <dia:composite type="dict"/>
       </dia:attribute>
       <dia:attribute name="orth_points">
-        <dia:point val="16.085,1.9"/>
-        <dia:point val="20.8673,1.9"/>
-        <dia:point val="20.8673,1.8"/>
+        <dia:point val="20.705,1.9"/>
+        <dia:point val="23.1773,1.9"/>
+        <dia:point val="23.1773,1.8"/>
         <dia:point val="24.9497,1.8"/>
       </dia:attribute>
       <dia:attribute name="orth_orient">
@@ -2305,15 +2322,15 @@ Track segment lengths must be integer multiples of resolution.#</dia:string>
         <dia:point val="46.365,9.9"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="45.615,9.14;50.0375,16.7497"/>
+        <dia:rectangle val="45.615,9.14;50.615,16.7497"/>
       </dia:attribute>
       <dia:attribute name="meta">
         <dia:composite type="dict"/>
       </dia:attribute>
       <dia:attribute name="orth_points">
         <dia:point val="46.365,9.9"/>
-        <dia:point val="48.2975,9.9"/>
-        <dia:point val="48.2975,15.9497"/>
+        <dia:point val="48.875,9.9"/>
+        <dia:point val="48.875,15.9497"/>
       </dia:attribute>
       <dia:attribute name="orth_orient">
         <dia:enum val="0"/>
@@ -2380,18 +2397,18 @@ Track segment lengths must be integer multiples of resolution.#</dia:string>
     </dia:object>
     <dia:object type="UML - Association" version="2" id="O8">
       <dia:attribute name="obj_pos">
-        <dia:point val="16.085,3.5"/>
+        <dia:point val="20.705,3.5"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="10.69,2.75;17.185,16.7497"/>
+        <dia:rectangle val="10.69,2.75;21.805,16.7497"/>
       </dia:attribute>
       <dia:attribute name="meta">
         <dia:composite type="dict"/>
       </dia:attribute>
       <dia:attribute name="orth_points">
-        <dia:point val="16.085,3.5"/>
-        <dia:point val="17.135,3.5"/>
-        <dia:point val="17.135,9.32487"/>
+        <dia:point val="20.705,3.5"/>
+        <dia:point val="21.755,3.5"/>
+        <dia:point val="21.755,9.32487"/>
         <dia:point val="11.49,9.32487"/>
         <dia:point val="11.49,15.9497"/>
       </dia:attribute>
@@ -2462,18 +2479,18 @@ Track segment lengths must be integer multiples of resolution.#</dia:string>
     </dia:object>
     <dia:object type="UML - Association" version="2" id="O9">
       <dia:attribute name="obj_pos">
-        <dia:point val="16.085,2.7"/>
+        <dia:point val="20.705,2.7"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="16.035,1.95;26.9997,11.75"/>
+        <dia:rectangle val="20.655,1.95;26.9997,11.75"/>
       </dia:attribute>
       <dia:attribute name="meta">
         <dia:composite type="dict"/>
       </dia:attribute>
       <dia:attribute name="orth_points">
-        <dia:point val="16.085,2.7"/>
-        <dia:point val="21.1424,2.7"/>
-        <dia:point val="21.1424,10.9"/>
+        <dia:point val="20.705,2.7"/>
+        <dia:point val="23.4524,2.7"/>
+        <dia:point val="23.4524,10.9"/>
         <dia:point val="26.9497,10.9"/>
       </dia:attribute>
       <dia:attribute name="orth_orient">
