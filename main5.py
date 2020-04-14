@@ -1,7 +1,7 @@
 
 class TrackSeg:
     def __init__(self, index, start, end, speed):
-        assert index >= 0
+        assert index >= 0 and type(index) is int
         assert start <= end
         assert speed >= 0
         self._index = index
@@ -192,7 +192,7 @@ class Simulation:
 
     def __init__(self, filename, accel, resolution):
         assert accel > 0
-        assert resolution > 0
+        assert resolution > 0 and type(resolution) is int
         self._resolution = resolution
         self._track = Track(filename)
         self._train = Train(self._track, accel, self._resolution)
