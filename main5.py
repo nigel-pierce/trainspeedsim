@@ -192,16 +192,9 @@ class Simulation:
         fwd_best_speeds = self._gen_best_speeds_dir("+")
         
         rev_best_speeds = self._gen_best_speeds_dir("-")
-        #[]
-        # self._train.set_dir("-")
-        #while not self._train.at_end_of_track():
-        #    self._train.travel_seg()
-        #    if not self._train.at_end_of_track():
-        #        rev_best_speeds.append(self.PosSpeed(self._train.get_pos(), \
-        #            self._train.get_speed()))
 
-        # note: all of that up there generated duplicate PosSpeeds for 0mph or 
-        # 0-length (not sure which is important) segments
+        # note: all of that up there generated duplicate PosSpeeds for 0-length 
+        # segments
         # we will need to fix this when building self._best_speeds
 
         lastps = None
