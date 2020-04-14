@@ -1,6 +1,9 @@
 
 class TrackSeg:
     def __init__(self, index, start, end, speed):
+        assert index >= 0
+        assert start <= end
+        assert speed >= 0
         self._index = index
         self._start = int(start)
         self._end   = int(end)
@@ -35,6 +38,7 @@ class Track:
         # load the file into TrackSegs into
         self._track = self._load_maxspeeds(filename)
         # and throw if anything goes wrong
+        assert len(self._track) > 0, "there must be at least one track segment"
 
     def __str__(self):
         out = "[\n"
@@ -77,6 +81,8 @@ class Track:
  
 class Train:
     def __init__(self, track, acceleration, resolution):
+        assert acceleration > 0
+        assert resolution > 0 and type(resolution) is int
         self._track = track
         self._acceleration = acceleration
         self._resolution = resolution
@@ -151,6 +157,9 @@ class Train:
 
     # takes all units in feet units
     def _accelerate(self, v_target, acc, v_i, d):
+        assert v_target >= 0 and v_i >= 0
+        assert d >= 0
+        assert acc > 0
         nacc = acc
         from math import sqrt
         t = ( -v_i + sqrt(v_i**2 - 4.0 * 0.5 * nacc * -d) ) / (2.0*0.5*nacc)
@@ -182,6 +191,8 @@ class Simulation:
     PosSpeed = namedtuple("PosSpeed", ["pos", "speed"])
 
     def __init__(self, filename, accel, resolution):
+        assert accel > 0
+        assert resolution > 0
         self._resolution = resolution
         self._track = Track(filename)
         self._train = Train(self._track, accel, self._resolution)
