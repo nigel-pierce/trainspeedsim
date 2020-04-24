@@ -335,7 +335,7 @@ class Simulation:
         
 
 if __name__ == "__main__":
-    md = MultiDict({("k1a", "k1b"): "v1", ("k2a"): "v2"})
+    md = MultiDict({("k1a", "k1b"): "v1", ("k2a",): "v2"})
 
     print(md)
 
