@@ -33,31 +33,64 @@ class MultiDict:
         # For example: {(k1a, k1b): v1, (k1b): v2} would create self._layer1 
         # and _layer2 as follows:
         #  1. Key is (k1a, k1b). Value is v1.
-        #     
-        #     self._layer1 = {k1a: k1a, k1b: k1a}
+        #     This should create a new key group containing k1a and then join
+        #     k1b to it.
+        #     md[k1a] = v1:
+        #     self._layer1 = {k1a: k1a}
         #     self._layer2 = {k1a: v1}
+        #     md.join(k1b, k1a):
+        #     self._layer1 = {k1a: k1a, k1b: k1a}
         #  2. Key is (k1b). Value is v2.
-        #     self._layer1 = {k1a: k1a, k1b: k1b}
-        #     self._layer2 = {k1a: v1, k1b: v2}
-        # If k1a is repeated, the situation is more complicated.
-        # Example: {(k1a, k1b): v1, (k1a): v2}
-        #  1. Key is (k1a, k1b). Value is v1.
-        #     self._layer1 = {k1a: k1a, k1b: k1a}
-        #     self._layer2 = {k1a: v1}
-        #  2. Key is (k1a). Value is v2.
-        #     self._layer1 = {k1a: k1a, k1b: k1a} ?
-        #  This isn't a very good plan.
-        # For the situation of {(k1a, k1b): v1, (k1a): v2}, (a repeated first 
-        # key element), k1b
+        #     This should set key group containing k1b to the value v2.
+        #     md[k1b] = v2:
+        #     self._layer1 = {k1a: k1a, k1b: k1a} (no change)
+        #     self._layer2 = {k1a: v2}
         for k in d:
             for i in range(len(k)):
                 subkey = k[i]
                 if i==0:
                     # become the "root node" of this key-set
                     rootkey = subkey
-                self._layer1[subkey] = rootkey
-            self._layer2[rootkey] = d[k]
+                    self.__setitem__(subkey, d[k])
+                else:
+                    self.join(subkey, rootkey)
+
+    def __repr__(self):
+        # TODO iterator for MultiDict
+        # YIKES I have to build these darn things in reverse
+        # I mean seriously if the number of keys is N and the number of values/
+        # groups is M this is going to take O(N*M) time.
+        diclist = {}
+        for rootkey in self._layer2:
+            val = self._layer2[rootkey]
+            for key in self._layer1:
+                if self._layer1[key] == rootkey:
+                    if val in diclist:
+                        diclist[val].append(key)
+                    else:
+                        diclist[val] = [key]
+
+        return str(diclist)
+
+    def __setitem__(self, key, value):
+        if key in self._layer1:
+            self._layer2[self._layer1[key]] = value
+        else:
+            self._layer1[key] = key
+            self._layer2[self._layer1[key]] = value
                 
+    def __getitem__(self, key):
+        if key in self._layer1:
+            return self._layer2[self._layer1[key]]
+        else:
+            raise KeyError()
+
+    #def
+    # TODO do __delitem__ and __keys__ and stuff later
+
+    def join(self, key_wanting_to_join, key_dest):
+        self._layer1[key_wanting_to_join] = self._layer1[key_dest]
+        # TODO do something if a key group no longer has members
             
 class TrackSeg:
     def __init__(self, index, start, end, speed):
@@ -302,8 +335,12 @@ class Simulation:
         
 
 if __name__ == "__main__":
-    sim = Simulation("sprinter_maxspeeds4.csv", 1.25, 528)
+    md = MultiDict({("k1a", "k1b"): "v1", ("k2a"): "v2"})
 
-    sim.run()
+    print(md)
 
-    sim.output()
+    #sim = Simulation("sprinter_maxspeeds4.csv", 1.25, 528)
+
+    #sim.run()
+
+    #sim.output()
