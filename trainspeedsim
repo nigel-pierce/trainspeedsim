@@ -10,11 +10,30 @@ class MultiDict:
         # The basic idea is that it maps all members of a given key to the 
         # first element of that key, which is used as the key to the second
         # mapping which actually contains the values.
-        # In general, if a key element is repeated, the old key element is 
-        # spun-off into its own mapping.
+        # The fundamental operations on this object will be these:
+        #  1. multidict[k] = v
+        #     Sets key group containing k to value v.
+        #     If key belongs to no key group, create a new key group containing
+        #     only k and set its value to v.
+        #  2. multidict.join(k1, k2) joins k1 to the key group containing k2.
+        #     That is all it does; even if k1 originally belongs to (k1, k3),
+        #     k3 is unaffected besides k1 being removed from its group.
+        # Construction of this object will be considered like so:
+        #  1. A key tuple-or-list of the form (k1a, k1b, ...): v1 will be 
+        #     treated as:
+        #     if a key group already contains k1a:
+        #       multidict[k1a] = v1
+        #     else if no key group already contains k1a:
+        #       multidict[k1a] = v1
+        #     Oh I guess multidict[k] takes care of this already.
+        #     Anyway the rest would be:
+        #     multidict.join(k1b, k1a)
+        #     multidict.join(..., k1a or k1b or any other key in that key group 
+        #       it doesn't matter)
         # For example: {(k1a, k1b): v1, (k1b): v2} would create self._layer1 
         # and _layer2 as follows:
         #  1. Key is (k1a, k1b). Value is v1.
+        #     
         #     self._layer1 = {k1a: k1a, k1b: k1a}
         #     self._layer2 = {k1a: v1}
         #  2. Key is (k1b). Value is v2.
