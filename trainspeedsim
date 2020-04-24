@@ -73,11 +73,7 @@ class MultiDict:
         out = "{"
         for val in diclist:
             out = out + str(tuple(diclist[val]))
-            if type(val) is str:
-                sval = "'"+val+"'"
-            else:
-                sval = str(val)
-            out = out + ": " + sval + ", "
+            out = out + ": " + repr(val) + ", "
         out = out + "}"
 
         return out
