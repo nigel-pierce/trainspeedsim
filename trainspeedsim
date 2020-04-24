@@ -70,7 +70,11 @@ class MultiDict:
                     else:
                         diclist[val] = [key]
 
-        return str(diclist)
+        out = str(diclist)
+        out = out.replace('[', '(')
+        out = out.replace(']', ',)')
+
+        return out
 
     def __setitem__(self, key, value):
         if key in self._layer1:
@@ -339,6 +343,13 @@ if __name__ == "__main__":
 
     print(md)
 
+    md["k3a"] = "v3"
+
+    print(md)
+
+    md["k1b"] = "v4"
+
+    print(md)
     #sim = Simulation("sprinter_maxspeeds4.csv", 1.25, 528)
 
     #sim.run()
