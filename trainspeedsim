@@ -1,5 +1,45 @@
 #! /usr/bin/python3
 
+class MultiDict:
+    def __init__(self, d={}):
+        self._layer1 = {}
+        self._layer2 = {}
+        # Expects input in the form {(k1a, k1b): v1, (k2a): v2} (a dictionary
+        # of tuples-to-values)
+        # For that matter a dict of lists-to-values works too
+        # The basic idea is that it maps all members of a given key to the 
+        # first element of that key, which is used as the key to the second
+        # mapping which actually contains the values.
+        # In general, if a key element is repeated, the old key element is 
+        # spun-off into its own mapping.
+        # For example: {(k1a, k1b): v1, (k1b): v2} would create self._layer1 
+        # and _layer2 as follows:
+        #  1. Key is (k1a, k1b). Value is v1.
+        #     self._layer1 = {k1a: k1a, k1b: k1a}
+        #     self._layer2 = {k1a: v1}
+        #  2. Key is (k1b). Value is v2.
+        #     self._layer1 = {k1a: k1a, k1b: k1b}
+        #     self._layer2 = {k1a: v1, k1b: v2}
+        # If k1a is repeated, the situation is more complicated.
+        # Example: {(k1a, k1b): v1, (k1a): v2}
+        #  1. Key is (k1a, k1b). Value is v1.
+        #     self._layer1 = {k1a: k1a, k1b: k1a}
+        #     self._layer2 = {k1a: v1}
+        #  2. Key is (k1a). Value is v2.
+        #     self._layer1 = {k1a: k1a, k1b: k1a} ?
+        #  This isn't a very good plan.
+        # For the situation of {(k1a, k1b): v1, (k1a): v2}, (a repeated first 
+        # key element), k1b
+        for k in d:
+            for i in range(len(k)):
+                subkey = k[i]
+                if i==0:
+                    # become the "root node" of this key-set
+                    rootkey = subkey
+                self._layer1[subkey] = rootkey
+            self._layer2[rootkey] = d[k]
+                
+            
 class TrackSeg:
     def __init__(self, index, start, end, speed):
         assert index >= 0 and type(index) is int
@@ -187,6 +227,14 @@ class Train:
                 self._finished_seg = True
         return self._finished_seg
 
+#class Config:
+#    def __init__(self, argv):
+#        self._parse(argv)
+#    
+#    def _parse(argv):
+#        
+#        for arg in argv[1:]:
+        
 class Simulation:
     from collections import namedtuple
     PosSpeed = namedtuple("PosSpeed", ["pos", "speed"])
