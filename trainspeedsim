@@ -70,9 +70,11 @@ class MultiDict:
                     else:
                         diclist[val] = [key]
 
-        out = str(diclist)
-        out = out.replace('[', '(')
-        out = out.replace(']', ',)')
+        out = "{"
+        for val in diclist:
+            out = out + str(tuple(diclist[val]))
+            out = out + ": " + val + ", "
+        out = out + "}"
 
         return out
 
