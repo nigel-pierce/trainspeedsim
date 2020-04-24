@@ -353,7 +353,7 @@ if __name__ == "__main__":
 
     print(md)
 
-    md["k1b"] = "v4"
+    md["k1b"] = 4
 
     print(md)
     #sim = Simulation("sprinter_maxspeeds4.csv", 1.25, 528)
