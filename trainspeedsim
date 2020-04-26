@@ -293,8 +293,13 @@ class ArgvError(Exception):
     pass
 
 class Config:
+    class FlagDesc:
+        def __init__(self, val, needs_val=True):
+            self.val = val
+            self.needs_val = needs_val
+
     def __init__(self, argv):
-        self._flagsdict = MultiDict({("-u", "--units"): None})
+        self._flagsdict = MultiDict({("-u", "--units"): self.FlagDesc(None)})
         self._infile = None
         self._parse(argv)
         self._validate_args()
@@ -307,13 +312,16 @@ class Config:
         for arg in argv[1:]:
             if arg[0] == "-" and not isflagval: # it's a flag
                 if arg in self._flagsdict:
-                    flag = arg
-                    isflagval = True # next argv entry must be a value
+                    if self._flagsdict[arg].needs_val:
+                        flag = arg
+                        isflagval = True # next argv entry must be a value
+                    else:
+                        self._flagsdict[arg].val = True
                 else:
                     raise KeyError("No such flag")
             elif isflagval:
-                if self._flagsdict[flag] == None:
-                    self._flagsdict[flag] = arg
+                if self._flagsdict[flag].val == None:
+                    self._flagsdict[flag].val = arg
                     isflagval = False
                 else:
                     raise ArgvError("Cannot define flag multiple times")
