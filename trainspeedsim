@@ -302,7 +302,14 @@ class Config:
         self._flagsdict = MultiDict({("-u", "--units"): self.FlagDesc(None)})
         self._flagsdict["-b"] = self.FlagDesc(None, False)
         self._flagsdict.join("--boolean", "-b")
-        self._infile = None
+        self._flagsdict["-h"] = self.FlagDesc(None, False)
+        self._flagsdict.join("--help", "-h")
+        
+        # declare what we're configuring (just to be clear)
+        self.mode = None
+        self.infile = None
+        self.units = None
+
         self._parse(argv)
         self._validate_args()
     
@@ -328,15 +335,27 @@ class Config:
                 else:
                     raise ArgvError("Cannot define flag multiple times")
             else: # must be by itself (so probably input filename)
-                if self._infile == None:
-                    self._infile = arg
+                if self.infile == None:
+                    self.infile = arg
                 else:
                     raise ArgvError("Cannot have multiple input files")
         
     def _validate_args(self):
         # make sure arguments are logical and consistent etc.
-        if self._infile == None:
-            raise ArgvError("Must specify input file")
+        if self._flagsdict["-h"].val == True:
+            self.mode = "help"
+        else:
+            # default configuration or something
+            self.mode = "sim"
+
+        if self.mode == "sim":
+            if self._flagsdict["-u"].val in [None, "imperial"]:
+                self.units == "imperial"
+            if self.infile == None:
+                raise ArgvError("Must specify input file")
+
+        if self.mode == "help":
+            pass
         
 class Simulation:
     from collections import namedtuple
