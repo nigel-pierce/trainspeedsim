@@ -91,6 +91,9 @@ class MultiDict:
         else:
             raise KeyError()
 
+    def __contains__(self, key):
+        return key in self._layer1
+
     #def
     # TODO do __delitem__ and __keys__ and stuff later
 
@@ -285,13 +288,45 @@ class Train:
                 self._finished_seg = True
         return self._finished_seg
 
-#class Config:
-#    def __init__(self, argv):
-#        self._parse(argv)
-#    
-#    def _parse(argv):
-#        
-#        for arg in argv[1:]:
+class ArgvError(Exception):
+    """ An error having to do with the command-line arguments """
+    pass
+
+class Config:
+    def __init__(self, argv):
+        self._flagsdict = MultiDict({("-u", "--units"): None})
+        self._infile = None
+        self._parse(argv)
+        self._validate_args()
+    
+    def _parse(self, argv):
+        # input filename is just by itself, all other args are -<FLAG> val
+        assert len(argv) > 1
+        #for arg in argv[1:]:
+        isflagval = False
+        for arg in argv[1:]:
+            if arg[0] == "-" and not isflagval: # it's a flag
+                if arg in self._flagsdict:
+                    flag = arg
+                    isflagval = True # next argv entry must be a value
+                else:
+                    raise KeyError("No such flag")
+            elif isflagval:
+                if self._flagsdict[flag] == None:
+                    self._flagsdict[flag] = arg
+                    isflagval = False
+                else:
+                    raise ArgvError("Cannot define flag multiple times")
+            else: # must be by itself (so probably input filename)
+                if self._infile == None:
+                    self._infile = arg
+                else:
+                    raise ArgvError("Cannot have multiple input files")
+        
+    def _validate_args(self):
+        # make sure arguments are logical and consistent etc.
+        if self._infile == None:
+            raise ArgvError("Must specify input file")
         
 class Simulation:
     from collections import namedtuple
@@ -357,6 +392,8 @@ if __name__ == "__main__":
     md2 = MultiDict(eval(repr(md)))
     print(md2)
 
+    import sys
+    conf = Config(sys.argv)
     #sim = Simulation("sprinter_maxspeeds4.csv", 1.25, 528)
 
     #sim.run()
