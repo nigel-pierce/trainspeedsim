@@ -300,6 +300,8 @@ class Config:
 
     def __init__(self, argv):
         self._flagsdict = MultiDict({("-u", "--units"): self.FlagDesc(None)})
+        self._flagsdict["-b"] = self.FlagDesc(None, False)
+        self._flagsdict.join("--boolean", "-b")
         self._infile = None
         self._parse(argv)
         self._validate_args()
