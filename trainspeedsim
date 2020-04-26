@@ -352,6 +352,11 @@ if __name__ == "__main__":
     md["k1b"] = 4
 
     print(md)
+
+    # test if repr does the thing
+    md2 = MultiDict(eval(repr(md)))
+    print(md2)
+
     #sim = Simulation("sprinter_maxspeeds4.csv", 1.25, 528)
 
     #sim.run()
