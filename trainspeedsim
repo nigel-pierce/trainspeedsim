@@ -356,7 +356,12 @@ class Config:
 
         if self.mode == "help":
             pass
-        
+       
+    def gen_help(self):
+        # generate this automagically from self._flagsdict later
+        return  "trainspeedsim [-h|--help | [-u|--units UNIT] INPUT_FILE\n" + \
+                "  -u|--units: imperial|metric"
+
 class Simulation:
     from collections import namedtuple
     PosSpeed = namedtuple("PosSpeed", ["pos", "speed"])
@@ -423,8 +428,10 @@ if __name__ == "__main__":
 
     import sys
     conf = Config(sys.argv)
-    #sim = Simulation("sprinter_maxspeeds4.csv", 1.25, 528)
 
-    #sim.run()
-
-    #sim.output()
+    if conf.mode == "sim":
+        sim = Simulation(conf.infile, 1.25, 528)
+        sim.run()
+        sim.output()
+    elif conf.mode == "help":
+        print(conf.gen_help())
