@@ -430,7 +430,11 @@ if __name__ == "__main__":
     conf = Config(sys.argv)
 
     if conf.mode == "sim":
-        sim = Simulation(conf.infile, 1.25, 528)
+        try:
+            sim = Simulation(conf.infile, 1.25, 528)
+        except FileNotFoundError as e:
+            sys.stderr.write(str(e)+"\n")
+            exit()
         sim.run()
         sim.output()
     elif conf.mode == "help":
