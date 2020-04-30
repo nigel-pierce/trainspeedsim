@@ -485,3 +485,7 @@ if __name__ == "__main__":
         sim.output()
     elif conf.mode == "help":
         print(conf.gen_help())
+
+    wrong = HasUnit(1, "f")
+    wrong.to_bigger_unit()
+    wrong.to_smaller_unit()
