@@ -137,7 +137,7 @@ class Pos:
         return self._val
     
     def to_bigger_unit(self):
-        assert self._unit in ("f", "m")
+        assert self._unit in self._bigger # keys are the small units
         return Pos(self._val * self._conv[(self._unit, self._bigger[self._unit])],\
             self._bigger[self._unit])
 
