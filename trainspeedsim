@@ -102,15 +102,25 @@ class MultiDict:
         # TODO do something if a key group no longer has members
             
 class HasUnit: # virtual/interface-ish
+    # Subclasses will define the values, units, and their conversions
+
     def __init__(self, val, unit):
         pass
 
+    def val(self):
+        return self._val
+    
     def to_bigger_unit(self):
-        raise AttributeError("I'm pure virtual, baby")
+        assert self._unit in self._bigger # keys are the small units
+        return Pos(self._val * self._conv[(self._unit, self._bigger[self._unit])],\
+            self._bigger[self._unit])
 
     def to_smaller_unit(self):
-        raise AttributeError("Don't call me")
-
+        assert self._unit in self._smaller # keys are the big units
+        k = (self._unit, self._smaller[self._unit])
+        smaller_unit_val = self._val * self._conv[k]
+        return Pos(smaller_unit_val, self._smaller[self._unit])
+        
 class Pos:
     # conversions
     _conv = {               \
@@ -132,21 +142,9 @@ class Pos:
         assert unit in set("f","mi","m","km")
         self._val = val
         self._unit = unit
-    
-    def val(self):
-        return self._val
-    
-    def to_bigger_unit(self):
-        assert self._unit in self._bigger # keys are the small units
-        return Pos(self._val * self._conv[(self._unit, self._bigger[self._unit])],\
-            self._bigger[self._unit])
 
-    def to_smaller_unit(self):
-        assert self._unit in self._smaller # keys are the big units
-        k = (self._unit, self._smaller[self._unit])
-        smaller_unit_val = self._val * self._conv[k]
-        return Pos(smaller_unit_val, self._smaller[self._unit])
-        
+
+    
 class TrackSeg:
     def __init__(self, index, start, end, speed):
         assert index >= 0 and type(index) is int
