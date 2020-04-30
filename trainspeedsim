@@ -101,6 +101,52 @@ class MultiDict:
         self._layer1[key_wanting_to_join] = self._layer1[key_dest]
         # TODO do something if a key group no longer has members
             
+class HasUnit: # virtual/interface-ish
+    def __init__(self, val, unit):
+        pass
+
+    def to_bigger_unit(self):
+        raise AttributeError("I'm pure virtual, baby")
+
+    def to_smaller_unit(self):
+        raise AttributeError("Don't call me")
+
+class Pos:
+    # conversions
+    _conv = {               \
+        ("f","mi"): 1/5280, \
+        ("mi","f"): 5280,   \
+        ("m","km"): 1/1000, \
+        ("km","m"): 1000    \
+    }
+    _bigger = {     \
+        "f": "mi",  \
+        "m": "km"   \
+    }
+    _smaller = {    \
+        "mi": "f",  \
+        "km": "m",  \
+    }
+
+    def __init__(self, val, unit):
+        assert unit in set("f","mi","m","km")
+        self._val = val
+        self._unit = unit
+    
+    def val(self):
+        return self._val
+    
+    def to_bigger_unit(self):
+        assert self._unit in ("f", "m")
+        return Pos(self._val * self._conv[(self._unit, self._bigger[self._unit])],\
+            self._bigger[self._unit])
+
+    def to_smaller_unit(self):
+        assert self._unit in self._smaller # keys are the big units
+        k = (self._unit, self._smaller[self._unit])
+        smaller_unit_val = self._val * self._conv[k]
+        return Pos(smaller_unit_val, self._smaller[self._unit])
+        
 class TrackSeg:
     def __init__(self, index, start, end, speed):
         assert index >= 0 and type(index) is int
