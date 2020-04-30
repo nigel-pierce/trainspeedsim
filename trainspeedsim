@@ -499,3 +499,4 @@ if __name__ == "__main__":
     half_mile = Pos(0.5, "mi")
     half_mile_in_feet = half_mile.to_smaller_unit()
     print(half_mile, " ", half_mile_in_feet)
+    half_mile.to_bigger_unit() # expect error
