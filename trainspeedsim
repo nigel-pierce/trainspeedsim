@@ -154,14 +154,17 @@ class TrackSeg:
         assert start <= end
         assert speed >= 0
         self._index = index
-        self._start = int(start)
-        self._end   = int(end)
+        self._start = start
+        self._end   = end
         self._speed = speed
     
     def __str__(self):
-        return "id: {}, {} mi - {} mi @ {:.1f} mph".format(self._index, self._start/5280, self._end/5280, self._speed*3600/5280)
+        # want units to be in miles/km ("big" units)
+        # if self._start TODO
+        return "id: {}, {} - {} @ {:.1f} mph".format(self._index, self._start.to_bigger(), self._end.to_bigger(), self._speed*3600/5280)
     
     def __repr__(self):
+        # TODO update this for HasUnits
         return "TrackSeg(index={}, start={}, end={}, speed={})".format(self._index, self._start, self._end, self._speed)
     
     def get_index(self):
@@ -181,11 +184,11 @@ class TrackSeg:
     
 class Track:
     from collections import namedtuple
-    MaxSpeed = namedtuple("MaxSpeed", ["milepost", "speed"])
+    RawMaxSpeed = namedtuple("MaxSpeed", ["milepost", "speed"])
 
-    def __init__(self, filename):
+    def __init__(self, filename, units):
         # load the file into TrackSegs into
-        self._track = self._load_maxspeeds(filename)
+        self._track = self._load_maxspeeds(filename, units)
         # and throw if anything goes wrong
         assert len(self._track) > 0, "there must be at least one track segment"
 
@@ -209,17 +212,28 @@ class Track:
 
         return self._track[index + d]
 
-    def _load_maxspeeds(self, filename):
+    def _load_maxspeeds(self, filename, units):
+        assert units in ["imperial", "metric"]
         import csv
-        raw_maxspeeds = [maxspeed for maxspeed in map (self.MaxSpeed._make, csv.reader(open(filename, "r"), delimiter='	', quoting=csv.QUOTE_NONNUMERIC))]
+        raw_maxspeeds = [maxspeed for maxspeed in map (self.RawMaxSpeed._make, csv.reader(open(filename, "r"), delimiter='	', quoting=csv.QUOTE_NONNUMERIC))]
         
+        if units == "imperial":
+            pos_unit = "ft"
+        elif units == "metric":
+            pos_unit = "m"
+        else:
+            assert False # should never get here
+
+        # assign units
+        # assumes units in file are "big units" (mi or km, mph or kph)
+        # might change that later (TODO)
         # generate segments from that
         maxspeedsegs = []
         for x in range(0, len(raw_maxspeeds)-1):
             maxguy = raw_maxspeeds[x]
-            mp1 = maxguy.milepost * 5280
+            mp1 = Pos(maxguy.milepost, pos_unit).to_smaller()
             maxguy2 = raw_maxspeeds[x+1]
-            mp2 = maxguy2.milepost * 5280
+            mp2 = Pos(maxguy2.milepost, pos_unit).to_smaller()
             #if maxguy2.speed != 0:
             seg = TrackSeg(x, mp1, mp2, maxguy.speed * 5280 / 3600)
             if (x+1 == len(raw_maxspeeds)-1):
@@ -396,7 +410,9 @@ class Config:
             self.mode = "sim"
 
         if self.mode == "sim":
+            print("-u value:", self._flagsdict["-u"].val)
             if self._flagsdict["-u"].val in [None, "imperial"]:
+                print("if that was None or imperial, should be in here")
                 self.units == "imperial"
             if self.infile == None:
                 raise ArgvError("Must specify input file")
@@ -413,11 +429,14 @@ class Simulation:
     from collections import namedtuple
     PosSpeed = namedtuple("PosSpeed", ["pos", "speed"])
 
-    def __init__(self, filename, accel, resolution):
+    def __init__(self, filename, accel, resolution, units):
         assert accel > 0
         assert resolution > 0 and type(resolution) is int
+        print(units)
+        assert units in ["imperial", "metric"] # there must be a more generic way
+        self._units = units
         self._resolution = resolution
-        self._track = Track(filename)
+        self._track = Track(filename, self._units)
         self._train = Train(self._track, accel, self._resolution)
         self._best_speeds = []
 
@@ -478,7 +497,7 @@ if __name__ == "__main__":
 
     if conf.mode == "sim":
         try:
-            sim = Simulation(conf.infile, 1.25, 528)
+            sim = Simulation(conf.infile, 1.25, 528, conf.units)
         except FileNotFoundError as e:
             sys.stderr.write(str(e)+"\n")
             exit()
