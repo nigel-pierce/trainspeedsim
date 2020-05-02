@@ -161,7 +161,7 @@ class TrackSeg:
     def __str__(self):
         # want units to be in miles/km ("big" units)
         # if self._start TODO
-        return "id: {}, {} - {} @ {:.1f} mph".format(self._index, self._start.to_bigger(), self._end.to_bigger(), self._speed*3600/5280)
+        return "id: {}, {} - {} @ {:.1f} mph".format(self._index, self._start.to_bigger_unit(), self._end.to_bigger_unit(), self._speed*3600/5280)
     
     def __repr__(self):
         # TODO update this for HasUnits
@@ -218,9 +218,9 @@ class Track:
         raw_maxspeeds = [maxspeed for maxspeed in map (self.RawMaxSpeed._make, csv.reader(open(filename, "r"), delimiter='	', quoting=csv.QUOTE_NONNUMERIC))]
         
         if units == "imperial":
-            pos_unit = "ft"
+            pos_unit = "mi"
         elif units == "metric":
-            pos_unit = "m"
+            pos_unit = "km"
         else:
             assert False # should never get here
 
@@ -231,9 +231,9 @@ class Track:
         maxspeedsegs = []
         for x in range(0, len(raw_maxspeeds)-1):
             maxguy = raw_maxspeeds[x]
-            mp1 = Pos(maxguy.milepost, pos_unit).to_smaller()
+            mp1 = Pos(maxguy.milepost, pos_unit).to_smaller_unit()
             maxguy2 = raw_maxspeeds[x+1]
-            mp2 = Pos(maxguy2.milepost, pos_unit).to_smaller()
+            mp2 = Pos(maxguy2.milepost, pos_unit).to_smaller_unit()
             #if maxguy2.speed != 0:
             seg = TrackSeg(x, mp1, mp2, maxguy.speed * 5280 / 3600)
             if (x+1 == len(raw_maxspeeds)-1):
@@ -413,7 +413,7 @@ class Config:
             print("-u value:", self._flagsdict["-u"].val)
             if self._flagsdict["-u"].val in [None, "imperial"]:
                 print("if that was None or imperial, should be in here")
-                self.units == "imperial"
+                self.units = "imperial"
             if self.infile == None:
                 raise ArgvError("Must specify input file")
 
