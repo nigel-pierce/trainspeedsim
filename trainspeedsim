@@ -503,7 +503,8 @@ class Simulation:
             
     def output(self):
         for point in self._best_speeds:
-            print("{:.1f}, {}".format(point.pos/5280, point.speed*3600/5280))
+            print("{:.1f}, {}".format(point.pos.to_bigger_unit().val(), \
+                point.speed*3600/5280))
     
     def _gen_best_speeds_dir(self, direction):
         assert direction=="+" or direction=="-"
