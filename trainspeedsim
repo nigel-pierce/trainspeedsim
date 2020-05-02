@@ -154,10 +154,17 @@ class HasUnit: # virtual/interface-ish
         return not self < other
         
     # maths
+    def __add__(self, other):
+        to_math = self._compare_to(other)
+        return Pos(self._val + to_math, self._unit)
 
     def __sub__(self, other):
         to_math = self._compare_to(other)
         return Pos(self._val - to_math, self._unit)
+
+    def __mod__(self, other):
+        to_math = self._compare_to(other)
+        return Pos(self._val % to_math, self._unit)
 
 class Pos(HasUnit):
     # conversions
