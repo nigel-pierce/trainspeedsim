@@ -123,7 +123,42 @@ class HasUnit: # virtual/interface-ish
         k = (self._unit, self._smaller[self._unit])
         smaller_unit_val = self._val * self._conv[k]
         return Pos(smaller_unit_val, self._smaller[self._unit])
+    
+    # comparison methods compatible with both HasUnits and numbers
+
+    def _compare_to(self, other):
+        if isinstance(other, HasUnit):
+            assert self._unit == other._unit
+            to_compare = other._val
+        elif isinstance(other, (int, float)):
+            to_compare = other
+        else:
+            raise TypeError("incomparable types")
+
+        return to_compare
+
+    def __eq__(self, other):
+        return self._val == self._compare_to(other)
+
+    def __lt__(self, other):
+        return self._val < self._compare_to(other)
+
+    def __le__(self, other):
+        to_compare = self._compare_to(other)
+        return self < to_compare or self == to_compare
+
+    def __gt__(self, other):
+        return not self <= other
+
+    def __ge__(self, other):
+        return not self < other
         
+    # maths
+
+    def __sub__(self, other):
+        to_math = self._compare_to(other)
+        return Pos(self._val - to_math, self._unit)
+
 class Pos(HasUnit):
     # conversions
     _conv = {               \
