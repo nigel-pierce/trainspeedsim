@@ -452,9 +452,7 @@ class Config:
             self.mode = "sim"
 
         if self.mode == "sim":
-            print("-u value:", self._flagsdict["-u"].val)
             if self._flagsdict["-u"].val in [None, "imperial"]:
-                print("if that was None or imperial, should be in here")
                 self.units = "imperial"
             if self.infile == None:
                 raise ArgvError("Must specify input file")
@@ -474,7 +472,6 @@ class Simulation:
     def __init__(self, filename, accel, resolution, units):
         assert accel > 0
         assert resolution > 0 and type(resolution) is int
-        print(units)
         assert units in ["imperial", "metric"] # there must be a more generic way
         self._units = units
         self._resolution = resolution
@@ -519,21 +516,6 @@ class Simulation:
         
 
 if __name__ == "__main__":
-    md = MultiDict({("k1a", "k1b"): "v1", ("k2a",): "v2"})
-
-    print(md)
-
-    md["k3a"] = "v3"
-
-    print(md)
-
-    md["k1b"] = 4
-
-    print(md)
-
-    # test if repr does the thing
-    md2 = MultiDict(eval(repr(md)))
-    print(md2)
 
     import sys
     conf = Config(sys.argv)
@@ -549,16 +531,3 @@ if __name__ == "__main__":
     elif conf.mode == "help":
         print(conf.gen_help())
 
-    foot = Pos(1, "f")
-    foot_in_miles = foot.to_bigger_unit()
-    print(foot, " ", foot_in_miles)
-    mile = Pos(1, "mi")
-    mile_in_feet = mile.to_smaller_unit()
-    print(mile, " ", mile_in_feet)
-    two640_feet = Pos(2640, "f")
-    two640_feet_in_miles = two640_feet.to_bigger_unit()
-    print(two640_feet, " ", two640_feet_in_miles)
-    half_mile = Pos(0.5, "mi")
-    half_mile_in_feet = half_mile.to_smaller_unit()
-    print(half_mile, " ", half_mile_in_feet)
-    half_mile.to_bigger_unit() # expect error
