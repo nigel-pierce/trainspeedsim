@@ -113,16 +113,19 @@ class HasUnit: # virtual/interface-ish
     def val(self):
         return self._val
     
+    def unit(self):
+        return self._unit
+
     def to_bigger_unit(self):
         assert self._unit in self._bigger # keys are the small units
-        return Pos(self._val * self._conv[(self._unit, self._bigger[self._unit])],\
-            self._bigger[self._unit])
+        return type(self)(self._val * self._conv[(self._unit, \
+            self._bigger[self._unit])], self._bigger[self._unit])
 
     def to_smaller_unit(self):
         assert self._unit in self._smaller # keys are the big units
         k = (self._unit, self._smaller[self._unit])
         smaller_unit_val = self._val * self._conv[k]
-        return Pos(smaller_unit_val, self._smaller[self._unit])
+        return type(self)(smaller_unit_val, self._smaller[self._unit])
     
     # comparison methods compatible with both HasUnits and numbers
 
@@ -188,7 +191,28 @@ class Pos(HasUnit):
         self._val = val
         self._unit = unit
 
+class Speed(HasUnit):
+    _conv = {                       \
+        ("f/s","mi/h"): 3600/5280,  \
+        ("mi/h","f/s"): 5280/3600,  \
+        ("m/s","km/h"): 3600/1000,  \
+        ("km/h","m/s"): 1000/3600   \
+    }
 
+    _bigger = {         \
+        "f/s": "mi/h",  \
+        "m/s": "km/h"   \
+    }
+
+    _smaller = {        \
+        "mi/h": "f/s",  \
+        "km/h": "m/s"   \
+    }
+
+    def __init__(self, val, unit):
+        assert unit in ["f/s","mi/h","m/s","km/h"]
+        self._val = val
+        self._unit = unit
     
 class TrackSeg:
     def __init__(self, index, start, end, speed):
@@ -203,7 +227,7 @@ class TrackSeg:
     def __str__(self):
         # want units to be in miles/km ("big" units)
         # if self._start TODO
-        return "id: {}, {} - {} @ {:.1f} mph".format(self._index, self._start.to_bigger_unit(), self._end.to_bigger_unit(), self._speed*3600/5280)
+        return "id: {}, {} - {} @ {:.1f} mph".format(self._index, self._start.to_bigger_unit(), self._end.to_bigger_unit(), self._speed.to_bigger_unit())
     
     def __repr__(self):
         # TODO update this for HasUnits
@@ -261,8 +285,10 @@ class Track:
         
         if units == "imperial":
             pos_unit = "mi"
+            speed_unit = "mi/h"
         elif units == "metric":
             pos_unit = "km"
+            speed_unit = "km/h"
         else:
             assert False # should never get here
 
@@ -277,9 +303,11 @@ class Track:
             maxguy2 = raw_maxspeeds[x+1]
             mp2 = Pos(maxguy2.milepost, pos_unit).to_smaller_unit()
             #if maxguy2.speed != 0:
-            seg = TrackSeg(x, mp1, mp2, maxguy.speed * 5280 / 3600)
+            speed1 = Speed(maxguy.speed, speed_unit).to_smaller_unit()
+            seg = TrackSeg(x, mp1, mp2, speed1)
             if (x+1 == len(raw_maxspeeds)-1):
-                seg = TrackSeg(x, mp1, mp2, maxguy2.speed * 5280/3600)
+                speed2 = Speed(maxguy2.speed, speed_unit).to_smaller_unit()
+                seg = TrackSeg(x, mp1, mp2, speed2)
             maxspeedsegs.append(seg)
 
         return maxspeedsegs
@@ -292,12 +320,14 @@ class Train:
         self._acceleration = acceleration
         self._resolution = resolution
         # then the derived attributes and defaults
-        self._speed = 0
         self._seg = self._track.get_first_seg()
+        self._speed = self._seg.get_speed() # first segment better be 0 speed
+        assert self._speed == 0 # oh I can make sure of that
         self._pos = self._seg.get_start()
         self._dir = "+"
         self._finished_seg = False
 
+    # TODO speed as Speed
     def __str__(self):
         return ("pos: {:.1f} mi, speed {:.2f} mph, dir: {}, seg: ({}), accel: {}, "+ \
             "res: {}, finished {}, track defined: {}").format(self._pos/5280, self._speed*3600/5280, self._dir, self._seg, self._acceleration, self._resolution, self._finished_seg, self._track is not None)
@@ -354,6 +384,8 @@ class Train:
             if (self._seg.length() != 0):
                 self._finished_seg = self._travel_non0_seg()
             else:
+                print("seg speed (expect units):",self._seg.get_speed(), \
+                    "self speed (expect units):", self._speed)
                 self._speed = min(self._seg.get_speed(), self._speed)
                 # well I guess we're instantly finished with a 0-length seg
                 self._finished_seg = True
@@ -377,7 +409,10 @@ class Train:
         # accelerate() over one resolution of distance? I didn't think 
         # this far ahead.
         segspeed = self._seg.get_speed()
-        self._speed = min(segspeed, self._accelerate(segspeed, self._acceleration, self._speed, self._resolution))
+        acc_speed = Speed(self._accelerate(segspeed.val(), self._acceleration, \
+            self._speed.val(), self._resolution), self._speed.unit())
+        self._speed = min(segspeed, acc_speed)
+            
 
         # always travels over seg at least *once*, even if zero-length
         assert self._dir == "+" or self._dir == "-"
@@ -501,7 +536,7 @@ class Simulation:
     def output(self):
         for point in self._best_speeds:
             print("{:.1f}, {}".format(point.pos.to_bigger_unit().val(), \
-                point.speed*3600/5280))
+                point.speed.to_bigger_unit().val()))
     
     def _gen_best_speeds_dir(self, direction):
         assert direction=="+" or direction=="-"
