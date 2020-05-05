@@ -384,11 +384,11 @@ class Train:
             if (self._seg.length() != 0):
                 self._finished_seg = self._travel_non0_seg()
             else:
-                print("seg speed (expect units):",self._seg.get_speed(), \
-                    "self speed (expect units):", self._speed)
                 self._speed = min(self._seg.get_speed(), self._speed)
                 # well I guess we're instantly finished with a 0-length seg
                 self._finished_seg = True
+            print("seg speed: ",self._seg.get_speed(), \
+                "\nself speed:", self._speed, ";")
 
         return self._finished_seg
 
