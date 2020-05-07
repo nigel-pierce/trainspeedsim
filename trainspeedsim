@@ -227,7 +227,8 @@ class TrackSeg:
     def __str__(self):
         # want units to be in miles/km ("big" units)
         # if self._start TODO
-        return "id: {}, {} - {} @ {:.1f} mph".format(self._index, self._start.to_bigger_unit(), self._end.to_bigger_unit(), self._speed.to_bigger_unit())
+        return "id: {}, {} - {} @ {}".format(self._index, self._start.to_bigger_unit(), self._end.to_bigger_unit(), self._speed)
+    #.to_bigger_unit())
     
     def __repr__(self):
         # TODO update this for HasUnits
@@ -309,6 +310,7 @@ class Track:
                 speed2 = Speed(maxguy2.speed, speed_unit).to_smaller_unit()
                 seg = TrackSeg(x, mp1, mp2, speed2)
             maxspeedsegs.append(seg)
+            print("seg", x, seg)
 
         return maxspeedsegs
  
