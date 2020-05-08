@@ -537,8 +537,11 @@ class Simulation:
             
     def output(self):
         for point in self._best_speeds:
+            # round so that e.g. 49.99999999999999 displays as 50.0
+            # using HasUnit introduces rounding error, so that's compensating
+            # sort of
             print("{:.1f}, {}".format(point.pos.to_bigger_unit().val(), \
-                point.speed.to_bigger_unit().val()))
+                round(point.speed.to_bigger_unit().val(), 10)))
     
     def _gen_best_speeds_dir(self, direction):
         assert direction=="+" or direction=="-"
