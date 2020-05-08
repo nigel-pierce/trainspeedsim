@@ -101,6 +101,8 @@ class MultiDict:
         self._layer1[key_wanting_to_join] = self._layer1[key_dest]
         # TODO do something if a key group no longer has members
             
+from fractions import Fraction
+
 class HasUnit: # virtual/interface-ish
     # Subclasses will define the values, units, and their conversions
 
@@ -118,13 +120,16 @@ class HasUnit: # virtual/interface-ish
 
     def to_bigger_unit(self):
         assert self._unit in self._bigger # keys are the small units
-        return type(self)(self._val * self._conv[(self._unit, \
-            self._bigger[self._unit])], self._bigger[self._unit])
+        k = (self._unit, self._bigger[self._unit])
+        conv = self._conv[k]
+        bigger_unit_val = self._val * conv.numerator / conv.denominator
+        return type(self)(bigger_unit_val, self._bigger[self._unit])
 
     def to_smaller_unit(self):
         assert self._unit in self._smaller # keys are the big units
         k = (self._unit, self._smaller[self._unit])
-        smaller_unit_val = self._val * self._conv[k]
+        conv = self._conv[k]
+        smaller_unit_val = self._val * conv.numerator / conv.denominator
         return type(self)(smaller_unit_val, self._smaller[self._unit])
     
     # comparison methods compatible with both HasUnits and numbers
@@ -171,11 +176,11 @@ class HasUnit: # virtual/interface-ish
 
 class Pos(HasUnit):
     # conversions
-    _conv = {               \
-        ("f","mi"): 1/5280, \
-        ("mi","f"): 5280,   \
-        ("m","km"): 1/1000, \
-        ("km","m"): 1000    \
+    _conv = {                           \
+        ("f","mi"): Fraction(1, 5280),  \
+        ("mi","f"): Fraction(5280),     \
+        ("m","km"): Fraction(1, 1000),  \
+        ("km","m"): Fraction(1000)      \
     }
     _bigger = {     \
         "f": "mi",  \
@@ -192,11 +197,11 @@ class Pos(HasUnit):
         self._unit = unit
 
 class Speed(HasUnit):
-    _conv = {                       \
-        ("f/s","mi/h"): 3600/5280,  \
-        ("mi/h","f/s"): 5280/3600,  \
-        ("m/s","km/h"): 3600/1000,  \
-        ("km/h","m/s"): 1000/3600   \
+    _conv = {                               \
+        ("f/s","mi/h"): Fraction(3600,5280),\
+        ("mi/h","f/s"): Fraction(5280,3600),\
+        ("m/s","km/h"): Fraction(3600,1000),\
+        ("km/h","m/s"): Fraction(1000,3600) \
     }
 
     _bigger = {         \
@@ -540,8 +545,10 @@ class Simulation:
             # round so that e.g. 49.99999999999999 displays as 50.0
             # using HasUnit introduces rounding error, so that's compensating
             # sort of
+            # on second thought, I will use fractions.Fraction for the
+            # conversion
             print("{:.1f}, {}".format(point.pos.to_bigger_unit().val(), \
-                round(point.speed.to_bigger_unit().val(), 10)))
+                point.speed.to_bigger_unit().val(), 10))
     
     def _gen_best_speeds_dir(self, direction):
         assert direction=="+" or direction=="-"
