@@ -315,7 +315,6 @@ class Track:
                 speed2 = Speed(maxguy2.speed, speed_unit).to_smaller_unit()
                 seg = TrackSeg(x, mp1, mp2, speed2)
             maxspeedsegs.append(seg)
-            print("seg", x, seg)
 
         return maxspeedsegs
  
@@ -394,8 +393,6 @@ class Train:
                 self._speed = min(self._seg.get_speed(), self._speed)
                 # well I guess we're instantly finished with a 0-length seg
                 self._finished_seg = True
-            print("seg speed: ",self._seg.get_speed(), \
-                "\nself speed:", self._speed, ";")
 
         return self._finished_seg
 
@@ -548,7 +545,7 @@ class Simulation:
             # on second thought, I will use fractions.Fraction for the
             # conversion
             print("{:.1f}, {}".format(point.pos.to_bigger_unit().val(), \
-                point.speed.to_bigger_unit().val(), 10))
+                point.speed.to_bigger_unit().val()))
     
     def _gen_best_speeds_dir(self, direction):
         assert direction=="+" or direction=="-"
