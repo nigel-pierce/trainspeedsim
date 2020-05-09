@@ -504,8 +504,10 @@ class Config:
        
     def gen_help(self):
         # generate this automagically from self._flagsdict later
-        return  "trainspeedsim [-h|--help | [-u|--units UNIT] [-a|--acceleration ACCELERATION] INPUT_FILE\n" + \
-                "  -u|--units: imperial|metric"
+        return  "trainspeedsim [-h|--help | OPTIONS] INPUT_FILE\n" + \
+                "OPTIONS:\n" + \
+                "  -u|--units: imperial|metric\n" + \
+                "  -a|--acceleration: decimal value (in ft/s^2 et al.)"
 
 class Simulation:
     from collections import namedtuple
