@@ -224,6 +224,11 @@ class Speed(ConvertibleUnit):
         assert unit in ["f/s","mi/h","m/s","km/h"]
         ConvertibleUnit.__init__(self, val, unit)
     
+class Accel(HasUnit):
+    def __init__(self, val, unit):
+        assert unit in ["f/s^2", "m/s^2"]
+        HasUnit.__init__(self, val, unit)
+
 class TrackSeg:
     def __init__(self, index, start, end, speed):
         assert index >= 0 and type(index) is int
