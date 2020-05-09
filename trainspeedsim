@@ -104,10 +104,11 @@ class MultiDict:
 from fractions import Fraction
 
 class HasUnit: # virtual/interface-ish
-    # Subclasses will define the values, units, and their conversions
+    # Subclasses will define the values, and units
 
     def __init__(self, val, unit):
-        pass
+        self._val = val
+        self._unit = unit
 
     def __str__(self):
         return str(self._val)+" "+self._unit
@@ -118,20 +119,6 @@ class HasUnit: # virtual/interface-ish
     def unit(self):
         return self._unit
 
-    def to_bigger_unit(self):
-        assert self._unit in self._bigger # keys are the small units
-        k = (self._unit, self._bigger[self._unit])
-        conv = self._conv[k]
-        bigger_unit_val = self._val * conv.numerator / conv.denominator
-        return type(self)(bigger_unit_val, self._bigger[self._unit])
-
-    def to_smaller_unit(self):
-        assert self._unit in self._smaller # keys are the big units
-        k = (self._unit, self._smaller[self._unit])
-        conv = self._conv[k]
-        smaller_unit_val = self._val * conv.numerator / conv.denominator
-        return type(self)(smaller_unit_val, self._smaller[self._unit])
-    
     # comparison methods compatible with both HasUnits and numbers
 
     def _compare_to(self, other):
@@ -174,7 +161,27 @@ class HasUnit: # virtual/interface-ish
         to_math = self._compare_to(other)
         return Pos(self._val % to_math, self._unit)
 
-class Pos(HasUnit):
+class ConvertibleUnit(HasUnit):
+    # subclasses will define values, units, and their conversions
+    
+    def __init__(self, val, unit):
+        HasUnit.__init__(self, val, unit)
+
+    def to_bigger_unit(self):
+        assert self._unit in self._bigger # keys are the small units
+        k = (self._unit, self._bigger[self._unit])
+        conv = self._conv[k]
+        bigger_unit_val = self._val * conv.numerator / conv.denominator
+        return type(self)(bigger_unit_val, self._bigger[self._unit])
+
+    def to_smaller_unit(self):
+        assert self._unit in self._smaller # keys are the big units
+        k = (self._unit, self._smaller[self._unit])
+        conv = self._conv[k]
+        smaller_unit_val = self._val * conv.numerator / conv.denominator
+        return type(self)(smaller_unit_val, self._smaller[self._unit])
+    
+class Pos(ConvertibleUnit):
     # conversions
     _conv = {                           \
         ("f","mi"): Fraction(1, 5280),  \
@@ -193,10 +200,9 @@ class Pos(HasUnit):
 
     def __init__(self, val, unit):
         assert unit in ["f","mi","m","km"]
-        self._val = val
-        self._unit = unit
+        ConvertibleUnit.__init__(self, val, unit)
 
-class Speed(HasUnit):
+class Speed(ConvertibleUnit):
     _conv = {                               \
         ("f/s","mi/h"): Fraction(3600,5280),\
         ("mi/h","f/s"): Fraction(5280,3600),\
@@ -216,8 +222,7 @@ class Speed(HasUnit):
 
     def __init__(self, val, unit):
         assert unit in ["f/s","mi/h","m/s","km/h"]
-        self._val = val
-        self._unit = unit
+        ConvertibleUnit.__init__(self, val, unit)
     
 class TrackSeg:
     def __init__(self, index, start, end, speed):
@@ -498,6 +503,7 @@ class Config:
                 self.units = "imperial"
             if self.infile == None:
                 raise ArgvError("Must specify input file")
+            #self._flagsdict["-a"].val
 
         if self.mode == "help":
             pass
