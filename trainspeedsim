@@ -444,6 +444,8 @@ class Config:
         self._flagsdict = MultiDict({("-u", "--units"): self.FlagDesc(None)})
         self._flagsdict["-b"] = self.FlagDesc(None, False)
         self._flagsdict.join("--boolean", "-b")
+        self._flagsdict["-a"] = self.FlagDesc(None)
+        self._flagsdict.join("--acceleration", "-a")
         self._flagsdict["-h"] = self.FlagDesc(None, False)
         self._flagsdict.join("--help", "-h")
         
@@ -451,6 +453,7 @@ class Config:
         self.mode = None
         self.infile = None
         self.units = None
+        self.accel = None
 
         self._parse(argv)
         self._validate_args()
@@ -501,7 +504,7 @@ class Config:
        
     def gen_help(self):
         # generate this automagically from self._flagsdict later
-        return  "trainspeedsim [-h|--help | [-u|--units UNIT] INPUT_FILE\n" + \
+        return  "trainspeedsim [-h|--help | [-u|--units UNIT] [-a|--acceleration ACCELERATION] INPUT_FILE\n" + \
                 "  -u|--units: imperial|metric"
 
 class Simulation:
