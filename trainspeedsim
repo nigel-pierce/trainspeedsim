@@ -505,12 +505,14 @@ class Config:
         if self.mode == "sim":
             if self._flagsdict["-u"].val in [None, "imperial"]:
                 self.units = "imperial"
+            if self.infile == None:
+                raise ArgvError("Must specify input file")
             if self._flagsdict["-a"].val is not None:
                 accel_unit = {"imperial": "f/s^2", "metric": "m/s^2"}
                 self.accel = Accel(float(self._flagsdict["-a"].val), \
                     accel_unit[self.units])
-            if self.infile == None:
-                raise ArgvError("Must specify input file")
+            else:
+                raise ArgvError("Must specify acceleration")
 
         if self.mode == "help":
             pass
