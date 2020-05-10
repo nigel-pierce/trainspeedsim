@@ -512,7 +512,9 @@ class Config:
                 self.accel = Accel(float(self._flagsdict["-a"].val), \
                     accel_unit[self.units])
             else:
-                raise ArgvError("Must specify acceleration")
+                # default acceleration to 1.25
+                # TODO convert that to m/s^2 if units is metric
+                self.accel = Accel(1.25, "f/s^2")
 
         if self.mode == "help":
             pass
