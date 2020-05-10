@@ -406,7 +406,6 @@ class Train:
 
         return self._finished_seg
 
-    # takes all units in feet units
     def _accelerate(self, v_target, acc, v_i, d):
         assert v_target >= 0 and v_i >= 0
         assert d >= 0
@@ -423,7 +422,7 @@ class Train:
         # accelerate() over one resolution of distance? I didn't think 
         # this far ahead.
         segspeed = self._seg.get_speed()
-        acc_speed = Speed(self._accelerate(segspeed.val(), self._acceleration, \
+        acc_speed = Speed(self._accelerate(segspeed.val(), self._acceleration.val(), \
             self._speed.val(), self._resolution), self._speed.unit())
         self._speed = min(segspeed, acc_speed)
             
@@ -506,9 +505,12 @@ class Config:
         if self.mode == "sim":
             if self._flagsdict["-u"].val in [None, "imperial"]:
                 self.units = "imperial"
+            if self._flagsdict["-a"].val is not None:
+                accel_unit = {"imperial": "f/s^2", "metric": "m/s^2"}
+                self.accel = Accel(float(self._flagsdict["-a"].val), \
+                    accel_unit[self.units])
             if self.infile == None:
                 raise ArgvError("Must specify input file")
-            #self._flagsdict["-a"].val
 
         if self.mode == "help":
             pass
@@ -582,7 +584,8 @@ if __name__ == "__main__":
 
     if conf.mode == "sim":
         try:
-            sim = Simulation(conf.infile, 1.25, 528, conf.units)
+            # acceleration used to be hard-coded to 1.25 (in f/s^2)
+            sim = Simulation(conf.infile, conf.accel, 528, conf.units)
         except FileNotFoundError as e:
             sys.stderr.write(str(e)+"\n")
             exit()
