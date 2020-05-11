@@ -80,11 +80,10 @@ class MultiDict:
         return out
 
     def __setitem__(self, key, value):
-        if key in self._layer1:
-            self._layer2[self._layer1[key]] = value
-        else:
+        if key not in self._layer1:
             self._layer1[key] = key
-            self._layer2[self._layer1[key]] = value
+        key2 = self._layer1[key]
+        self._layer2[key2] = value
                 
     def __getitem__(self, key):
         if key in self._layer1:
@@ -100,6 +99,10 @@ class MultiDict:
 
     def join(self, key_wanting_to_join, key_dest):
         self._layer1[key_wanting_to_join] = self._layer1[key_dest]
+        if key_dest in self._reverse:
+            self._reverse[key_dest].append(key_wanting_to_join)
+        else:
+            self._reverse[key_dest] = [key_wanting_to_join]
         # TODO do something if a key group no longer has members
             
 from fractions import Fraction
@@ -584,18 +587,30 @@ class Simulation:
 
 if __name__ == "__main__":
 
-    import sys
-    conf = Config(sys.argv)
+    md = MultiDict({('1a','1b','1c'):1, ('2a','2b'):2})
+    print(md)
+    md.join('1d','1b')
+    print(md)
+    md['3a'] = 3
+    print(md)
+    md['2b'] = 20
+    print(md)
 
-    if conf.mode == "sim":
-        try:
-            # acceleration used to be hard-coded to 1.25 (in f/s^2)
-            sim = Simulation(conf.infile, conf.accel, 528, conf.units)
-        except FileNotFoundError as e:
-            sys.stderr.write(str(e)+"\n")
-            exit()
-        sim.run()
-        sim.output()
-    elif conf.mode == "help":
-        print(conf.gen_help())
+    # commented out for testing of MultiDict
 
+    #import sys
+    #conf = Config(sys.argv)
+
+    #if conf.mode == "sim":
+    #    try:
+    #        # acceleration used to be hard-coded to 1.25 (in f/s^2)
+    #        sim = Simulation(conf.infile, conf.accel, 528, conf.units)
+    #    except FileNotFoundError as e:
+    #        sys.stderr.write(str(e)+"\n")
+    #        exit()
+    #    sim.run()
+    #    sim.output()
+    #elif conf.mode == "help":
+    #    print(conf.gen_help())
+
+    
