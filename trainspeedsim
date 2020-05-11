@@ -2,8 +2,9 @@
 
 class MultiDict:
     def __init__(self, d={}):
-        self._layer1 = {}
-        self._layer2 = {}
+        self._layer1 = {} # outer keys to "canonical" keys
+        self._layer2 = {} # "canonical" keys to values
+        self._reverse = {} # keys are the "canonical" ones
         # Expects input in the form {(k1a, k1b): v1, (k2a): v2} (a dictionary
         # of tuples-to-values)
         # For that matter a dict of lists-to-values works too
