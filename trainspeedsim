@@ -99,11 +99,15 @@ class MultiDict:
 
     def join(self, key_wanting_to_join, key_dest):
         self._layer1[key_wanting_to_join] = self._layer1[key_dest]
-        if key_dest in self._reverse:
-            self._reverse[key_dest].append(key_wanting_to_join)
-        else:
-            self._reverse[key_dest] = [key_wanting_to_join]
+        self._add_to_reverse(key_wanting_to_join, key_dest)
         # TODO do something if a key group no longer has members
+
+    def _add_to_reverse(self, to_add, canonical_key):
+        if canonical_key in self._reverse:
+            self._reverse[canonical_key].append(to_add)
+        else:
+            self._reverse[canonical_key] = [to_add]
+        
             
 from fractions import Fraction
 
