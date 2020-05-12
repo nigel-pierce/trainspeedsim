@@ -84,6 +84,8 @@ class MultiDict:
             self._layer1[key] = key
         key2 = self._layer1[key]
         self._layer2[key2] = value
+        
+        self._add_to_reverse(key, key2)
                 
     def __getitem__(self, key):
         if key in self._layer1:
