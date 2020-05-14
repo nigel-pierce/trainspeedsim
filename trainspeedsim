@@ -607,31 +607,29 @@ class Simulation:
 
 if __name__ == "__main__":
 
-    md = MultiDict({('1a','1b','1c'):1, ('2a','2b'):2})
-    print(md,"\n--")
-    md.join('1d','1b')
-    print(md,"\n--")
-    md['3a'] = 3
-    print(md,"\n--")
-    md['2b'] = 20
-    print(md)
-    md.join('4b','4a')
+    #md = MultiDict({('1a','1b','1c'):1, ('2a','2b'):2})
+    #print(md,"\n--")
+    #md.join('1d','1b')
+    #print(md,"\n--")
+    #md['3a'] = 3
+    #print(md,"\n--")
+    #md['2b'] = 20
+    #print(md)
+    #md.join('4b','4a')
 
-    # commented out for testing of MultiDict
+    import sys
+    conf = Config(sys.argv)
 
-    #import sys
-    #conf = Config(sys.argv)
-
-    #if conf.mode == "sim":
-    #    try:
-    #        # acceleration used to be hard-coded to 1.25 (in f/s^2)
-    #        sim = Simulation(conf.infile, conf.accel, 528, conf.units)
-    #    except FileNotFoundError as e:
-    #        sys.stderr.write(str(e)+"\n")
-    #        exit()
-    #    sim.run()
-    #    sim.output()
-    #elif conf.mode == "help":
-    #    print(conf.gen_help())
+    if conf.mode == "sim":
+        try:
+            # acceleration used to be hard-coded to 1.25 (in f/s^2)
+            sim = Simulation(conf.infile, conf.accel, 528, conf.units)
+        except FileNotFoundError as e:
+            sys.stderr.write(str(e)+"\n")
+            exit()
+        sim.run()
+        sim.output()
+    elif conf.mode == "help":
+        print(conf.gen_help())
 
     
