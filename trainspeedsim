@@ -87,10 +87,10 @@ class MultiDict:
     def __setitem__(self, key, value):
         if key not in self._layer1:
             self._layer1[key] = key
+            self._add_to_reverse(key, key)
         key2 = self._layer1[key]
         self._layer2[key2] = value
         
-        self._add_to_reverse(key, key2)
                 
     def __getitem__(self, key):
         if key in self._layer1:
@@ -109,12 +109,11 @@ class MultiDict:
         self._add_to_reverse(key_wanting_to_join, key_dest)
         # TODO do something if a key group no longer has members
 
-    def _add_to_reverse(self, to_add, dest_key):
-        try:
-            assert dest_key in self._layer1
-        except AssertionError:
-            raise KeyError("Destination key "+str(dest_key)+" doesn't exist")
-        canonical_key = self._layer1[dest_key]
+    # DON'T CALL if to_add already is in val list of _reverse
+    # (otherwise it puts duplicate entry in that list)
+    # The only way to avoid that purely in _add_to_reverse would be to search
+    # all of _reverse's value lists for to_add, which would take O(N*M) time.
+    def _add_to_reverse(self, to_add, canonical_key):
         if canonical_key in self._reverse:
             self._reverse[canonical_key].append(to_add)
         else:
