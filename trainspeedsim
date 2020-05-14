@@ -71,12 +71,17 @@ class MultiDict:
                     else:
                         diclist[val] = [key]
 
-        out = "{"
+        out = "old code: {"
         for val in diclist:
             out = out + str(tuple(diclist[val]))
             out = out + ": " + repr(val) + ", "
-        out = out + "}"
+        out = out + "}\nnew code: {"
 
+        for canonical_key, val in self._layer2.items():
+            out = out + str(tuple(self._reverse[canonical_key]))
+            out = out + ": " + repr(val) + ", "
+        out = out + "}"
+        
         return out
 
     def __setitem__(self, key, value):
@@ -594,11 +599,11 @@ class Simulation:
 if __name__ == "__main__":
 
     md = MultiDict({('1a','1b','1c'):1, ('2a','2b'):2})
-    print(md)
+    print(md,"\n--")
     md.join('1d','1b')
-    print(md)
+    print(md,"\n--")
     md['3a'] = 3
-    print(md)
+    print(md,"\n--")
     md['2b'] = 20
     print(md)
 
