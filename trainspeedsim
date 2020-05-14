@@ -105,8 +105,14 @@ class MultiDict:
     # TODO do __delitem__ and __keys__ and stuff later
 
     def join(self, key_wanting_to_join, key_dest):
-        self._layer1[key_wanting_to_join] = self._layer1[key_dest]
-        self._add_to_reverse(key_wanting_to_join, key_dest)
+        # can't move key from one group to another or otherwise join groups
+        # (might change that later)
+        # also essential 
+        assert key_wanting_to_join not in self._layer1
+
+        canonical_key = self._layer1[key_dest]
+        self._layer1[key_wanting_to_join] = canonical_key
+        self._add_to_reverse(key_wanting_to_join, canonical_key)
         # TODO do something if a key group no longer has members
 
     # DON'T CALL if to_add already is in val list of _reverse
