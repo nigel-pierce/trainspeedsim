@@ -109,7 +109,12 @@ class MultiDict:
         self._add_to_reverse(key_wanting_to_join, key_dest)
         # TODO do something if a key group no longer has members
 
-    def _add_to_reverse(self, to_add, canonical_key):
+    def _add_to_reverse(self, to_add, dest_key):
+        try:
+            assert dest_key in self._layer1
+        except AssertionError:
+            raise KeyError("Destination key "+str(dest_key)+" doesn't exist")
+        canonical_key = self._layer1[dest_key]
         if canonical_key in self._reverse:
             self._reverse[canonical_key].append(to_add)
         else:
