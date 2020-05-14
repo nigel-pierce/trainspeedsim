@@ -616,6 +616,7 @@ if __name__ == "__main__":
     print(md,"\n--")
     md['2b'] = 20
     print(md)
+    md.join('4b','4a')
 
     # commented out for testing of MultiDict
 
