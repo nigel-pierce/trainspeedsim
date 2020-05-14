@@ -18,6 +18,7 @@ class MultiDict:
         #  2. multidict.join(k1, k2) joins k1 to the key group containing k2.
         #     That is all it does; even if k1 originally belongs to (k1, k3),
         #     k3 is unaffected besides k1 being removed from its group.
+        #     ACTUALLY I changed my mind. k1 has to be a new key.
         # Construction of this object will be considered like so:
         #  1. A key tuple-or-list of the form (k1a, k1b, ...): v1 will be 
         #     treated as:
@@ -56,26 +57,7 @@ class MultiDict:
                     self.join(subkey, rootkey)
 
     def __repr__(self):
-        # TODO iterator for MultiDict
-        # YIKES I have to build these darn things in reverse
-        # I mean seriously if the number of keys is N and the number of values/
-        # groups is M this is going to take O(N*M) time.
-        diclist = {}
-        for rootkey in self._layer2:
-            val = self._layer2[rootkey]
-            for key in self._layer1:
-                if self._layer1[key] == rootkey:
-                    if val in diclist:
-                        diclist[val].append(key)
-                    else:
-                        diclist[val] = [key]
-
-        out = "old code: {"
-        for val in diclist:
-            out = out + str(tuple(diclist[val]))
-            out = out + ": " + repr(val) + ", "
-        out = out + "}\nnew code: {"
-
+        out = "{"
         for canonical_key, val in self._layer2.items():
             out = out + str(tuple(self._reverse[canonical_key]))
             out = out + ": " + repr(val) + ", "
