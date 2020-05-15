@@ -1,2 +1,4 @@
 *.swp
 *.[ao]
+__pycache__
+.~lock*#
