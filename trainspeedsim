@@ -231,7 +231,7 @@ class Track:
 class Train:
     def __init__(self, track, acceleration, resolution):
         assert acceleration > 0
-        assert resolution > 0 and type(resolution) is int
+        assert resolution > 0 and resolution % 1 == 0 # is inty
         self._track = track
         self._acceleration = acceleration
         self._resolution = resolution
@@ -323,7 +323,7 @@ class Train:
         # this far ahead.
         segspeed = self._seg.get_speed()
         acc_speed = Speed(self._accelerate(segspeed.val(), self._acceleration.val(), \
-            self._speed.val(), self._resolution), self._speed.unit())
+            self._speed.val(), self._resolution.val()), self._speed.unit())
         self._speed = min(segspeed, acc_speed)
             
 
@@ -363,6 +363,7 @@ class Config:
         self.infile = None
         self.units = None
         self.accel = None
+        self.res = None
 
         self._parse(argv)
         self._validate_args()
@@ -415,6 +416,8 @@ class Config:
                 # default acceleration to 1.25
                 # TODO convert that to m/s^2 if units is metric
                 self.accel = Accel(1.25, "f/s^2")
+            self.res = Pos(528, "f") # TODO this in metric too and TODO arg
+                # for this 
 
         if self.mode == "help":
             pass
@@ -432,7 +435,7 @@ class Simulation:
 
     def __init__(self, filename, accel, resolution, units):
         assert accel > 0
-        assert resolution > 0 and type(resolution) is int
+        assert resolution > 0 and resolution % 1 == 0 # more generic than is int
         assert units in ["imperial", "metric"] # there must be a more generic way
         self._units = units
         self._resolution = resolution
@@ -489,7 +492,9 @@ if __name__ == "__main__":
     if conf.mode == "sim":
         try:
             # acceleration used to be hard-coded to 1.25 (in f/s^2)
-            sim = Simulation(conf.infile, conf.accel, 528, conf.units)
+            # resolution was hard-coded to 528 (f) as well
+            # for now let's keep it hard-coded but as a Pos instead (in Conf)
+            sim = Simulation(conf.infile, conf.accel, conf.res, conf.units)
         except FileNotFoundError as e:
             sys.stderr.write(str(e)+"\n")
             exit()
