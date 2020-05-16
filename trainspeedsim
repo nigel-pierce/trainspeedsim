@@ -355,6 +355,8 @@ class Config:
         self._flagsdict.join("--boolean", "-b")
         self._flagsdict["-a"] = self.FlagDesc(None)
         self._flagsdict.join("--acceleration", "-a")
+        self._flagsdict["-r"] = self.FlagDesc(None)
+        self._flagsdict.join("--resolution", "-r")
         self._flagsdict["-h"] = self.FlagDesc(None, False)
         self._flagsdict.join("--help", "-h")
         
@@ -416,8 +418,12 @@ class Config:
                 # default acceleration to 1.25
                 # TODO convert that to m/s^2 if units is metric
                 self.accel = Accel(1.25, "f/s^2")
-            self.res = Pos(528, "f") # TODO this in metric too and TODO arg
-                # for this 
+            if self._flagsdict["-r"].val is not None:
+                dist_unit = {"imperial": "f", "metric": "m"}
+                self.res = Pos(float(self._flagsdict["-r"].val), \
+                    dist_unit[self.units])
+            else:
+                self.res = Pos(528, "f") # TODO this in metric too
 
         if self.mode == "help":
             pass
