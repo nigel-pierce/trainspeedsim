@@ -408,24 +408,33 @@ class Config:
             self.mode = "sim"
 
         if self.mode == "sim":
-            if self._flagsdict["-u"].val in [None, "imperial"]:
-                self.units = "imperial"
+            uflag = self._flagsdict["-u"]
+            if uflag.val == None:
+                self.units = uflag.default_val
+            elif uflag.val in ["imperial", "metric"]:
+                self.units = uflag.val
+                if self.units == "metric": # TODO implement metric
+                    raise NotImplementedError('Units "metric" not yet implemented')
+            else:
+                raise ArgvError('Value of -u flag must be "imperial" or "metric"')
+
             if self.infile == None:
                 raise ArgvError("Must specify input file")
-            if self._flagsdict["-a"].val is not None:
+
+            aflag = self._flagsdict["-a"]
+            if aflag.val is not None:
                 accel_unit = {"imperial": "f/s^2", "metric": "m/s^2"}
-                self.accel = Accel(float(self._flagsdict["-a"].val), \
-                    accel_unit[self.units])
+                self.accel = Accel(float(aflag.val), accel_unit[self.units])
             else:
-                # default acceleration to 1.25
+                self.accel = aflag.default_val
                 # TODO convert that to m/s^2 if units is metric
-                self.accel = Accel(1.25, "f/s^2")
-            if self._flagsdict["-r"].val is not None:
+
+            rflag = self._flagsdict["-r"]
+            if rflag.val is not None:
                 dist_unit = {"imperial": "f", "metric": "m"}
-                self.res = Pos(float(self._flagsdict["-r"].val), \
-                    dist_unit[self.units])
+                self.res = Pos(float(rflag.val), dist_unit[self.units])
             else:
-                self.res = Pos(528, "f") # TODO this in metric too
+                self.res = rflag.default_val # TODO this in metric too
 
         if self.mode == "help":
             pass
