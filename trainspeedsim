@@ -345,19 +345,21 @@ class ArgvError(Exception):
 
 class Config:
     class FlagDesc:
-        def __init__(self, val, needs_val=True):
-            self.val = val
+        def __init__(self, needs_val, default_val=None):
+            self.val = None
             self.needs_val = needs_val
+            self.default_val = default_val
 
     def __init__(self, argv):
-        self._flagsdict = MultiDict({("-u", "--units"): self.FlagDesc(None)})
-        self._flagsdict["-b"] = self.FlagDesc(None, False)
+        self._flagsdict = MultiDict({("-u", "--units"): self.FlagDesc(True, \
+            "imperial")})
+        self._flagsdict["-b"] = self.FlagDesc(False)
         self._flagsdict.join("--boolean", "-b")
-        self._flagsdict["-a"] = self.FlagDesc(None)
+        self._flagsdict["-a"] = self.FlagDesc(True, Accel(1.25, "f/s^2"))
         self._flagsdict.join("--acceleration", "-a")
-        self._flagsdict["-r"] = self.FlagDesc(None)
+        self._flagsdict["-r"] = self.FlagDesc(True, Pos(528, "f"))
         self._flagsdict.join("--resolution", "-r")
-        self._flagsdict["-h"] = self.FlagDesc(None, False)
+        self._flagsdict["-h"] = self.FlagDesc(False)
         self._flagsdict.join("--help", "-h")
         
         # declare what we're configuring (just to be clear)
