@@ -245,9 +245,8 @@ class Train:
         self._dir = "+"
         self._finished_seg = False
 
-    # TODO speed as Speed
     def __str__(self):
-        return ("pos: {:.1f} mi, speed {:.2f} mph, dir: {}, seg: ({}), accel: {}, "+ \
+        return ("pos: {:.1f}, speed {:.2f}, dir: {}, seg: ({}), accel: {}, "+ \
             "res: {}, finished {}, track defined: {}").format(self._pos.to_bigger_unit(), self._speed.to_bigger_unit(), self._dir, self._seg, self._acceleration, self._resolution, self._finished_seg, self._track is not None)
 
     def get_pos(self):
