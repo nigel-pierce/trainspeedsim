@@ -244,7 +244,7 @@ class Train:
     # TODO speed as Speed
     def __str__(self):
         return ("pos: {:.1f} mi, speed {:.2f} mph, dir: {}, seg: ({}), accel: {}, "+ \
-            "res: {}, finished {}, track defined: {}").format(self._pos/5280, self._speed*3600/5280, self._dir, self._seg, self._acceleration, self._resolution, self._finished_seg, self._track is not None)
+            "res: {}, finished {}, track defined: {}").format(self._pos.to_bigger_unit(), self._speed.to_bigger_unit(), self._dir, self._seg, self._acceleration, self._resolution, self._finished_seg, self._track is not None)
 
     def get_pos(self):
         return self._pos
@@ -459,6 +459,7 @@ class Simulation:
         self._resolution = resolution
         self._track = Track(filename, self._units)
         self._train = Train(self._track, accel, self._resolution)
+        print(self._train)
         self._best_speeds = []
 
     def run(self):
