@@ -409,14 +409,17 @@ class Config:
 
         if self.mode == "sim":
             uflag = self._flagsdict["-u"]
-            if uflag.val == None:
-                self.units = uflag.default_val
-            elif uflag.val in ["imperial", "metric"]:
-                self.units = uflag.val
-                if self.units == "metric": # TODO implement metric
-                    raise NotImplementedError('Units "metric" not yet implemented')
+            if uflag.val is not None:
+                if uflag.val in ["imperial", "metric"]:
+                    self.units = uflag.val
+                    if self.units == "metric": # TODO implement metric
+                        raise NotImplementedError('Units "metric" not yet '+\
+                            'implemented')
+                else:
+                    raise ArgvError('Value of -u flag must be "imperial" or '+\
+                        '"metric"')
             else:
-                raise ArgvError('Value of -u flag must be "imperial" or "metric"')
+                self.units = uflag.default_val
 
             if self.infile == None:
                 raise ArgvError("Must specify input file")
