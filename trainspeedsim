@@ -462,7 +462,6 @@ class Simulation:
         self._resolution = resolution
         self._track = Track(filename, self._units)
         self._train = Train(self._track, accel, self._resolution)
-        print(self._train)
         self._best_speeds = []
 
     def run(self):
@@ -500,7 +499,6 @@ class Simulation:
         self._train.set_dir(direction)
         while not self._train.at_end_of_track():
             self._train.travel_seg()
-            print(self._train)
             if not self._train.at_end_of_track(): # prevents repeating last seg
                 best.append(self.PosSpeed(self._train.get_pos(), \
                     self._train.get_speed()))
