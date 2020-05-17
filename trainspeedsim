@@ -61,6 +61,10 @@ class HasUnit: # virtual/interface-ish
         to_math = self._compare_to(other)
         return Pos(self._val % to_math, self._unit)
 
+    # formatting just defers to float
+    def __format__(self, format_spec):
+        return format(self._val, format_spec) + " " + self._unit
+
 class ConvertibleUnit(HasUnit):
     # subclasses will define values, units, and their conversions
     
