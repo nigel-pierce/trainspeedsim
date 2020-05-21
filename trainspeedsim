@@ -84,6 +84,43 @@ class ConvertibleUnit(HasUnit):
         conv = self._conv[k]
         smaller_unit_val = self._val * conv.numerator / conv.denominator
         return type(self)(smaller_unit_val, self._smaller[self._unit])
+
+    # should be sufficient to convert between any of these in any direction
+    conv = {"f":  {"mi": Fraction(1,5280),  \
+                   "m":  Fraction(0.3048),  \
+                   "in": Fraction(12)     },\ # just to spice things up
+            "mi": {"f":  Fraction(5280)   },\
+            "m":  {"f":  Fraction(3.2808399) },\
+            "in": {"f":  Fraction(1, 12) } \
+           }
+
+    def convert_to(self, unit):
+        # find path from self._unit to unit
+        # the graph is stored as a dict where each key is a node and value is a 
+        # dict where each key is a node (unit) connected (convertible) to.
+        # to make it "undirected", include the reverse direction yeah.
+
+
+        unit_from = "mi"
+        unit_to = "m"
+
+        path = [unit_from]
+        visited = set(unit_from)
+        path.extend(self._path_to(unit_from, unit_to, visited)
+
+
+    def _path_to(unit_from, unit_to, visited):
+        
+        current_node = conv[unit_from]
+        path = [unit_from]
+        if unit_to not in current_node:
+            for unit in current_node:
+                if unit not in visited:
+                    return path.extend(self._path_to(unit, unit_to
+        else:
+            return [unit_to]
+            
+                
     
 class Pos(ConvertibleUnit):
     # conversions
@@ -91,7 +128,9 @@ class Pos(ConvertibleUnit):
         ("f","mi"): Fraction(1, 5280),  \
         ("mi","f"): Fraction(5280),     \
         ("m","km"): Fraction(1, 1000),  \
-        ("km","m"): Fraction(1000)      \
+        ("km","m"): Fraction(1000),     \
+        ("f","m"):  Fraction(0.3048),   \
+        ("m","f"):  Fraction(3.2808399) \
     }
     _bigger = {     \
         "f": "mi",  \
