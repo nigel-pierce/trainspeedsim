@@ -105,7 +105,24 @@ class ConvertibleUnit(HasUnit):
         unit_to = "m"
 
         path = [unit_from]
-        visited = set(unit_from)
+        visited = {} # ones we have examined all edges from and the value is 
+            # the previous node
+        # edge = {node: unit_from for node in conv[unit_from].keys()} # don't 
+            # need this
+        frontier = {unit_from: None}
+        newfrontier = set()
+        
+        while unit_to not in frontier and len(frontier) > 0:
+            newedge = {}
+            for node, prev in frontier:
+                neighbors = {n: node for n in conv[node].keys()}
+                newfrontier.update(neighbors)
+                newfrontier -= edge | visited
+                visited[node] = prev
+            frontier.update(newfrontier)
+            frontier -= visited
+        
+
         path.extend(self._path_to(unit_from, unit_to, visited)
 
 
