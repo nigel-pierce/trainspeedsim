@@ -134,15 +134,16 @@ class ConvertibleUnit(HasUnit):
             print("path:", path)
             time.sleep(1)
             nextnode = frontier[unit_to]
-            while nextnode in visited: # and visited[nextnode] != unit_from:
+            while nextnode in visited: # will append starting node's None
                 path.append(visited[nextnode])
                 print("path:", path)
                 time.sleep(1)
                 nextnode = visited[nextnode]
+            finalpath = list(reversed(path[:-1])) # removes the None
         else:
             raise KeyError("cannot convert to unit "+str(unit_to))
 
-        return path
+        return finalpath
 
     
 class Pos(ConvertibleUnit):
