@@ -143,7 +143,7 @@ class ConvertibleUnit(HasUnit):
                 nextnode = visited[nextnode]
             finalpath = list(reversed(path[:-1])) # removes the None
         else:
-            raise KeyError("cannot convert to unit "+str(unit_to))
+            raise ValueError("cannot convert to unit "+str(unit_to))
 
         return finalpath
 
