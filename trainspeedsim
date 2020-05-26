@@ -101,8 +101,8 @@ class ConvertibleUnit(HasUnit):
                 "in": {"f":  Fraction(1, 12) } \
                }
 
-        unit_from = "mi"
-        unit_to = "m"
+        unit_from = self._unit
+        unit_to = unit
 
         path = []
         visited = {} # ones we have examined all edges from and the value is 
