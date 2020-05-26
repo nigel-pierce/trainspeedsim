@@ -97,8 +97,10 @@ class ConvertibleUnit(HasUnit):
                        "m":  Fraction(0.3048),  \
                        "in": Fraction(12)     }, # just to spice things up\
                 "mi": {"f":  Fraction(5280)   },\
-                "m":  {"f":  Fraction(3.2808399) },\
-                "in": {"f":  Fraction(1, 12) } \
+                "m":  {"f":  Fraction(3.2808399), \
+                        "cm": Fraction(100) },\
+                "in": {"f":  Fraction(1, 12) }, \
+                "cm": {"m": Fraction(1, 100) }\
                }
 
         unit_from = self._unit
