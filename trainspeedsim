@@ -145,7 +145,15 @@ class ConvertibleUnit(HasUnit):
         else:
             raise ValueError("cannot convert to unit "+str(unit_to))
 
-        return finalpath
+        result = self._val
+        unit_from = finalpath[0]
+        for unit_to in finalpath[1:]:
+            convd = conv[unit_from]
+            ratio = convd[unit_to]
+            result = result * ratio.numerator / ratio.denominator
+            unit_from = unit_to
+
+        return type(self)(result, unit)
 
     
 class Pos(ConvertibleUnit):
@@ -573,9 +581,9 @@ class Simulation:
 if __name__ == "__main__":
 
     pos = Pos(1, "f") # doesn't matter while convert_to() is hard-coded
-    path = pos.convert_to("hi")
+    in_m = pos.convert_to("m")
 
-    print(path)
+    print(pos, "is" , in_m)
 
     # commented out to test ConvertibleUnit.convert_to()
 
