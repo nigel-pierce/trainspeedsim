@@ -108,6 +108,9 @@ class ConvertibleUnit(HasUnit):
         unit_from = self._unit
         unit_to = unit
 
+        if unit_to == self._unit:
+            return type(self)(self._val, self._unit)
+
         path = []
         visited = {} # ones we have examined all edges from and the value is 
             # the previous node
@@ -590,6 +593,9 @@ if __name__ == "__main__":
     mi = Pos(1, "mi")
     in_km = mi.convert_to("km")
     print(mi, "is", in_km)
+
+    in_mi = mi.convert_to("mi")
+    print(mi, "is", in_mi)
 
     # commented out to test ConvertibleUnit.convert_to()
 
