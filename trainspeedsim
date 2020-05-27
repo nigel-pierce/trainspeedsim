@@ -98,9 +98,11 @@ class ConvertibleUnit(HasUnit):
                        "in": Fraction(12)     }, # just to spice things up\
                 "mi": {"f":  Fraction(5280)   },\
                 "m":  {"f":  Fraction(3.2808399), \
-                        "cm": Fraction(100) },\
+                        "cm": Fraction(100),    \
+                        "km": Fraction(1, 1000) },  \
                 "in": {"f":  Fraction(1, 12) }, \
-                "cm": {"m": Fraction(1, 100) }\
+                "cm": {"m": Fraction(1, 100) }, \
+                "km": {"m":  Fraction(1000) }\
                }
 
         unit_from = self._unit
@@ -584,6 +586,10 @@ if __name__ == "__main__":
     in_m = pos.convert_to("m")
 
     print(pos, "is" , in_m)
+
+    mi = Pos(1, "mi")
+    in_km = mi.convert_to("km")
+    print(mi, "is", in_km)
 
     # commented out to test ConvertibleUnit.convert_to()
 
