@@ -73,17 +73,11 @@ class ConvertibleUnit(HasUnit):
 
     def to_bigger_unit(self):
         assert self._unit in self._bigger # keys are the small units
-        k = (self._unit, self._bigger[self._unit])
-        conv = self._conv[k]
-        bigger_unit_val = self._val * conv.numerator / conv.denominator
-        return type(self)(bigger_unit_val, self._bigger[self._unit])
+        return self.convert_to(self._bigger[self._unit])
 
     def to_smaller_unit(self):
         assert self._unit in self._smaller # keys are the big units
-        k = (self._unit, self._smaller[self._unit])
-        conv = self._conv[k]
-        smaller_unit_val = self._val * conv.numerator / conv.denominator
-        return type(self)(smaller_unit_val, self._smaller[self._unit])
+        return self.convert_to(self._smaller[self._unit])
 
 
     def convert_to(self, unit):
@@ -92,18 +86,6 @@ class ConvertibleUnit(HasUnit):
         # dict where each key is a node (unit) connected (convertible) to.
         # to make it "undirected", include the reverse direction yeah.
 
-        # should be sufficient to convert between any of these in any direction
-        conv = {"f":  {"mi": Fraction(1,5280),  \
-                       "m":  Fraction(0.3048),  \
-                       "in": Fraction(12)     }, # just to spice things up\
-                "mi": {"f":  Fraction(5280)   },\
-                "m":  {"f":  Fraction(3.2808399), \
-                        "cm": Fraction(100),    \
-                        "km": Fraction(1, 1000) },  \
-                "in": {"f":  Fraction(1, 12) }, \
-                "cm": {"m": Fraction(1, 100) }, \
-                "km": {"m":  Fraction(1000) }\
-               }
 
         unit_from = self._unit
         unit_to = unit
@@ -124,8 +106,8 @@ class ConvertibleUnit(HasUnit):
             print("Frontier:", frontier)
             newfrontier = {}
             for node, prev in frontier.items():
-                newneighbors = {n: node for n in conv[node].keys() if n not in \
-                    frontier and n not in visited}
+                newneighbors = {n: node for n in self._conv[node].keys() if \
+                    n not in frontier and n not in visited}
                 newfrontier.update(newneighbors)
                 visited[node] = prev
             frontier.clear()
@@ -153,7 +135,7 @@ class ConvertibleUnit(HasUnit):
         result = self._val
         unit_from = finalpath[0]
         for unit_to in finalpath[1:]:
-            convd = conv[unit_from]
+            convd = self._conv[unit_from]
             ratio = convd[unit_to]
             result = result * ratio.numerator / ratio.denominator
             unit_from = unit_to
@@ -163,14 +145,18 @@ class ConvertibleUnit(HasUnit):
     
 class Pos(ConvertibleUnit):
     # conversions
-    _conv = {                           \
-        ("f","mi"): Fraction(1, 5280),  \
-        ("mi","f"): Fraction(5280),     \
-        ("m","km"): Fraction(1, 1000),  \
-        ("km","m"): Fraction(1000),     \
-        ("f","m"):  Fraction(0.3048),   \
-        ("m","f"):  Fraction(3.2808399) \
-    }
+    # should be sufficient to convert between any of these in any direction
+    _conv = {"f":  {"mi": Fraction(1,5280),  \
+                   "m":  Fraction(0.3048),  \
+                   "in": Fraction(12)     }, # just to spice things up\
+            "mi": {"f":  Fraction(5280)   },\
+            "m":  {"f":  Fraction(3.2808399), \
+                    "cm": Fraction(100),    \
+                    "km": Fraction(1, 1000) },  \
+            "in": {"f":  Fraction(1, 12) }, \
+            "cm": {"m": Fraction(1, 100) }, \
+            "km": {"m":  Fraction(1000) }\
+           }
     _bigger = {     \
         "f": "mi",  \
         "m": "km"   \
@@ -181,7 +167,7 @@ class Pos(ConvertibleUnit):
     }
 
     def __init__(self, val, unit):
-        assert unit in ["f","mi","m","km"]
+        assert unit in self._conv
         ConvertibleUnit.__init__(self, val, unit)
 
 class Speed(ConvertibleUnit):
@@ -585,7 +571,7 @@ class Simulation:
 
 if __name__ == "__main__":
 
-    pos = Pos(1, "f") # doesn't matter while convert_to() is hard-coded
+    pos = Pos(1, "f")
     in_m = pos.convert_to("m")
 
     print(pos, "is" , in_m)
