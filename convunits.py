@@ -105,7 +105,7 @@ class ConvertibleUnit(HasUnit):
             # haven't examined outgoing edges yet
         
         while unit_to not in frontier and len(frontier) > 0:
-            print("Frontier:", frontier)
+            #print("Frontier:", frontier)
             newfrontier = {}
             for node, prev in frontier.items():
                 newneighbors = {n: node for n in self._conv[node].keys() if \
@@ -114,17 +114,17 @@ class ConvertibleUnit(HasUnit):
                 visited[node] = prev
             frontier.clear()
             frontier.update(newfrontier)
-            print("New frontier:", newfrontier)
+            #print("New frontier:", newfrontier)
         if unit_to in frontier:
             # create the path from end to beginning
             path.append(unit_to)
-            print("path:", path)
+            #print("path:", path)
             path.append(frontier[unit_to])
-            print("path:", path)
+            #print("path:", path)
             nextnode = frontier[unit_to]
             while nextnode in visited: # will append starting node's None
                 path.append(visited[nextnode])
-                print("path:", path)
+                #print("path:", path)
                 nextnode = visited[nextnode]
             finalpath = list(reversed(path[:-1])) # removes the None
         else:
