@@ -103,9 +103,8 @@ class ConvertibleUnit(HasUnit):
         path = []
         visited = {} # ones we have examined all edges from and the value is 
             # the previous node
-        # edge = {node: unit_from for node in conv[unit_from].keys()} # don't 
-            # need this
-        frontier = {unit_from: None}
+        frontier = {unit_from: None} # neighbors to nodes in visited that we 
+            # haven't examined outgoing edges yet
         
         import time
 
