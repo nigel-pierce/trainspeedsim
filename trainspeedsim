@@ -631,6 +631,13 @@ if __name__ == "__main__":
     except AssertionError as e:
         print(repr(e))
 
+    try:
+        acc = Accel(3, "m/s^2")
+        invalid_acc = acc.convert_to("f/h^2")
+        print(invalid_acc)
+    except AssertionError as e:
+        print(repr(e))
+
     # commented out to test ConvertibleUnit.convert_to()
 
     #import sys
