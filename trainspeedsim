@@ -93,6 +93,13 @@ class ConvertibleUnit(HasUnit):
         if unit_to == self._unit:
             return type(self)(self._val, self._unit)
 
+        conv_path = self._dijkstra(unit_from, unit_to)
+
+        result = self._conv_calc(conv_path)
+
+        return type(self)(result, unit)
+
+    def _dijkstra(self, unit_from, unit_to):
         path = []
         visited = {} # ones we have examined all edges from and the value is 
             # the previous node
@@ -132,9 +139,7 @@ class ConvertibleUnit(HasUnit):
         else:
             raise ValueError("cannot convert to unit "+str(unit_to))
 
-        result = self._conv_calc(finalpath)
-
-        return type(self)(result, unit)
+        return finalpath
 
     def _conv_calc(self, finalpath):
         result = self._val
