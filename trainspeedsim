@@ -106,8 +106,6 @@ class ConvertibleUnit(HasUnit):
         frontier = {unit_from: None} # neighbors to nodes in visited that we 
             # haven't examined outgoing edges yet
         
-        import time
-
         while unit_to not in frontier and len(frontier) > 0:
             print("Frontier:", frontier)
             newfrontier = {}
@@ -119,20 +117,16 @@ class ConvertibleUnit(HasUnit):
             frontier.clear()
             frontier.update(newfrontier)
             print("New frontier:", newfrontier)
-            time.sleep(1)
         if unit_to in frontier:
             # create the path from end to beginning
             path.append(unit_to)
             print("path:", path)
-            time.sleep(1)
             path.append(frontier[unit_to])
             print("path:", path)
-            time.sleep(1)
             nextnode = frontier[unit_to]
             while nextnode in visited: # will append starting node's None
                 path.append(visited[nextnode])
                 print("path:", path)
-                time.sleep(1)
                 nextnode = visited[nextnode]
             finalpath = list(reversed(path[:-1])) # removes the None
         else:
