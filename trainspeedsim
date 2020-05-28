@@ -284,14 +284,12 @@ class Config:
             if uflag.val is not None:
                 if uflag.val in ["imperial", "metric"]:
                     self.units = uflag.val
-                    if self.units == "metric": # TODO implement metric
-                        raise NotImplementedError('Units "metric" not yet '+\
-                            'implemented')
                 else:
                     raise ArgvError('Value of -u flag must be "imperial" or '+\
                         '"metric"')
             else:
                 self.units = uflag.default_val
+            # self.units is now either "imperial" or "metric"
 
             if self.infile == None:
                 raise ArgvError("Must specify input file")
@@ -300,16 +298,27 @@ class Config:
             if aflag.val is not None:
                 accel_unit = {"imperial": "f/s^2", "metric": "m/s^2"}
                 self.accel = Accel(float(aflag.val), accel_unit[self.units])
-            else:
-                self.accel = aflag.default_val
-                # TODO convert that to m/s^2 if units is metric
+            else: # default, in the relevant unit
+                if self.units == "imperial":
+                    self.accel = aflag.default_val
+                elif self.units == "metric":
+                    self.accel = aflag.default_val.convert_to("m/s^2")
+                else:
+                    # should never get here
+                    raise RuntimeError("How did we get here?")
 
             rflag = self._flagsdict["-r"]
             if rflag.val is not None:
                 dist_unit = {"imperial": "f", "metric": "m"}
                 self.res = Pos(float(rflag.val), dist_unit[self.units])
-            else:
-                self.res = rflag.default_val # TODO this in metric too
+            else: # default, in the relevant unit
+                if self.units == "imperial":
+                    self.res = rflag.default_val
+                elif self.units == "metric":
+                    self.res = rflag.default_val.convert_to("m")
+                else: # DO I really need to do this?
+                    raise RuntimeError("Shouldn't get here")
+                # TODO make the default metric res be 100 m
 
         if self.mode == "help":
             pass
