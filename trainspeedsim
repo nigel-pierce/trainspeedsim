@@ -178,11 +178,13 @@ class Pos(ConvertibleUnit):
         ConvertibleUnit.__init__(self, val, unit)
 
 class Speed(ConvertibleUnit):
-    _conv = {                               \
-        ("f/s","mi/h"): Fraction(3600,5280),\
-        ("mi/h","f/s"): Fraction(5280,3600),\
-        ("m/s","km/h"): Fraction(3600,1000),\
-        ("km/h","m/s"): Fraction(1000,3600) \
+    _conv = { \
+        "f/s": {"mi/h": Fraction(3600,5280), \
+                "m/s": Fraction(0.3048) }, \
+        "mi/h":{"f/s": Fraction(5280, 3600) }, \
+        "m/s": {"km/h": Fraction(3600,1000), \
+                "f/s": Fraction(3.2808399) }, \
+        "km/h":{"m/s": Fraction(1000,3600) } \
     }
 
     _bigger = {         \
@@ -196,7 +198,7 @@ class Speed(ConvertibleUnit):
     }
 
     def __init__(self, val, unit):
-        assert unit in ["f/s","mi/h","m/s","km/h"]
+        assert unit in self._conv
         ConvertibleUnit.__init__(self, val, unit)
     
 class Accel(HasUnit):
