@@ -576,9 +576,17 @@ if __name__ == "__main__":
 
     pos = Pos(1, "f")
     in_m = pos.convert_to("m")
-
     print(pos, "is" , in_m)
-
+    pos_bigger = pos.to_bigger_unit()
+    print(pos, "biggers to", pos_bigger)
+    try:
+        pos_smaller = pos.to_smaller_unit()
+        print(pos, "smallers to", pos_smaller)
+    except AssertionError as e:
+        print(repr(e))
+    pos_bigger_smaller = pos_bigger.to_smaller_unit()
+    print(pos_bigger, "smallers to", pos_bigger_smaller)
+    
     mi = Pos(1, "mi")
     in_km = mi.convert_to("km")
     print(mi, "is", in_km)
