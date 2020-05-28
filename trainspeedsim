@@ -72,11 +72,11 @@ class ConvertibleUnit(HasUnit):
         HasUnit.__init__(self, val, unit)
 
     def to_bigger_unit(self):
-        assert self._unit in self._bigger # keys are the small units
+        assert self._unit in self._bigger, "cannot bigify" # keys are the small units
         return self.convert_to(self._bigger[self._unit])
 
     def to_smaller_unit(self):
-        assert self._unit in self._smaller # keys are the big units
+        assert self._unit in self._smaller, "cannot smallify" # keys are the big units
         return self.convert_to(self._smaller[self._unit])
 
 
