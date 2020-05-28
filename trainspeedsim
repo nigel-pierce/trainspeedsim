@@ -132,6 +132,11 @@ class ConvertibleUnit(HasUnit):
         else:
             raise ValueError("cannot convert to unit "+str(unit_to))
 
+        result = self._conv_calc(finalpath)
+
+        return type(self)(result, unit)
+
+    def _conv_calc(self, finalpath):
         result = self._val
         unit_from = finalpath[0]
         for unit_to in finalpath[1:]:
@@ -139,10 +144,8 @@ class ConvertibleUnit(HasUnit):
             ratio = convd[unit_to]
             result = result * ratio.numerator / ratio.denominator
             unit_from = unit_to
+        return result
 
-        return type(self)(result, unit)
-
-    
 class Pos(ConvertibleUnit):
     # conversions
     # should be sufficient to convert between any of these in any direction
