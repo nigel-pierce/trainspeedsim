@@ -378,24 +378,21 @@ class Simulation:
 
 if __name__ == "__main__":
 
+    import sys
+    conf = Config(sys.argv)
 
-    # commented out to test ConvertibleUnit.convert_to()
-
-    #import sys
-    #conf = Config(sys.argv)
-
-    #if conf.mode == "sim":
-    #    try:
-    #        # acceleration used to be hard-coded to 1.25 (in f/s^2)
-    #        # resolution was hard-coded to 528 (f) as well
-    #        # for now let's keep it hard-coded but as a Pos instead (in Conf)
-    #        sim = Simulation(conf.infile, conf.accel, conf.res, conf.units)
-    #    except FileNotFoundError as e:
-    #        sys.stderr.write(str(e)+"\n")
-    #        exit()
-    #    sim.run()
-    #    sim.output()
-    #elif conf.mode == "help":
-    #    print(conf.gen_help())
+    if conf.mode == "sim":
+        try:
+            # acceleration used to be hard-coded to 1.25 (in f/s^2)
+            # resolution was hard-coded to 528 (f) as well
+            # for now let's keep it hard-coded but as a Pos instead (in Conf)
+            sim = Simulation(conf.infile, conf.accel, conf.res, conf.units)
+        except FileNotFoundError as e:
+            sys.stderr.write(str(e)+"\n")
+            exit()
+        sim.run()
+        sim.output()
+    elif conf.mode == "help":
+        print(conf.gen_help())
 
     
