@@ -590,6 +590,14 @@ if __name__ == "__main__":
     in_mi = mi.convert_to("mi")
     print(mi, "is", in_mi)
 
+    two_mi = Pos(2, "mi")
+    in_m = two_mi.convert_to("m")
+    print(two_mi, "is", in_m)
+
+    #speed = Speed(1, "f/s")
+    #in_mps = speed.convert_to("m/s")
+    #print(speed, "is", in_mps)
+
     # commented out to test ConvertibleUnit.convert_to()
 
     #import sys
