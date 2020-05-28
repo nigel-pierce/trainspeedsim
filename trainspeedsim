@@ -195,10 +195,19 @@ class Speed(ConvertibleUnit):
         assert unit in self._conv
         ConvertibleUnit.__init__(self, val, unit)
     
-class Accel(HasUnit):
+class Accel(ConvertibleUnit):
+    _conv = {\
+        "f/s^2": {"m/s^2": Fraction(0.3048) },\
+        "m/s^2": {"f/s^2": Fraction(3.2808399) } \
+    }
+
+    _bigger = {}
+
+    _smaller = {}
+
     def __init__(self, val, unit):
-        assert unit in ["f/s^2", "m/s^2"]
-        HasUnit.__init__(self, val, unit)
+        assert unit in self._conv
+        ConvertibleUnit.__init__(self, val, unit)
 
 class TrackSeg:
     def __init__(self, index, start, end, speed):
@@ -601,6 +610,26 @@ if __name__ == "__main__":
     speed = Speed(1, "f/s")
     in_mps = speed.convert_to("m/s")
     print(speed, "is", in_mps)
+
+    accel = Accel(1.5, "f/s^2")
+    in_mps2 = accel.convert_to("m/s^2")
+    print(accel, "is", in_mps2)
+
+    mps = Accel(2, "m/s^2")
+    in_fps2 = mps.convert_to("f/s^2")
+    print(mps, "is", in_fps2)
+
+    try:
+        acc_big = accel.to_bigger_unit()
+        print(accel, "is", acc_big)
+    except AssertionError as e:
+        print(repr(e))
+
+    try:
+        acc_small = accel.to_smaller_unit()
+        print(accel, "is", acc_small)
+    except AssertionError as e:
+        print(repr(e))
 
     # commented out to test ConvertibleUnit.convert_to()
 
