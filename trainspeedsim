@@ -229,7 +229,8 @@ class Config:
         self._flagsdict.join("--boolean", "-b")
         self._flagsdict["-a"] = self.FlagDesc(True, Accel(1.25, "f/s^2"))
         self._flagsdict.join("--acceleration", "-a")
-        self._flagsdict["-r"] = self.FlagDesc(True, Pos(528, "f"))
+        self._flagsdict["-r"] = self.FlagDesc(True, \
+            {"imperial": Pos(528, "f"), "metric": Pos(100, "m")} )
         self._flagsdict.join("--resolution", "-r")
         self._flagsdict["-h"] = self.FlagDesc(False)
         self._flagsdict.join("--help", "-h")
@@ -312,13 +313,7 @@ class Config:
                 dist_unit = {"imperial": "f", "metric": "m"}
                 self.res = Pos(float(rflag.val), dist_unit[self.units])
             else: # default, in the relevant unit
-                if self.units == "imperial":
-                    self.res = rflag.default_val
-                elif self.units == "metric":
-                    self.res = rflag.default_val.convert_to("m")
-                else: # DO I really need to do this?
-                    raise RuntimeError("Shouldn't get here")
-                # TODO make the default metric res be 100 m
+                self.res = rflag.default_val[self.units]
 
         if self.mode == "help":
             pass
