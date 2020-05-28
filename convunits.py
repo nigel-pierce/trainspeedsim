@@ -206,3 +206,60 @@ class Accel(ConvertibleUnit):
     def __init__(self, val, unit):
         assert unit in self._conv
         ConvertibleUnit.__init__(self, val, unit)
+
+if __name__ == "__main__":
+
+    pos = Pos(1, "f")
+    in_m = pos.convert_to("m")
+    print(pos, "is" , in_m)
+    pos_bigger = pos.to_bigger_unit()
+    print(pos, "biggers to", pos_bigger)
+    try:
+        pos_smaller = pos.to_smaller_unit()
+        print(pos, "smallers to", pos_smaller)
+    except AssertionError as e:
+        print(repr(e))
+    pos_bigger_smaller = pos_bigger.to_smaller_unit()
+    print(pos_bigger, "smallers to", pos_bigger_smaller)
+    
+    mi = Pos(1, "mi")
+    in_km = mi.convert_to("km")
+    print(mi, "is", in_km)
+
+    in_mi = mi.convert_to("mi")
+    print(mi, "is", in_mi)
+
+    two_mi = Pos(2, "mi")
+    in_m = two_mi.convert_to("m")
+    print(two_mi, "is", in_m)
+
+    speed = Speed(1, "f/s")
+    in_mps = speed.convert_to("m/s")
+    print(speed, "is", in_mps)
+
+    accel = Accel(1.5, "f/s^2")
+    in_mps2 = accel.convert_to("m/s^2")
+    print(accel, "is", in_mps2)
+
+    mps = Accel(2, "m/s^2")
+    in_fps2 = mps.convert_to("f/s^2")
+    print(mps, "is", in_fps2)
+
+    try:
+        acc_big = accel.to_bigger_unit()
+        print(accel, "is", acc_big)
+    except AssertionError as e:
+        print(repr(e))
+
+    try:
+        acc_small = accel.to_smaller_unit()
+        print(accel, "is", acc_small)
+    except AssertionError as e:
+        print(repr(e))
+
+    try:
+        acc = Accel(3, "m/s^2")
+        invalid_acc = acc.convert_to("f/h^2")
+        print(invalid_acc)
+    except ValueError as e:
+        print(repr(e))
