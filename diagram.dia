@@ -3512,7 +3512,7 @@ Track segment lengths must be integer multiples of resolution.#</dia:string>
         <dia:point val="-17,4.3"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="-18.7972,3.34144;-16.0414,15.7"/>
+        <dia:rectangle val="-18.7972,3.34144;-16.0414,14.9"/>
       </dia:attribute>
       <dia:attribute name="meta">
         <dia:composite type="dict"/>
@@ -3818,7 +3818,7 @@ Track segment lengths must be integer multiples of resolution.#</dia:string>
         <dia:point val="-2.97457,14.1"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="-4.10964,14.0362;-1.45958,23.7"/>
+        <dia:rectangle val="-4.10964,14.0362;-1.45958,22.9"/>
       </dia:attribute>
       <dia:attribute name="meta">
         <dia:composite type="dict"/>
@@ -3895,13 +3895,13 @@ Track segment lengths must be integer multiples of resolution.#</dia:string>
     </dia:object>
     <dia:object type="UML - Class" version="0" id="O17">
       <dia:attribute name="obj_pos">
-        <dia:point val="31,-17"/>
+        <dia:point val="40,-19"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="30.95,-17.05;47.335,-8.75"/>
+        <dia:rectangle val="39.95,-19.05;56.335,-10.75"/>
       </dia:attribute>
       <dia:attribute name="elem_corner">
-        <dia:point val="31,-17"/>
+        <dia:point val="40,-19"/>
       </dia:attribute>
       <dia:attribute name="elem_width">
         <dia:real val="16.285"/>
@@ -4328,13 +4328,13 @@ Track segment lengths must be integer multiples of resolution.#</dia:string>
         <dia:point val="33,2"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="32.95,1.95;52.8,7.25"/>
+        <dia:rectangle val="32.95,1.95;50.875,7.25"/>
       </dia:attribute>
       <dia:attribute name="elem_corner">
         <dia:point val="33,2"/>
       </dia:attribute>
       <dia:attribute name="elem_width">
-        <dia:real val="19.75"/>
+        <dia:real val="17.824999999999999"/>
       </dia:attribute>
       <dia:attribute name="elem_height">
         <dia:real val="5.2000000000000011"/>
@@ -4438,7 +4438,7 @@ Track segment lengths must be integer multiples of resolution.#</dia:string>
             <dia:string>##</dia:string>
           </dia:attribute>
           <dia:attribute name="value">
-            <dia:string>#"f", "m", "mi", "km"#</dia:string>
+            <dia:string>#"f", "m", "mi", "km", etc.#</dia:string>
           </dia:attribute>
           <dia:attribute name="comment">
             <dia:string>##</dia:string>
@@ -4455,13 +4455,13 @@ Track segment lengths must be integer multiples of resolution.#</dia:string>
         </dia:composite>
         <dia:composite type="umlattribute">
           <dia:attribute name="name">
-            <dia:string>#_conversions#</dia:string>
+            <dia:string>#_conv#</dia:string>
           </dia:attribute>
           <dia:attribute name="type">
             <dia:string>##</dia:string>
           </dia:attribute>
           <dia:attribute name="value">
-            <dia:string>#{("f","mi"):Fraction(1,5280) etc.}#</dia:string>
+            <dia:string>#{"f": {"mi":Fraction(1,5280) } etc.}#</dia:string>
           </dia:attribute>
           <dia:attribute name="comment">
             <dia:string>##</dia:string>
@@ -4531,24 +4531,22 @@ Track segment lengths must be integer multiples of resolution.#</dia:string>
     </dia:object>
     <dia:object type="UML - Generalization" version="1" id="O19">
       <dia:attribute name="obj_pos">
-        <dia:point val="53.645,-1.14964"/>
+        <dia:point val="52.4525,1.05028"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="42.825,-1.19964;54.495,2.40002"/>
+        <dia:rectangle val="50.8253,1.00028;53.3025,5.44"/>
       </dia:attribute>
       <dia:attribute name="meta">
         <dia:composite type="dict"/>
       </dia:attribute>
       <dia:attribute name="orth_points">
-        <dia:point val="53.645,-1.14964"/>
-        <dia:point val="53.645,0.800018"/>
-        <dia:point val="42.875,0.800018"/>
-        <dia:point val="42.875,1.94968"/>
+        <dia:point val="52.4525,1.05028"/>
+        <dia:point val="52.4525,4.6"/>
+        <dia:point val="50.8753,4.6"/>
       </dia:attribute>
       <dia:attribute name="orth_orient">
         <dia:enum val="1"/>
         <dia:enum val="0"/>
-        <dia:enum val="1"/>
       </dia:attribute>
       <dia:attribute name="orth_autoroute">
         <dia:boolean val="true"/>
@@ -4575,7 +4573,7 @@ Track segment lengths must be integer multiples of resolution.#</dia:string>
         <dia:color val="#000000ff"/>
       </dia:attribute>
       <dia:connections>
-        <dia:connection handle="0" to="O26" connection="18"/>
+        <dia:connection handle="0" to="O26" connection="24"/>
         <dia:connection handle="1" to="O18" connection="16"/>
       </dia:connections>
     </dia:object>
@@ -4584,13 +4582,13 @@ Track segment lengths must be integer multiples of resolution.#</dia:string>
         <dia:point val="55,2"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="54.95,1.95;77.495,7.25"/>
+        <dia:rectangle val="54.95,1.95;76.34,7.25"/>
       </dia:attribute>
       <dia:attribute name="elem_corner">
         <dia:point val="55,2"/>
       </dia:attribute>
       <dia:attribute name="elem_width">
-        <dia:real val="22.445"/>
+        <dia:real val="21.289999999999999"/>
       </dia:attribute>
       <dia:attribute name="elem_height">
         <dia:real val="5.2000000000000011"/>
@@ -4711,13 +4709,13 @@ Track segment lengths must be integer multiples of resolution.#</dia:string>
         </dia:composite>
         <dia:composite type="umlattribute">
           <dia:attribute name="name">
-            <dia:string>#_conversions#</dia:string>
+            <dia:string>#_conv#</dia:string>
           </dia:attribute>
           <dia:attribute name="type">
             <dia:string>##</dia:string>
           </dia:attribute>
           <dia:attribute name="value">
-            <dia:string>#{("f/s","mi/h"):Fraction(3600,5280) etc.}#</dia:string>
+            <dia:string>#{"f/s": {"mi/h": Fraction(3600,5280)  } etc.}#</dia:string>
           </dia:attribute>
           <dia:attribute name="comment">
             <dia:string>##</dia:string>
@@ -4787,24 +4785,22 @@ Track segment lengths must be integer multiples of resolution.#</dia:string>
     </dia:object>
     <dia:object type="UML - Generalization" version="1" id="O21">
       <dia:attribute name="obj_pos">
-        <dia:point val="53.645,-1.14964"/>
+        <dia:point val="52.4525,1.05028"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="52.795,-1.19964;66.2725,2.40002"/>
+        <dia:rectangle val="51.6025,1.00028;54.9997,5.44"/>
       </dia:attribute>
       <dia:attribute name="meta">
         <dia:composite type="dict"/>
       </dia:attribute>
       <dia:attribute name="orth_points">
-        <dia:point val="53.645,-1.14964"/>
-        <dia:point val="53.645,0.800018"/>
-        <dia:point val="66.2225,0.800018"/>
-        <dia:point val="66.2225,1.94968"/>
+        <dia:point val="52.4525,1.05028"/>
+        <dia:point val="52.4525,4.6"/>
+        <dia:point val="54.9497,4.6"/>
       </dia:attribute>
       <dia:attribute name="orth_orient">
         <dia:enum val="1"/>
         <dia:enum val="0"/>
-        <dia:enum val="1"/>
       </dia:attribute>
       <dia:attribute name="orth_autoroute">
         <dia:boolean val="true"/>
@@ -4831,7 +4827,7 @@ Track segment lengths must be integer multiples of resolution.#</dia:string>
         <dia:color val="#000000ff"/>
       </dia:attribute>
       <dia:connections>
-        <dia:connection handle="0" to="O26" connection="18"/>
+        <dia:connection handle="0" to="O26" connection="24"/>
         <dia:connection handle="1" to="O20" connection="16"/>
       </dia:connections>
     </dia:object>
@@ -4840,7 +4836,7 @@ Track segment lengths must be integer multiples of resolution.#</dia:string>
         <dia:point val="58.75,23.7"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="52.1713,3.97103;59.8497,23.7552"/>
+        <dia:rectangle val="50.2392,3.96397;59.8497,23.7552"/>
       </dia:attribute>
       <dia:attribute name="meta">
         <dia:composite type="dict"/>
@@ -4849,7 +4845,7 @@ Track segment lengths must be integer multiples of resolution.#</dia:string>
         <dia:point val="58.75,23.7"/>
         <dia:point val="59.8,14.15"/>
         <dia:point val="59.8,14.15"/>
-        <dia:point val="52.8003,4.6"/>
+        <dia:point val="50.8753,4.6"/>
       </dia:attribute>
       <dia:attribute name="orth_orient">
         <dia:enum val="1"/>
@@ -4893,15 +4889,15 @@ Track segment lengths must be integer multiples of resolution.#</dia:string>
         <dia:point val="58.75,25.3"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="58.7,6.75;66.6725,26.9"/>
+        <dia:rectangle val="58.7,6.75;66.095,26.14"/>
       </dia:attribute>
       <dia:attribute name="meta">
         <dia:composite type="dict"/>
       </dia:attribute>
       <dia:attribute name="orth_points">
         <dia:point val="58.75,25.3"/>
-        <dia:point val="66.2225,25.3"/>
-        <dia:point val="66.2225,7.2"/>
+        <dia:point val="65.645,25.3"/>
+        <dia:point val="65.645,7.2"/>
       </dia:attribute>
       <dia:attribute name="orth_orient">
         <dia:enum val="0"/>
@@ -4944,15 +4940,15 @@ Track segment lengths must be integer multiples of resolution.#</dia:string>
         <dia:point val="20.98,17.3"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="20.93,6.75;66.6725,18.9"/>
+        <dia:rectangle val="20.93,6.75;66.095,18.14"/>
       </dia:attribute>
       <dia:attribute name="meta">
         <dia:composite type="dict"/>
       </dia:attribute>
       <dia:attribute name="orth_points">
         <dia:point val="20.98,17.3"/>
-        <dia:point val="66.2225,17.3"/>
-        <dia:point val="66.2225,7.2"/>
+        <dia:point val="65.645,17.3"/>
+        <dia:point val="65.645,7.2"/>
       </dia:attribute>
       <dia:attribute name="orth_orient">
         <dia:enum val="0"/>
@@ -5045,19 +5041,19 @@ Track segment lengths must be integer multiples of resolution.#</dia:string>
     </dia:object>
     <dia:object type="UML - Class" version="0" id="O26">
       <dia:attribute name="obj_pos">
-        <dia:point val="43,-7"/>
+        <dia:point val="42,-8"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="42.95,-7.05;64.34,-1.15"/>
+        <dia:rectangle val="41.95,-8.05;62.955,1.05"/>
       </dia:attribute>
       <dia:attribute name="elem_corner">
-        <dia:point val="43,-7"/>
+        <dia:point val="42,-8"/>
       </dia:attribute>
       <dia:attribute name="elem_width">
-        <dia:real val="21.289999999999999"/>
+        <dia:real val="20.905000000000001"/>
       </dia:attribute>
       <dia:attribute name="elem_height">
-        <dia:real val="5.7999999999999998"/>
+        <dia:real val="9"/>
       </dia:attribute>
       <dia:attribute name="name">
         <dia:string>#ConvertibleUnit#</dia:string>
@@ -5152,10 +5148,10 @@ Track segment lengths must be integer multiples of resolution.#</dia:string>
       <dia:attribute name="attributes">
         <dia:composite type="umlattribute">
           <dia:attribute name="name">
-            <dia:string>#_conversions#</dia:string>
+            <dia:string>#_conv#</dia:string>
           </dia:attribute>
           <dia:attribute name="type">
-            <dia:string>#{(string, string): Fraction}#</dia:string>
+            <dia:string>#{string: {string: Fraction}}#</dia:string>
           </dia:attribute>
           <dia:attribute name="value">
             <dia:string>#abstract#</dia:string>
@@ -5281,6 +5277,167 @@ Track segment lengths must be integer multiples of resolution.#</dia:string>
           </dia:attribute>
           <dia:attribute name="parameters"/>
         </dia:composite>
+        <dia:composite type="umloperation">
+          <dia:attribute name="name">
+            <dia:string>#convert_to#</dia:string>
+          </dia:attribute>
+          <dia:attribute name="stereotype">
+            <dia:string>##</dia:string>
+          </dia:attribute>
+          <dia:attribute name="type">
+            <dia:string>#type(self)#</dia:string>
+          </dia:attribute>
+          <dia:attribute name="visibility">
+            <dia:enum val="0"/>
+          </dia:attribute>
+          <dia:attribute name="comment">
+            <dia:string>##</dia:string>
+          </dia:attribute>
+          <dia:attribute name="abstract">
+            <dia:boolean val="false"/>
+          </dia:attribute>
+          <dia:attribute name="inheritance_type">
+            <dia:enum val="2"/>
+          </dia:attribute>
+          <dia:attribute name="query">
+            <dia:boolean val="false"/>
+          </dia:attribute>
+          <dia:attribute name="class_scope">
+            <dia:boolean val="false"/>
+          </dia:attribute>
+          <dia:attribute name="parameters">
+            <dia:composite type="umlparameter">
+              <dia:attribute name="name">
+                <dia:string>#unit#</dia:string>
+              </dia:attribute>
+              <dia:attribute name="type">
+                <dia:string>#string#</dia:string>
+              </dia:attribute>
+              <dia:attribute name="value">
+                <dia:string>##</dia:string>
+              </dia:attribute>
+              <dia:attribute name="comment">
+                <dia:string>##</dia:string>
+              </dia:attribute>
+              <dia:attribute name="kind">
+                <dia:enum val="0"/>
+              </dia:attribute>
+            </dia:composite>
+          </dia:attribute>
+        </dia:composite>
+        <dia:composite type="umloperation">
+          <dia:attribute name="name">
+            <dia:string>#_dijkstra#</dia:string>
+          </dia:attribute>
+          <dia:attribute name="stereotype">
+            <dia:string>##</dia:string>
+          </dia:attribute>
+          <dia:attribute name="type">
+            <dia:string>#[string,...]#</dia:string>
+          </dia:attribute>
+          <dia:attribute name="visibility">
+            <dia:enum val="1"/>
+          </dia:attribute>
+          <dia:attribute name="comment">
+            <dia:string>##</dia:string>
+          </dia:attribute>
+          <dia:attribute name="abstract">
+            <dia:boolean val="false"/>
+          </dia:attribute>
+          <dia:attribute name="inheritance_type">
+            <dia:enum val="2"/>
+          </dia:attribute>
+          <dia:attribute name="query">
+            <dia:boolean val="false"/>
+          </dia:attribute>
+          <dia:attribute name="class_scope">
+            <dia:boolean val="false"/>
+          </dia:attribute>
+          <dia:attribute name="parameters">
+            <dia:composite type="umlparameter">
+              <dia:attribute name="name">
+                <dia:string>#unit_from#</dia:string>
+              </dia:attribute>
+              <dia:attribute name="type">
+                <dia:string>#string#</dia:string>
+              </dia:attribute>
+              <dia:attribute name="value">
+                <dia:string>##</dia:string>
+              </dia:attribute>
+              <dia:attribute name="comment">
+                <dia:string>##</dia:string>
+              </dia:attribute>
+              <dia:attribute name="kind">
+                <dia:enum val="0"/>
+              </dia:attribute>
+            </dia:composite>
+            <dia:composite type="umlparameter">
+              <dia:attribute name="name">
+                <dia:string>#unit_to#</dia:string>
+              </dia:attribute>
+              <dia:attribute name="type">
+                <dia:string>#string#</dia:string>
+              </dia:attribute>
+              <dia:attribute name="value">
+                <dia:string>##</dia:string>
+              </dia:attribute>
+              <dia:attribute name="comment">
+                <dia:string>##</dia:string>
+              </dia:attribute>
+              <dia:attribute name="kind">
+                <dia:enum val="0"/>
+              </dia:attribute>
+            </dia:composite>
+          </dia:attribute>
+        </dia:composite>
+        <dia:composite type="umloperation">
+          <dia:attribute name="name">
+            <dia:string>#_conv_to#</dia:string>
+          </dia:attribute>
+          <dia:attribute name="stereotype">
+            <dia:string>##</dia:string>
+          </dia:attribute>
+          <dia:attribute name="type">
+            <dia:string>#float#</dia:string>
+          </dia:attribute>
+          <dia:attribute name="visibility">
+            <dia:enum val="1"/>
+          </dia:attribute>
+          <dia:attribute name="comment">
+            <dia:string>##</dia:string>
+          </dia:attribute>
+          <dia:attribute name="abstract">
+            <dia:boolean val="false"/>
+          </dia:attribute>
+          <dia:attribute name="inheritance_type">
+            <dia:enum val="2"/>
+          </dia:attribute>
+          <dia:attribute name="query">
+            <dia:boolean val="false"/>
+          </dia:attribute>
+          <dia:attribute name="class_scope">
+            <dia:boolean val="false"/>
+          </dia:attribute>
+          <dia:attribute name="parameters">
+            <dia:composite type="umlparameter">
+              <dia:attribute name="name">
+                <dia:string>#finalpath#</dia:string>
+              </dia:attribute>
+              <dia:attribute name="type">
+                <dia:string>#[string,...]#</dia:string>
+              </dia:attribute>
+              <dia:attribute name="value">
+                <dia:string>##</dia:string>
+              </dia:attribute>
+              <dia:attribute name="comment">
+                <dia:string>##</dia:string>
+              </dia:attribute>
+              <dia:attribute name="kind">
+                <dia:enum val="0"/>
+              </dia:attribute>
+            </dia:composite>
+          </dia:attribute>
+        </dia:composite>
       </dia:attribute>
       <dia:attribute name="template">
         <dia:boolean val="false"/>
@@ -5289,22 +5446,24 @@ Track segment lengths must be integer multiples of resolution.#</dia:string>
     </dia:object>
     <dia:object type="UML - Generalization" version="1" id="O27">
       <dia:attribute name="obj_pos">
-        <dia:point val="39.1425,-8.74975"/>
+        <dia:point val="48.1425,-10.7497"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="38.2925,-8.79975;42.9997,-2.5"/>
+        <dia:rectangle val="47.2925,-10.7997;52.5025,-8.00028"/>
       </dia:attribute>
       <dia:attribute name="meta">
         <dia:composite type="dict"/>
       </dia:attribute>
       <dia:attribute name="orth_points">
-        <dia:point val="39.1425,-8.74975"/>
-        <dia:point val="39.1425,-4.1"/>
-        <dia:point val="42.9497,-4.1"/>
+        <dia:point val="48.1425,-10.7497"/>
+        <dia:point val="48.1425,-9.00001"/>
+        <dia:point val="52.4525,-9.00001"/>
+        <dia:point val="52.4525,-8.05028"/>
       </dia:attribute>
       <dia:attribute name="orth_orient">
         <dia:enum val="1"/>
         <dia:enum val="0"/>
+        <dia:enum val="1"/>
       </dia:attribute>
       <dia:attribute name="orth_autoroute">
         <dia:boolean val="true"/>
@@ -5332,24 +5491,24 @@ Track segment lengths must be integer multiples of resolution.#</dia:string>
       </dia:attribute>
       <dia:connections>
         <dia:connection handle="0" to="O17" connection="24"/>
-        <dia:connection handle="1" to="O26" connection="18"/>
+        <dia:connection handle="1" to="O26" connection="24"/>
       </dia:connections>
     </dia:object>
     <dia:object type="UML - Class" version="0" id="O28">
       <dia:attribute name="obj_pos">
-        <dia:point val="26,-5"/>
+        <dia:point val="26,-6"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="25.95,-5.05;36.175,-2.15"/>
+        <dia:rectangle val="25.95,-6.05;40.025,-0.75"/>
       </dia:attribute>
       <dia:attribute name="elem_corner">
-        <dia:point val="26,-5"/>
+        <dia:point val="26,-6"/>
       </dia:attribute>
       <dia:attribute name="elem_width">
-        <dia:real val="10.125"/>
+        <dia:real val="13.975"/>
       </dia:attribute>
       <dia:attribute name="elem_height">
-        <dia:real val="2.7999999999999998"/>
+        <dia:real val="5.2000000000000011"/>
       </dia:attribute>
       <dia:attribute name="name">
         <dia:string>#Accel#</dia:string>
@@ -5465,6 +5624,75 @@ Track segment lengths must be integer multiples of resolution.#</dia:string>
             <dia:boolean val="false"/>
           </dia:attribute>
         </dia:composite>
+        <dia:composite type="umlattribute">
+          <dia:attribute name="name">
+            <dia:string>#_conv#</dia:string>
+          </dia:attribute>
+          <dia:attribute name="type">
+            <dia:string>##</dia:string>
+          </dia:attribute>
+          <dia:attribute name="value">
+            <dia:string>#{"f/s^2": {"m/s^2"} etc. }#</dia:string>
+          </dia:attribute>
+          <dia:attribute name="comment">
+            <dia:string>##</dia:string>
+          </dia:attribute>
+          <dia:attribute name="visibility">
+            <dia:enum val="1"/>
+          </dia:attribute>
+          <dia:attribute name="abstract">
+            <dia:boolean val="false"/>
+          </dia:attribute>
+          <dia:attribute name="class_scope">
+            <dia:boolean val="false"/>
+          </dia:attribute>
+        </dia:composite>
+        <dia:composite type="umlattribute">
+          <dia:attribute name="name">
+            <dia:string>#_bigger#</dia:string>
+          </dia:attribute>
+          <dia:attribute name="type">
+            <dia:string>##</dia:string>
+          </dia:attribute>
+          <dia:attribute name="value">
+            <dia:string>#{}#</dia:string>
+          </dia:attribute>
+          <dia:attribute name="comment">
+            <dia:string>##</dia:string>
+          </dia:attribute>
+          <dia:attribute name="visibility">
+            <dia:enum val="1"/>
+          </dia:attribute>
+          <dia:attribute name="abstract">
+            <dia:boolean val="false"/>
+          </dia:attribute>
+          <dia:attribute name="class_scope">
+            <dia:boolean val="false"/>
+          </dia:attribute>
+        </dia:composite>
+        <dia:composite type="umlattribute">
+          <dia:attribute name="name">
+            <dia:string>#_smaller#</dia:string>
+          </dia:attribute>
+          <dia:attribute name="type">
+            <dia:string>##</dia:string>
+          </dia:attribute>
+          <dia:attribute name="value">
+            <dia:string>#{}#</dia:string>
+          </dia:attribute>
+          <dia:attribute name="comment">
+            <dia:string>##</dia:string>
+          </dia:attribute>
+          <dia:attribute name="visibility">
+            <dia:enum val="0"/>
+          </dia:attribute>
+          <dia:attribute name="abstract">
+            <dia:boolean val="false"/>
+          </dia:attribute>
+          <dia:attribute name="class_scope">
+            <dia:boolean val="false"/>
+          </dia:attribute>
+        </dia:composite>
       </dia:attribute>
       <dia:attribute name="operations"/>
       <dia:attribute name="template">
@@ -5474,24 +5702,24 @@ Track segment lengths must be integer multiples of resolution.#</dia:string>
     </dia:object>
     <dia:object type="UML - Generalization" version="1" id="O29">
       <dia:attribute name="obj_pos">
-        <dia:point val="39.1425,-8.74975"/>
+        <dia:point val="41.9497,-3.5"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="31.0125,-8.79975;39.9925,-4.90005"/>
+        <dia:rectangle val="39.9754,-4.35;41.9997,-2.61"/>
       </dia:attribute>
       <dia:attribute name="meta">
         <dia:composite type="dict"/>
       </dia:attribute>
       <dia:attribute name="orth_points">
-        <dia:point val="39.1425,-8.74975"/>
-        <dia:point val="39.1425,-6.50005"/>
-        <dia:point val="31.0625,-6.50005"/>
-        <dia:point val="31.0625,-5.05035"/>
+        <dia:point val="41.9497,-3.5"/>
+        <dia:point val="40.5876,-3.5"/>
+        <dia:point val="40.5876,-3.4"/>
+        <dia:point val="40.0254,-3.4"/>
       </dia:attribute>
       <dia:attribute name="orth_orient">
-        <dia:enum val="1"/>
         <dia:enum val="0"/>
         <dia:enum val="1"/>
+        <dia:enum val="0"/>
       </dia:attribute>
       <dia:attribute name="orth_autoroute">
         <dia:boolean val="true"/>
@@ -5518,8 +5746,8 @@ Track segment lengths must be integer multiples of resolution.#</dia:string>
         <dia:color val="#000000ff"/>
       </dia:attribute>
       <dia:connections>
-        <dia:connection handle="0" to="O17" connection="24"/>
-        <dia:connection handle="1" to="O28" connection="10"/>
+        <dia:connection handle="0" to="O26" connection="24"/>
+        <dia:connection handle="1" to="O28" connection="16"/>
       </dia:connections>
     </dia:object>
   </dia:layer>
