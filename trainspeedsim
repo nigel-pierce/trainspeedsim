@@ -323,8 +323,9 @@ class Config:
         return  "trainspeedsim [-h|--help | OPTIONS] INPUT_FILE\n" + \
                 "OPTIONS:\n" + \
                 "  -u|--units: imperial|metric\n" + \
-                "  -a|--acceleration: decimal value (in ft/s^2 et al.)\n" + \
-                "  -r|--resolution: integral value"
+                "  -a|--acceleration: decimal value (default: 1.5 ft/s^2 " + \
+                "or that converted to\n    m/s^2)\n" + \
+                "  -r|--resolution: integral value (default: 528 f or 100 m)"
 
 class Simulation:
     from collections import namedtuple
