@@ -1,0 +1,7 @@
+for the sprinter speeds, at gnuplot prompt, enter:
+
+gnuplot> set xtics 1
+gnuplot> set ytics 5
+gnuplot> plot [98:123] [0:55] 'sprinter_maxspeeds_stations.csv' with steps, 'out2.txt' with lines
+
+... I will install py-gnuplot and automate this. :)
