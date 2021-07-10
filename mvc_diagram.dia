@@ -1635,7 +1635,7 @@ end. Oh well.#</dia:string>
         <dia:point val="19,24"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="18.95,23.95;35.72,32.45"/>
+        <dia:rectangle val="18.95,23.95;35.72,34.1"/>
       </dia:attribute>
       <dia:attribute name="elem_corner">
         <dia:point val="19,24"/>
@@ -1644,7 +1644,7 @@ end. Oh well.#</dia:string>
         <dia:real val="16.669999999999998"/>
       </dia:attribute>
       <dia:attribute name="elem_height">
-        <dia:real val="8.3999999999999986"/>
+        <dia:real val="10.049999999999999"/>
       </dia:attribute>
       <dia:attribute name="name">
         <dia:string>#EditableTrack#</dia:string>
@@ -1671,7 +1671,7 @@ end. Oh well.#</dia:string>
         <dia:boolean val="true"/>
       </dia:attribute>
       <dia:attribute name="visible_comments">
-        <dia:boolean val="false"/>
+        <dia:boolean val="true"/>
       </dia:attribute>
       <dia:attribute name="wrap_operations">
         <dia:boolean val="true"/>
@@ -1680,7 +1680,7 @@ end. Oh well.#</dia:string>
         <dia:int val="40"/>
       </dia:attribute>
       <dia:attribute name="comment_line_length">
-        <dia:int val="17"/>
+        <dia:int val="18"/>
       </dia:attribute>
       <dia:attribute name="comment_tagging">
         <dia:boolean val="false"/>
@@ -1736,7 +1736,31 @@ end. Oh well.#</dia:string>
       <dia:attribute name="comment_font_height">
         <dia:real val="0.69999999999999996"/>
       </dia:attribute>
-      <dia:attribute name="attributes"/>
+      <dia:attribute name="attributes">
+        <dia:composite type="umlattribute">
+          <dia:attribute name="name">
+            <dia:string>#_track#</dia:string>
+          </dia:attribute>
+          <dia:attribute name="type">
+            <dia:string>#EditableTrackSeg[]#</dia:string>
+          </dia:attribute>
+          <dia:attribute name="value">
+            <dia:string>##</dia:string>
+          </dia:attribute>
+          <dia:attribute name="comment">
+            <dia:string>#Also switcheroo'd#</dia:string>
+          </dia:attribute>
+          <dia:attribute name="visibility">
+            <dia:enum val="1"/>
+          </dia:attribute>
+          <dia:attribute name="abstract">
+            <dia:boolean val="false"/>
+          </dia:attribute>
+          <dia:attribute name="class_scope">
+            <dia:boolean val="false"/>
+          </dia:attribute>
+        </dia:composite>
+      </dia:attribute>
       <dia:attribute name="operations">
         <dia:composite type="umloperation">
           <dia:attribute name="name">
@@ -2316,7 +2340,7 @@ end. Oh well.#</dia:string>
         <dia:point val="27.4575,20.2497"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="24.7013,20.1997;30.0913,23.9997"/>
+        <dia:rectangle val="24.7013,20.1997;30.0913,24.0012"/>
       </dia:attribute>
       <dia:attribute name="meta">
         <dia:composite type="dict"/>
@@ -2325,7 +2349,7 @@ end. Oh well.#</dia:string>
         <dia:point val="27.4575,20.2497"/>
         <dia:point val="27.4575,22.5"/>
         <dia:point val="27.335,22.5"/>
-        <dia:point val="27.335,23.9497"/>
+        <dia:point val="27.335,23.9512"/>
       </dia:attribute>
       <dia:attribute name="orth_orient">
         <dia:enum val="1"/>
@@ -2358,7 +2382,7 @@ end. Oh well.#</dia:string>
       </dia:attribute>
       <dia:connections>
         <dia:connection handle="0" to="O11" connection="8"/>
-        <dia:connection handle="1" to="O10" connection="22"/>
+        <dia:connection handle="1" to="O10" connection="24"/>
       </dia:connections>
     </dia:object>
     <dia:object type="UML - Dependency" version="1" id="O13">
@@ -2366,7 +2390,7 @@ end. Oh well.#</dia:string>
         <dia:point val="12.67,20.4"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="12.62,20.35;19.45,26.75"/>
+        <dia:rectangle val="12.62,20.35;19.45,28.4"/>
       </dia:attribute>
       <dia:attribute name="meta">
         <dia:composite type="dict"/>
@@ -2374,8 +2398,8 @@ end. Oh well.#</dia:string>
       <dia:attribute name="orth_points">
         <dia:point val="12.67,20.4"/>
         <dia:point val="15.635,20.4"/>
-        <dia:point val="15.635,26.3"/>
-        <dia:point val="19,26.3"/>
+        <dia:point val="15.635,27.95"/>
+        <dia:point val="19,27.95"/>
       </dia:attribute>
       <dia:attribute name="orth_orient">
         <dia:enum val="0"/>
@@ -2411,7 +2435,7 @@ end. Oh well.#</dia:string>
       </dia:attribute>
       <dia:connections>
         <dia:connection handle="0" to="O0" connection="13"/>
-        <dia:connection handle="1" to="O10" connection="8"/>
+        <dia:connection handle="1" to="O10" connection="10"/>
       </dia:connections>
     </dia:object>
     <dia:object type="UML - Class" version="0" id="O14">
