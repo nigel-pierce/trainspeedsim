@@ -9,6 +9,10 @@ class TrackSeg:
         assert index >= 0 and type(index) is int
         assert start <= end
         assert speed >= 0
+        if (start == end):
+            assert speed == 0, "speed must be 0 when TrackSeg length is 0"
+        else:
+            assert speed > 0, "speed must be > 0 when TrackSeg length > 0"
         self._index = index
         self._start = start
         self._end   = end
