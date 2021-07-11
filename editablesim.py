@@ -1,10 +1,11 @@
 #! /usr/bin/python3
 
 from simulation import Simulation, Track, TrackSeg
+from convunits import Pos, Speed
 
 class EditableTrackSeg(TrackSeg):
     def __init__(self, index, start, end, speed):
-        TrackSeg.__init__(index, start, end, speed)
+        TrackSeg.__init__(self, index, start, end, speed)
         # I think that's it as far as constructoring goes
 
     def set_index(self, index):
@@ -24,3 +25,18 @@ class EditableTrackSeg(TrackSeg):
         assert start <= end
         self._start = start
         self._end = end
+
+
+
+if __name__ == "__main__":
+    seg = EditableTrackSeg(3, Pos(0, "mi").to_smaller_unit(), \
+            Pos(0, "mi").to_smaller_unit(), Speed(0, "mi/h").to_smaller_unit())
+    print(seg)
+
+    try:
+        seg2 = EditableTrackSeg(-2, Pos(0.2, "mi").to_smaller_unit(),
+                Pos(0.3, "mi").to_smaller_unit(), Speed(100, 
+                "mi/h").to_smaller_unit())
+        print(seg2)
+    except AssertionError as e:
+        print(repr(e))
