@@ -56,3 +56,11 @@ if __name__ == "__main__":
         print(seg2)
     except AssertionError as e:
         print(repr(e))
+    try:
+        seg2 = EditableTrackSeg(10, Pos(30, "mi").to_smaller_unit(),
+                Pos(30, "mi").to_smaller_unit(), Speed(10, 
+                "mi/h").to_smaller_unit())
+        # Actually this should be OK
+        print(seg2)
+    except AssertionError as e:
+        print(repr(e))
