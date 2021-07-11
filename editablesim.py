@@ -33,10 +33,26 @@ if __name__ == "__main__":
             Pos(0, "mi").to_smaller_unit(), Speed(0, "mi/h").to_smaller_unit())
     print(seg)
 
+    print("Testing invalid (Editable)TrackSegs on construction")
     try:
         seg2 = EditableTrackSeg(-2, Pos(0.2, "mi").to_smaller_unit(),
                 Pos(0.3, "mi").to_smaller_unit(), Speed(100, 
                 "mi/h").to_smaller_unit())
+        print(seg2)
+    except AssertionError as e:
+        print(repr(e))
+    try:
+        seg2 = EditableTrackSeg(1, Pos(1, "mi").to_smaller_unit(),
+                Pos(0.9, "mi").to_smaller_unit(), Speed(25, 
+                "mi/h").to_smaller_unit())
+        print(seg2)
+    except AssertionError as e:
+        print(repr(e))
+    try:
+        seg2 = EditableTrackSeg(10, Pos(30, "mi").to_smaller_unit(),
+                Pos(30.1, "mi").to_smaller_unit(), Speed(0, 
+                "mi/h").to_smaller_unit())
+        # I need to make it so I don't need to call to_smaller_unit() so much
         print(seg2)
     except AssertionError as e:
         print(repr(e))
