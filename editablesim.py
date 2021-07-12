@@ -43,6 +43,20 @@ class TestEditableTrackSegMethods(unittest.TestCase):
         with self.assertRaises(AssertionError):
             seg.set_index(-3)
 
+    def test_set_start(self):
+        self.assertEqual(self.seg.get_start(), Pos(11.4,
+                "mi").to_smaller_unit())
+        self.assertEqual(self.seg.get_end(), Pos(13.5, 
+                "mi").to_smaller_unit())
+        self.seg.set_start(Pos(10.8, "mi").to_smaller_unit())
+        self.assertEqual(self.seg.get_start(), 
+                Pos(10.8, "mi").to_smaller_unit())
+        with self.assertRaises(AssertionError):
+            self.seg.set_start(Pos(15, "mi").to_smaller_unit())
+        self.seg.set_start(Pos(13.5, "mi").to_smaller_unit())
+        self.assertEqual(self.seg.get_start(),
+                Pos(13.5, "mi").to_smaller_unit())
+
 
 if __name__ == "__main__":
     seg = EditableTrackSeg(3, Pos(0, "mi").to_smaller_unit(), \
