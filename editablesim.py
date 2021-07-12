@@ -74,6 +74,26 @@ class TestEditableTrackSegMethods(unittest.TestCase):
             Pos(11.4, "mi").to_smaller_unit())
         self.assertEqual(self.seg.get_start(), self.seg.get_end())
 
+    def test_set_start_end(self):
+        # check initial start & end values
+        self.assertEqual(self.seg.get_start(),
+                Pos(11.4, "mi").to_smaller_unit())
+        self.assertEqual(self.seg.get_end(), Pos(13.5, "mi").to_smaller_unit())
+        # set start and end to > current end
+        self.seg.set_start_end(Pos(14, "mi").to_smaller_unit(),
+                Pos(15, "mi").to_smaller_unit())
+        self.assertEqual(self.seg.get_start(), Pos(14, "mi").to_smaller_unit())
+        self.assertEqual(self.seg.get_end(), Pos(15, "mi").to_smaller_unit())
+        # set start > end (should throw)
+        with self.assertRaises(AssertionError):
+            self.seg.set_start_end(Pos(16, "mi").to_smaller_unit(),
+                    Pos(10, "mi").to_smaller_unit())
+        # set start == end
+        self.seg.set_start_end(Pos(9.5, "mi").to_smaller_unit(),
+                Pos(9.5, "mi").to_smaller_unit())
+        self.assertEqual(self.seg.get_start(), self.seg.get_end())
+        
+
 
 if __name__ == "__main__":
     seg = EditableTrackSeg(3, Pos(0, "mi").to_smaller_unit(), \
