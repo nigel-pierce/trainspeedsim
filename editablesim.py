@@ -28,6 +28,22 @@ class EditableTrackSeg(TrackSeg):
 
 
 
+import unittest
+
+class TestEditableTrackSegMethods(unittest.TestCase):
+    def setUp(self):
+        self.seg = EditableTrackSeg(14, Pos(11.4, "mi").to_smaller_unit(),
+                Pos(13.5, "mi").to_smaller_unit(), Speed(25,
+                "mi/h").to_smaller_unit())
+
+    def test_set_index(self):
+        self.assertEqual(self.seg.get_index(), 14)
+        self.seg.set_index(30)
+        self.assertEqual(self.seg.get_index(), 30)
+        with self.assertRaises(AssertionError):
+            seg.set_index(-3)
+
+
 if __name__ == "__main__":
     seg = EditableTrackSeg(3, Pos(0, "mi").to_smaller_unit(), \
             Pos(0, "mi").to_smaller_unit(), Speed(0, "mi/h").to_smaller_unit())
@@ -66,3 +82,6 @@ if __name__ == "__main__":
         print(seg2)
     except AssertionError as e:
         print(repr(e))
+
+    print("Testing setting methods")
+    unittest.main()
