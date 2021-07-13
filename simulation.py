@@ -6,11 +6,21 @@ from convunits import Pos, Speed, Accel
 
 class TrackSeg:
     def __init__(self, index, start, end, speed):
-        assert index >= 0 and type(index) is int
-        assert start <= end
-        assert speed >= 0
+        # assert index >= 0 and type(index) is int
+        if not isinstance(index, int):
+            raise TypeError("index must be int-derived")
+        if index < 0:
+            raise IndexError("index must be non-negative")
+        # assert start <= end
+        if start > end:
+            raise ValueError("start must be <= end")
+        # assert speed >= 0
+        if speed < 0:
+            raise ValueError("speed must be non-negative")
         if (speed == 0):
-            assert start == end, "TrackSeg length must be 0 when speed is 0"
+            # assert start == end, "TrackSeg length must be 0 when speed is 0"
+            if start != end:
+                raise ValueError("start and end must be equal if speed is 0")
         self._index = index
         self._start = start
         self._end   = end
