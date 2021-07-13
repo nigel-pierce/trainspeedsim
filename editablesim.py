@@ -106,14 +106,14 @@ if __name__ == "__main__":
                 Pos(0.3, "mi").to_smaller_unit(), Speed(100, 
                 "mi/h").to_smaller_unit())
         print(seg2)
-    except AssertionError as e:
+    except Exception as e:
         print(repr(e))
     try:
         seg2 = EditableTrackSeg(1, Pos(1, "mi").to_smaller_unit(),
                 Pos(0.9, "mi").to_smaller_unit(), Speed(25, 
                 "mi/h").to_smaller_unit())
         print(seg2)
-    except AssertionError as e:
+    except Exception as e:
         print(repr(e))
     try:
         seg2 = EditableTrackSeg(10, Pos(30, "mi").to_smaller_unit(),
@@ -121,7 +121,7 @@ if __name__ == "__main__":
                 "mi/h").to_smaller_unit())
         # I need to make it so I don't need to call to_smaller_unit() so much
         print(seg2)
-    except AssertionError as e:
+    except Exception as e:
         print(repr(e))
 
     print("Testing valid speed > 0 when TrackSeg length == 0")
@@ -131,7 +131,7 @@ if __name__ == "__main__":
                 "mi/h").to_smaller_unit())
         # Actually this should be OK
         print(seg2)
-    except AssertionError as e:
+    except Exception as e:
         print(repr(e))
 
     print("Testing setting methods")
