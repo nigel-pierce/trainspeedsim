@@ -9,20 +9,27 @@ class EditableTrackSeg(TrackSeg):
         # I think that's it as far as constructoring goes
 
     def set_index(self, index):
-        assert index >= 0 and type(index) is int
+        if not isinstance(index, int):
+            raise TypeError("index must be int-derived")
+        if index < 0:
+            raise IndexError("index must be non-negative")
+
         self._index = index
 
     def set_start(self, start):
-        assert start <= self._end
+        if start > self._end:
+            raise ValueError("start must be <= end")
         self._start = start
 
     def set_end(self, end):
-        assert end >= self._start
+        if self._start > end:
+            raise ValueError("start must be <= end")
         self._end = end
 
     # Convenience method
     def set_start_end(self, start, end):
-        assert start <= end
+        if start > end:
+            raise ValueError("start must be <= end")
         self._start = start
         self._end = end
 
