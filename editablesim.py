@@ -135,6 +135,11 @@ class TestEditableTrackSegMethods(unittest.TestCase):
                 Pos(9.5, "mi").to_smaller_unit())
         self.assertEqual(self.seg.get_start(), self.seg.get_end())
         
+        # set start < end with 0 speed, should throw
+        self.seg.set_speed(Speed(0, "mi/h").to_smaller_unit())
+        with self.assertRaises(ValueError):
+            self.seg.set_start_end(Pos(8, "mi").to_smaller_unit(),
+                    Pos(9.9, "mi").to_smaller_unit())
 
 
 if __name__ == "__main__":
