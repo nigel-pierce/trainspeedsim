@@ -69,6 +69,8 @@ class TestEditableTrackSegMethods(unittest.TestCase):
         self.seg.set_start(Pos(13.5, "mi").to_smaller_unit())
         self.assertEqual(self.seg.get_start(),
                 Pos(13.5, "mi").to_smaller_unit())
+        # set_start should throw ValueError IFF speed is 0 and length > 0
+        # wait I don't have a set_speed method yet
 
     def test_set_end(self):
         # check initial start & end values
