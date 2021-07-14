@@ -58,9 +58,14 @@ class TestEditableTrackSegMethods(unittest.TestCase):
                 "mi/h").to_smaller_unit())
 
     def test_set_index(self):
+        # confirm current index
         self.assertEqual(self.seg.get_index(), 14)
+
+        # set index
         self.seg.set_index(30)
         self.assertEqual(self.seg.get_index(), 30)
+
+        # set index < 0 (should throw)
         with self.assertRaises(IndexError):
             seg.set_index(-3)
 
