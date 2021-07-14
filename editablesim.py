@@ -53,7 +53,7 @@ class TestEditableTrackSegMethods(unittest.TestCase):
         self.assertEqual(self.seg.get_index(), 14)
         self.seg.set_index(30)
         self.assertEqual(self.seg.get_index(), 30)
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(IndexError):
             seg.set_index(-3)
 
     def test_set_start(self):
@@ -64,7 +64,7 @@ class TestEditableTrackSegMethods(unittest.TestCase):
         self.seg.set_start(Pos(10.8, "mi").to_smaller_unit())
         self.assertEqual(self.seg.get_start(), 
                 Pos(10.8, "mi").to_smaller_unit())
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(ValueError):
             self.seg.set_start(Pos(15, "mi").to_smaller_unit())
         self.seg.set_start(Pos(13.5, "mi").to_smaller_unit())
         self.assertEqual(self.seg.get_start(),
@@ -79,7 +79,7 @@ class TestEditableTrackSegMethods(unittest.TestCase):
         self.seg.set_end(Pos(14, "mi").to_smaller_unit())
         self.assertEqual(self.seg.get_end(), Pos(14, "mi").to_smaller_unit())
         # set end to earlier than start (should throw)
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(ValueError):
             self.seg.set_end(Pos(10, "mi").to_smaller_unit())
         # set end to equal start and check
         self.seg.set_end(Pos(11.4, "mi").to_smaller_unit())
@@ -98,7 +98,7 @@ class TestEditableTrackSegMethods(unittest.TestCase):
         self.assertEqual(self.seg.get_start(), Pos(14, "mi").to_smaller_unit())
         self.assertEqual(self.seg.get_end(), Pos(15, "mi").to_smaller_unit())
         # set start > end (should throw)
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(ValueError):
             self.seg.set_start_end(Pos(16, "mi").to_smaller_unit(),
                     Pos(10, "mi").to_smaller_unit())
         # set start == end
