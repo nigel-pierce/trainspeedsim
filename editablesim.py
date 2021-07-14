@@ -91,12 +91,15 @@ class TestEditableTrackSegMethods(unittest.TestCase):
         self.assertEqual(self.seg.get_start(),
                 Pos(11.4, "mi").to_smaller_unit())
         self.assertEqual(self.seg.get_end(), Pos(13.5, "mi").to_smaller_unit())
+
         # set end farther to 14 miles and check
         self.seg.set_end(Pos(14, "mi").to_smaller_unit())
         self.assertEqual(self.seg.get_end(), Pos(14, "mi").to_smaller_unit())
+        
         # set end to earlier than start (should throw)
         with self.assertRaises(ValueError):
             self.seg.set_end(Pos(10, "mi").to_smaller_unit())
+
         # set end to equal start and check
         self.seg.set_end(Pos(11.4, "mi").to_smaller_unit())
         self.assertEqual(self.seg.get_start(),
