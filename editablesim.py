@@ -36,7 +36,7 @@ class EditableTrackSeg(TrackSeg):
         if (speed == 0):
             if self._start != self._end:
                 raise ValueError("if start != end, speed must be > 0")
-        #self._speed = speed
+        self._speed = speed
 
     # Convenience method
     def set_start_end(self, start, end):
