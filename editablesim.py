@@ -30,6 +30,14 @@ class EditableTrackSeg(TrackSeg):
             raise ValueError("start and end must be equal if speed is 0")
         self._end = end
 
+    def set_speed(self, speed):
+        if speed < 0:
+            raise ValueError("speed must be non-negative")
+        if (speed == 0):
+            if self._start != self._end:
+                raise ValueError("if start != end, speed must be > 0")
+        #self._speed = speed
+
     # Convenience method
     def set_start_end(self, start, end):
         if start > end:
@@ -66,11 +74,17 @@ class TestEditableTrackSegMethods(unittest.TestCase):
                 Pos(10.8, "mi").to_smaller_unit())
         with self.assertRaises(ValueError):
             self.seg.set_start(Pos(15, "mi").to_smaller_unit())
+        # set start so length == 0
+        self.assertEqual(self.seg.get_end(), Pos(13.5, 
+                "mi").to_smaller_unit())
         self.seg.set_start(Pos(13.5, "mi").to_smaller_unit())
         self.assertEqual(self.seg.get_start(),
                 Pos(13.5, "mi").to_smaller_unit())
         # set_start should throw ValueError IFF speed is 0 and length > 0
-        # wait I don't have a set_speed method yet
+        self.seg.set_speed(Speed(0, "mi/h").to_smaller_unit())
+        self.assertEqual(self.seg.get_speed(), Speed(0, "mi/h").to_smaller_unit())
+        #with self.assertRaises(ValueError):
+        #    self.set.set_start(Pos(13.4, "mi").to_smaller_unit())
 
     def test_set_end(self):
         # check initial start & end values
