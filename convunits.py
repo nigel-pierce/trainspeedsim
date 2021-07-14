@@ -11,6 +11,10 @@ class HasUnit: # virtual/interface-ish
     def __str__(self):
         return str(self._val)+" "+self._unit
 
+    def __repr__(self):
+        #return str(self)
+        return "{}({}, '{}')".format(type(self).__name__, self._val, self._unit)
+
     def val(self):
         return self._val
     
