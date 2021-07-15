@@ -1,6 +1,44 @@
 
 from fractions import Fraction
 
+# TODO add accel
+def system_to_unit(units, unit_type, size):
+    systems = ("imperial", "metric")
+    types = ("pos", "speed")
+    sizes = ("big", "small")
+
+    # validate
+    if units not in systems:
+        raise ValueError("units '"+units+"' must be in systems "+systems)
+    if unit_type not in types:
+        raise ValueError("unit type '"+unit_type+"' must be one of "+types)
+    if size not in sizes:
+        raise ValueError("size '"+size+"' must be one of "+sizes)
+
+    #everything = {
+            #systems[0]: {
+            #types[0]: {
+            #sizes[0]: 
+
+    sys_to_unit = {
+            "imperial": {
+                "pos": {
+                    "big": "mi",
+                    "small": "f" },
+                "speed": {
+                    "big":  "mi/h",
+                    "small":"f/s" } },
+            "metric": {
+                "pos": {
+                    "big":   "km",
+                    "small": "m" },
+                "speed": {
+                    "big":   "km/h",
+                    "small": "m/s" } }
+            }
+    
+    return sys_to_unit[units][unit_type][size]
+
 class HasUnit: # virtual/interface-ish
     # Subclasses will define the values, and units
 
