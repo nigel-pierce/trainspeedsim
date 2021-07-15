@@ -259,6 +259,15 @@ class TestEditableTrack(unittest.TestCase):
             Pos(1.1, "mi").to_smaller_unit(), Pos(3.2, "mi").to_smaller_unit(),
             Speed(45, "mi/h").to_smaller_unit()))
 
+        # append a third segment, but invalid
+        with self.assertRaises(ValueError):
+            self.buildtrack.append_seg(Speed(0, "mi/h").to_smaller_unit(),
+                Pos(0.1, "mi").to_smaller_unit())
+
+        # append a real third segment, 0mph, 0-length
+        self.buildtrack.append_seg(Speed(0, "mi/h").to_smaller_unit(),
+                Pos(0, "mi").to_smaller_unit())
+
         # print it so far
         print(self.buildtrack)
 
