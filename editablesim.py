@@ -220,12 +220,16 @@ class TestEditableTrack(unittest.TestCase):
                 "imperial")
         self.buildtrack = EditableTrack(units="imperial")
 
-    def test_filetrack(self):
+    def test_initial_tracks(self):
         # just print it and see if it looks all right
         print(self.filetrack)
+        print(self.buildtrack)
         pass
 
+    #def ,kíííííííííííííííííííííííííí';[p--
 
+    #def test_append(self):
+        #self.buildtrack.
 
 if __name__ == "__main__":
     seg = EditableTrackSeg(3, Pos(0, "mi").to_smaller_unit(), \
