@@ -8,6 +8,12 @@ class EditableTrackSeg(TrackSeg):
         TrackSeg.__init__(self, index, start, end, speed)
         # I think that's it as far as constructoring goes
 
+    # create EditableTrackSeg from TrackSeg
+    @classmethod
+    def editableify(cls, seg):
+        return cls(seg.get_index(), seg.get_start(), seg.get_end(),
+                seg.get_speed())
+
     def set_index(self, index):
         if not isinstance(index, int):
             raise TypeError("index must be int-derived")
