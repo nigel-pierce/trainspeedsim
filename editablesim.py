@@ -195,13 +195,13 @@ class TestEditableTrackSegMethods(unittest.TestCase):
 
 
 class EditableTrack(Track):
-    def __init__(self, filename):
+    def __init__(self, filename=None, units=None):
         if filename is None:
             # start a track from scratch
             pass
         else:
             # Track-style behavior and load a track
-            Track.__init__(self, filename)
+            Track.__init__(self, filename, units)
             # Make it editable
             self._editableify()
 
@@ -210,8 +210,22 @@ class EditableTrack(Track):
             editable_seg = EditableTrackSeg.editableify(self._track[i])
             self._track[i] = editable_seg
 
-    self.__str__(self):
+    def __str__(self):
         return Track.__str__(self) + "\nEditable"
+
+
+class TestEditableTrack(unittest.TestCase):
+    def setUp(self):
+        self.filetrack = EditableTrack("sprinter_maxspeeds_stations.csv",
+                "imperial")
+        self.buildtrack = EditableTrack(units="imperial")
+
+    def test_filetrack(self):
+        # just print it and see if it looks all right
+        print(self.filetrack)
+        pass
+
+
 
 if __name__ == "__main__":
     seg = EditableTrackSeg(3, Pos(0, "mi").to_smaller_unit(), \
