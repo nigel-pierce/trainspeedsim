@@ -194,6 +194,25 @@ class TestEditableTrackSegMethods(unittest.TestCase):
                     Pos(9.9, "mi").to_smaller_unit())
 
 
+class EditableTrack(Track):
+    def __init__(self, filename):
+        if filename is None:
+            # start a track from scratch
+            pass
+        else:
+            # Track-style behavior and load a track
+            Track.__init__(self, filename)
+            # Make it editable
+            self._editableify()
+
+    def _editableify(self):
+        for i in range(0, len(self._track)):
+            editable_seg = EditableTrackSeg.editableify(self._track[i])
+            self._track[i] = editable_seg
+
+    self.__str__(self):
+        return Track.__str__(self) + "\nEditable"
+
 if __name__ == "__main__":
     seg = EditableTrackSeg(3, Pos(0, "mi").to_smaller_unit(), \
             Pos(0, "mi").to_smaller_unit(), Speed(0, "mi/h").to_smaller_unit())
