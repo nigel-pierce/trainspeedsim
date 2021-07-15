@@ -33,6 +33,12 @@ class TrackSeg:
     
     def __repr__(self):
         return "TrackSeg(index={}, start={}, end={}, speed={})".format(self._index, self._start, self._end, self._speed)
+
+    def __eq__(self, other):
+        if type(other) != type(self):
+            raise TypeError("Incomparable types")
+        return self._index == other._index and self._start == other._start and \
+                self._end == other._end and self._speed == other._speed
     
     def get_index(self):
         return self._index
