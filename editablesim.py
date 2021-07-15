@@ -245,11 +245,22 @@ class TestEditableTrack(unittest.TestCase):
     #def ,kíííííííííííííííííííííííííí';[p--
 
     def test_append(self):
+        # append first TrackSeg
         self.buildtrack.append_seg(Speed(30, "mi/h").to_smaller_unit(),
                 Pos(1.1, "mi").to_smaller_unit())
         self.assertEqual(self.buildtrack._track[0], EditableTrackSeg(0,
             Pos(0, "mi").to_smaller_unit(), Pos(1.1, "mi").to_smaller_unit(),
             Speed(30, "mi/h").to_smaller_unit()))
+
+        # append to that
+        self.buildtrack.append_seg(Speed(45, "mi/h").to_smaller_unit(),
+                Pos(2.1, "mi").to_smaller_unit())
+        self.assertEqual(self.buildtrack._track[1], EditableTrackSeg(1,
+            Pos(1.1, "mi").to_smaller_unit(), Pos(3.2, "mi").to_smaller_unit(),
+            Speed(45, "mi/h").to_smaller_unit()))
+
+        # print it so far
+        print(self.buildtrack)
 
 if __name__ == "__main__":
     seg = EditableTrackSeg(3, Pos(0, "mi").to_smaller_unit(), \
