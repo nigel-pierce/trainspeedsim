@@ -198,12 +198,14 @@ class EditableTrack(Track):
     def __init__(self, filename=None, units=None):
         if filename is None:
             # start a track from scratch
-            pass
+            self._track = []
+            self._units = units
         else:
             # Track-style behavior and load a track
             Track.__init__(self, filename, units)
             # Make it editable
             self._editableify()
+            self._units = units
 
     def _editableify(self):
         for i in range(0, len(self._track)):
