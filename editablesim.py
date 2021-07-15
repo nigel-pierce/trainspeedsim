@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 
 from simulation import Simulation, Track, TrackSeg
-from convunits import Pos, Speed
+from convunits import Pos, Speed, system_to_unit
 
 class EditableTrackSeg(TrackSeg):
     def __init__(self, index, start, end, speed):
@@ -217,9 +217,10 @@ class EditableTrack(Track):
 
     def append_seg(self, speed, length):
         # no need to validate, EditableTrackSeg takes care of that
+        pos_unit = system_to_unit(self._units, "pos", "big")
         if len(self._track) == 0:
             index = 0
-            start = Pos(0, self._units).to_smaller_unit()
+            start = Pos(0, pos_unit).to_smaller_unit()
             end = length
         else:
             index = self._track[-1].get_index() + 1
@@ -246,7 +247,7 @@ class TestEditableTrack(unittest.TestCase):
     def test_append(self):
         self.buildtrack.append_seg(Speed(30, "mi/h").to_smaller_unit(),
                 Pos(1.1, "mi").to_smaller_unit())
-        self.assertEqual(self.buildtrack[0], EditableTrackSeg(0,
+        self.assertEqual(self.buildtrack._track[0], EditableTrackSeg(0,
             Pos(0, "mi").to_smaller_unit(), Pos(1.1, "mi").to_smaller_unit(),
             Speed(30, "mi/h").to_smaller_unit()))
 
