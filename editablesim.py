@@ -215,6 +215,20 @@ class EditableTrack(Track):
     def __str__(self):
         return Track.__str__(self) + "\nEditable"
 
+    def append_seg(self, speed, length):
+        # no need to validate, EditableTrackSeg takes care of that
+        if len(self._track) == 0:
+            index = 0
+            start = Pos(0, self._units).to_smaller_unit()
+            end = length
+        else:
+            index = self._track[-1].get_index() + 1
+            start = self._track[-1].get_end()
+            end = start + length
+
+        # append new EditableTrackSeg
+        self._track.append(EditableTrackSeg(index, start, end, speed))
+
 
 class TestEditableTrack(unittest.TestCase):
     def setUp(self):
@@ -226,12 +240,15 @@ class TestEditableTrack(unittest.TestCase):
         # just print it and see if it looks all right
         print(self.filetrack)
         print(self.buildtrack)
-        pass
 
     #def ,kíííííííííííííííííííííííííí';[p--
 
-    #def test_append(self):
-        #self.buildtrack.
+    def test_append(self):
+        self.buildtrack.append_seg(Speed(30, "mi/h").to_smaller_unit(),
+                Pos(1.1, "mi").to_smaller_unit())
+        self.assertEqual(self.buildtrack[0], EditableTrackSeg(0,
+            Pos(0, "mi").to_smaller_unit(), Pos(1.1, "mi").to_smaller_unit(),
+            Speed(30, "mi/h").to_smaller_unit()))
 
 if __name__ == "__main__":
     seg = EditableTrackSeg(3, Pos(0, "mi").to_smaller_unit(), \
