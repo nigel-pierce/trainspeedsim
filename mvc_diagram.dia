@@ -3368,7 +3368,7 @@ end 0-len, 0-speed seg#</dia:string>
         <dia:point val="-17,24"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="-17.05,23.95;-4.115,28.15"/>
+        <dia:rectangle val="-17.05,23.95;-4.115,28.95"/>
       </dia:attribute>
       <dia:attribute name="meta">
         <dia:composite type="dict"/>
@@ -3380,7 +3380,7 @@ end 0-len, 0-speed seg#</dia:string>
         <dia:real val="12.834999999999999"/>
       </dia:attribute>
       <dia:attribute name="elem_height">
-        <dia:real val="4.0999999999999996"/>
+        <dia:real val="4.8999999999999995"/>
       </dia:attribute>
       <dia:attribute name="text">
         <dia:composite type="text">
@@ -3388,7 +3388,8 @@ end 0-len, 0-speed seg#</dia:string>
             <dia:string>#Most fundamental modifiers are:
 insert_limit()
 edit_limit()
-split_limit()#</dia:string>
+split_limit()
+append_limit()#</dia:string>
           </dia:attribute>
           <dia:attribute name="font">
             <dia:font family="monospace" style="0" name="Courier"/>
