@@ -284,7 +284,7 @@ class EditableTrack(Track):
             # but just in case, let's make sure low <= high:
             if not (low_index <= high_index):
                 raise RuntimeError("somehow low index > high index ("+
-                        low_index+" > "+high_index)
+                        str(low_index)+" > "+str(high_index)+")")
 
             check_index = round((low_index + high_index) / 2)
             # that biases check_index to equal high_index when high_index - 
