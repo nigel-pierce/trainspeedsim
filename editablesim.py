@@ -355,6 +355,15 @@ class TestEditableTrack(unittest.TestCase):
         # well print it
         print(self.shorttrack)
 
+    def test__intersecting_segs(self):
+        # assume loaded track correctly
+
+        inter = self.shorttrack._intersecting_segs(Pos(11.5, 
+            "mi").to_smaller_unit())
+
+        print(inter)
+
+
 if __name__ == "__main__":
     seg = EditableTrackSeg(3, Pos(0, "mi").to_smaller_unit(), \
             Pos(0, "mi").to_smaller_unit(), Speed(0, "mi/h").to_smaller_unit())
