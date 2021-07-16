@@ -388,6 +388,14 @@ class TestEditableTrack(unittest.TestCase):
         self.assertIn(self.shorttrack._track[4], inter)
         self.assertIn(self.shorttrack._track[5], inter)
 
+        # intersect very start of track
+        inter = self.shorttrack._intersecting_segs(Pos(0,
+            "mi").to_smaller_unit())
+        self._print_intersecting_segs(inter)
+        self.assertEqual(len(inter), 2)
+        self.assertIn(self.shorttrack._track[0], inter)
+        self.assertIn(self.shorttrack._track[1], inter)
+
     def _print_intersecting_segs(self, l):
         print("intersecting: [")
         for t in l:
