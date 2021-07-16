@@ -362,8 +362,18 @@ class TestEditableTrack(unittest.TestCase):
         inter = self.shorttrack._intersecting_segs(Pos(11.5, 
             "mi").to_smaller_unit())
 
+        print("intersecting: [")
         for t in inter:
             print(str(t)+", ")
+        print("]")
+
+        inter = self.shorttrack._intersecting_segs(Pos(11.3,
+            "mi").to_smaller_unit())
+
+        print("intersecting: [")
+        for t in inter:
+            print(str(t)+", ")
+        print("]")
 
 
 if __name__ == "__main__":
