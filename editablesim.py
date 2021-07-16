@@ -257,7 +257,13 @@ class EditableTrack(Track):
     def _intersecting_segs(self, mp):
         if (mp < 0):
             raise ValueError("mp must be non-negative")
+        if mp < self._track[0].get_start():
+            raise ValueError("mp {} < min mp {}".format(mp,
+                self._track[0].get_start()))
         # maybe also check if it's > final segment's end?
+        if mp > self._track[-1].get_end():
+            raise ValueError("mp {} > max mp {}".format(mp, 
+                self._track[-1].get_end()))
 
         # we'll have to do a search
         low_index = 0
