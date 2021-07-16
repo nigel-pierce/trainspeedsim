@@ -272,6 +272,11 @@ class TestEditableTrack(unittest.TestCase):
         # print it so far
         print(self.buildtrack)
 
+    def test_split(self):
+        # just assume short track loaded correctly
+        # well print it
+        print(self.shorttrack)
+
 if __name__ == "__main__":
     seg = EditableTrackSeg(3, Pos(0, "mi").to_smaller_unit(), \
             Pos(0, "mi").to_smaller_unit(), Speed(0, "mi/h").to_smaller_unit())
