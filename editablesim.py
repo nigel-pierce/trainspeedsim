@@ -318,8 +318,9 @@ class TestEditableTrack(unittest.TestCase):
 
     def test_initial_tracks(self):
         # just print it and see if it looks all right
-        print(self.filetrack)
-        print(self.buildtrack)
+        #print(self.filetrack)
+        #print(self.buildtrack)
+        pass
 
     #def ,kíííííííííííííííííííííííííí';[p--
 
