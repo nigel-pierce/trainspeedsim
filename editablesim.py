@@ -291,18 +291,18 @@ class EditableTrack(Track):
             # low_index == 1
 
         # check if other segs before or after check_index also intersected
-        intersected = set()
+        intersected = []
         the_seg = self._track[check_index]
-        intersected.add(the_seg)
+        intersected.append(the_seg)
         # before
         i = check_index - 1
         while self._track[i].get_end() == mp:
-            intersected.add(self._track[i])
+            intersected.append(self._track[i])
             i = i - 1
         # after
         i = check_index + 1
         while self._track[i].get_start() == mp:
-            intersected.add(self._track[i])
+            intersected.append(self._track[i])
             i = i + 1
 
 
