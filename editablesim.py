@@ -366,9 +366,10 @@ class TestEditableTrack(unittest.TestCase):
         track1 = EditableTrackSeg(3, Pos(11.3, "mi").to_smaller_unit(),
                 Pos(11.8, "mi").to_smaller_unit(), Speed(35, 
                 "mi/h").to_smaller_unit())
-        self.assertIn(track1, self.shorttrack._track)
+        self.assertIn(track1, inter)
         # Gawd writing that takes forever
         # maybe I'll just index shorttrack._track in the future
+        self.assertEqual(len(inter), 1)
 
         # intersect boundary of 2 segs
         inter = self.shorttrack._intersecting_segs(Pos(11.3,
