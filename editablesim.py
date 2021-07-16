@@ -247,6 +247,67 @@ class EditableTrack(Track):
 
         pass
 
+    # Checks if mp is "on boundary" of a track seg by seeing if len of tuple
+    # returned by self._intersecting_segs(mp) > 1
+    def _on_boundary(self, mp):
+        return len(self._intersecting_segs(mp)) > 1
+
+    # mp "intersects" any track segment where start <= mp <= end
+    # hence it can intersect on boundaries and 0-length segments
+    def _intersecting_segs(self, mp):
+        if (mp < 0):
+            raise ValueError("mp must be non-negative")
+        # maybe also check if it's > final segment's end?
+
+        # we'll have to do a search
+        low_index = 0
+        high_index = len(self._track) - 1
+        check_index = round((low_index + high_index) / 2)
+
+        while True:
+            seg = self._track[check_index]
+            if seg.get_start() <= mp and seg.get_end() >= mp:
+                break
+            elif seg.get_start() > mp:
+                # - 1 b/c seg at check_index is NOT intersected
+                high_index = check_index - 1
+            elif seg.get_end() < mp:
+                # + 1 b/c seg at check_index is NOT intersected
+                low_index = check_index + 1
+            else:
+                # should never get here
+                raise RuntimeError("got past if-elifs that should've exhausted"+
+                    "all possibilities (i.e., you should never see this)")
+
+            # the + 1 and - 1 ensure that low or high will always change
+            # each iteration, so we can't get stuck
+            # but just in case, let's make sure low <= high:
+            if not (low_index <= high_index):
+                raise RuntimeError("somehow low index > high index ("+
+                        low_index+" > "+high_index)
+
+            check_index = round((low_index + high_index) / 2)
+            # that biases check_index to equal high_index when high_index - 
+            # low_index == 1
+
+        # check if other segs before or after check_index also intersected
+        intersected = set()
+        the_seg = self._track[check_index]
+        intersected.add(the_seg)
+        # before
+        i = check_index - 1
+        while self._track[i].get_end() == mp:
+            intersected.add(self._track[i])
+            i = i - 1
+        # after
+        i = check_index + 1
+        while self._track[i].get_start() == mp:
+            intersected.add(self._track[i])
+            i = i + 1
+
+
+        return intersected
+
 
 class TestEditableTrack(unittest.TestCase):
     def setUp(self):
