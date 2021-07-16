@@ -362,13 +362,16 @@ class TestEditableTrack(unittest.TestCase):
         # intersect in middle of seg
         inter = self.shorttrack._intersecting_segs(Pos(11.5, 
             "mi").to_smaller_unit())
-
         self._print_intersecting_segs(inter)
 
         # intersect boundary of 2 segs
         inter = self.shorttrack._intersecting_segs(Pos(11.3,
             "mi").to_smaller_unit())
+        self._print_intersecting_segs(inter)
 
+        # intersect 0-length seg
+        inter = self.shorttrack._intersecting_segs(Pos(11.8,
+            "mi").to_smaller_unit())
         self._print_intersecting_segs(inter)
 
     def _print_intersecting_segs(self, l):
