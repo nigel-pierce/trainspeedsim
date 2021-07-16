@@ -236,6 +236,7 @@ class TestEditableTrack(unittest.TestCase):
         self.filetrack = EditableTrack("sprinter_maxspeeds_stations.csv",
                 "imperial")
         self.buildtrack = EditableTrack(units="imperial")
+        self.shorttrack = EditableTrack("short_maxspeeds.csv", "imperial")
 
     def test_initial_tracks(self):
         # just print it and see if it looks all right
