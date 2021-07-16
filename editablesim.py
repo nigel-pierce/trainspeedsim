@@ -230,6 +230,23 @@ class EditableTrack(Track):
         # append new EditableTrackSeg
         self._track.append(EditableTrackSeg(index, start, end, speed))
 
+    # Splits track segment that mp intersects with, at mp
+    # Throws if mp lies on boundary of track segment (i.e. mp == seg.get_start()
+    # or mp == seg.get_end() for some segment seg)
+    def split_seg(self, mp):
+        # throw if there's no track
+        if len(self._track) == 0:
+            raise SituationError("no track segments exist")
+        # throw if mp outside of range of track
+        if mp < self._track[0].get_start() or mp > self._track[-1].get_end():
+            raise ValueError("mp "+mp+" outside of track boundaries")
+        # throw if trying to split at segment boundary
+        # (this includes 0-length segments)
+        if self._on_boundary(mp):
+            raise ValueError("mp "+mp+" on segment boundary")
+
+        pass
+
 
 class TestEditableTrack(unittest.TestCase):
     def setUp(self):
