@@ -371,6 +371,22 @@ class TestEditableTrack(unittest.TestCase):
         # well print it
         print(self.shorttrack)
 
+        # should split seg 5 into id 5 11.8-12mi @ 50mph and id 6 12-12.5mi
+        # @ 50 mph (and shift subsequent ones id's to old id + 1)
+        twelvemiles = Pos(12.0, "mi").to_smaller_unit()
+        self.shorttrack.split_seg(twelvemiles)
+
+        self.assertEqual(len(self.shorttrack._track), 8)
+        self.assertEqual(self.shorttrack._track[5], EditableTrackSeg(5,
+            Pos(11.8, "mi").to_smaller_unit(), twelvemiles, 
+            Speed(50, "mi/h").to_smaller_unit()))
+        self.assertEqual(self.shorttrack._track[6], TrackSeg(6, twelvemiles,
+            Pos(12.5, "mi").to_smaller_unit(), 
+            Speed(50, "mi/h").to_smaller_unit()))
+        self.assertEqual(self.shorttrack._track[7].get_index(), 7)
+
+        # TODO more split tests like try to split 0-length seg etc.
+
     def test__intersecting_segs(self):
         # assume loaded track correctly
 
