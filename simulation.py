@@ -36,7 +36,8 @@ class TrackSeg:
 
     def __eq__(self, other):
         if type(other) != type(self):
-            raise TypeError("Incomparable types")
+            raise TypeError("Incomparable types {} and {}".format(type(self),
+                type(other)))
         return self._index == other._index and self._start == other._start and \
                 self._end == other._end and self._speed == other._speed
     
