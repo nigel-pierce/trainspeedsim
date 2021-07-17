@@ -240,11 +240,11 @@ class EditableTrack(Track):
             raise SituationError("no track segments exist")
         # throw if mp outside of range of track
         if mp < self._track[0].get_start() or mp > self._track[-1].get_end():
-            raise ValueError("mp "+mp+" outside of track boundaries")
+            raise ValueError("mp "+str(mp)+" outside of track boundaries")
         # throw if trying to split at segment boundary
         # (this includes 0-length segments)
         if self._on_boundary(mp):
-            raise ValueError("mp "+mp+" on segment boundary")
+            raise ValueError("mp "+str(mp)+" on segment boundary")
 
         # checks up there ^^^ guarantee there's exactly 1 seg in question
         seg_to_split = self._intersecting_segs(mp)[0]
