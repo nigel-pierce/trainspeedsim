@@ -270,14 +270,14 @@ class EditableTrack(Track):
         high_index = len(self._track) - 1
         check_index = round((low_index + high_index) / 2)
 
-        print("mp:", mp)
+        #print("mp:", mp)
 
         while True:
             seg = self._track[check_index]
 
-            print("low_index:", low_index, " check_index:", check_index,
-                " high_index:", high_index)
-            print("seg:", seg)
+            #print("low_index:", low_index, " check_index:", check_index,
+            #    " high_index:", high_index)
+            #print("seg:", seg)
             if seg.get_start() <= mp and seg.get_end() >= mp:
                 break
             elif seg.get_start() > mp:
@@ -291,8 +291,8 @@ class EditableTrack(Track):
                 raise RuntimeError("got past if-elifs that should've exhausted"+
                     "all possibilities (i.e., you should never see this)")
 
-            print("NEW: low_index:", low_index, " high_index:", high_index)
-            print("---------------")
+            #print("NEW: low_index:", low_index, " high_index:", high_index)
+            #print("---------------")
 
             # the + 1 and - 1 ensure that low or high will always change
             # each iteration, so we can't get stuck
