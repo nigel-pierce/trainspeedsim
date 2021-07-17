@@ -230,7 +230,8 @@ class EditableTrack(Track):
         # append new EditableTrackSeg
         self._track.append(EditableTrackSeg(index, start, end, speed))
 
-    # Splits track segment that mp intersects with, at mp
+    # Splits track segment that mp intersects with, at mp, into 2 new segs
+    # and updates subsequent segs' indexes accordingly
     # Throws if mp lies on boundary of track segment (i.e. mp == seg.get_start()
     # or mp == seg.get_end() for some segment seg)
     def split_seg(self, mp):
@@ -245,7 +246,32 @@ class EditableTrack(Track):
         if self._on_boundary(mp):
             raise ValueError("mp "+mp+" on segment boundary")
 
-        pass
+        # checks up there ^^^ guarantee there's exactly 1 seg in question
+        seg_to_split = self._intersecting_segs(mp)[0]
+
+        # make seg_to_split's end be mp, and make new seg whose start is mp
+        # and end is seg_to_split's old end
+        import copy
+        old_end = copy.copy(seg_to_split.get_end())
+        seg_to_split.set_end(mp)
+        new_seg = EditableTrackSeg(seg_to_split.get_index() + 1, copy.copy(mp), 
+                old_end, copy.copy(seg_to_split.get_speed()))
+        # You know, the whole thing about getters is they're supposed to not
+        # return a reference to the attribute, otherwise you'd be able to 
+        # modify an attribute via its getter...
+        # I should probably TODO have the getters in TrackSeg return copies to
+        # begin with.
+
+        # insert new_seg
+        new_seg_i = seg_to_split.get_index() + 1
+        self._track.insert(new_seg_i, new_seg)
+
+        # update subsequent segs' index members
+        for i in range(new_seg_i+1, len(self._track)):
+            self._track[i].set_index(i)
+
+
+        # that should do it
 
     # Checks if mp is "on boundary" of a track seg by seeing if len of tuple
     # returned by self._intersecting_segs(mp) > 1
