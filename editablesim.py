@@ -411,6 +411,8 @@ class TestEditableTrack(unittest.TestCase):
             Speed(50, "mi/h").to_smaller_unit()))
         self.assertEqual(self.shorttrack._track[7].get_index(), 7)
 
+        print("Split seg of ",self.shorttrack)
+
         # TODO more split tests like try to split 0-length seg etc.
 
     def test__intersecting_segs(self):
