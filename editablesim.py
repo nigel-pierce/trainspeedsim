@@ -413,7 +413,13 @@ class TestEditableTrack(unittest.TestCase):
 
         print("Split seg of ",self.shorttrack)
 
-        # TODO more split tests like try to split 0-length seg etc.
+        # try to split 0-length seg (should throw)
+        with self.assertRaises(ValueError):
+            self.shorttrack.split_seg(Pos(11.8, "mi").to_smaller_unit())
+
+        # try to split on seg boundary (should throw)
+        with self.assertRaises(ValueError):
+            self.shorttrack.split_seg(Pos(10.5, "mi").to_smaller_unit())
 
     def test__intersecting_segs(self):
         # assume loaded track correctly
