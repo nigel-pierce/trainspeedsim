@@ -36,6 +36,9 @@ class TrackSeg:
 
     def __eq__(self, other):
         #if type(other) != type(self):
+        # maybe should just duck type this and only raise TypeError when the
+        # chain of == ands raises an exception (AttributeError or otherwise)
+        # TODO
         if not isinstance(other, type(self)) \
                 and not isinstance(self, type(other)):
             raise TypeError("Incomparable types {} and {}".format(type(self),
