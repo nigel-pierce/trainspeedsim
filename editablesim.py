@@ -403,8 +403,13 @@ class TestEditableTrack(unittest.TestCase):
         self.assertIn(self.shorttrack._track[4], inter)
         self.assertIn(self.shorttrack._track[5], inter)
 
+        # intersect outside of range (throws)
+        with self.assertRaises(ValueError):
+            inter = self.shorttrack._intersecting_segs(Pos(0,
+                "mi").to_smaller_unit())
+
         # intersect very start of track
-        inter = self.shorttrack._intersecting_segs(Pos(0,
+        inter = self.shorttrack._intersecting_segs(Pos(10.1,
             "mi").to_smaller_unit())
         self._print_intersecting_segs(inter)
         self.assertEqual(len(inter), 2)
