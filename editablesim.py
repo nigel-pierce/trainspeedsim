@@ -337,12 +337,12 @@ class EditableTrack(Track):
         intersected.append(the_seg)
         # before
         i = check_index - 1
-        while self._track[i].get_end() == mp:
+        while i >= 0 and self._track[i].get_end() == mp:
             intersected.append(self._track[i])
             i = i - 1
         # after
         i = check_index + 1
-        while self._track[i].get_start() == mp:
+        while i < len(self._track) and self._track[i].get_start() == mp:
             intersected.append(self._track[i])
             i = i + 1
 
