@@ -3,6 +3,9 @@
 from simulation import Simulation, Track, TrackSeg
 from convunits import Pos, Speed, system_to_unit
 
+# For when an edit operation is impossible due to the circumstances and 
+# there's no valid value (so it's not ValueError)
+# e.g., can't edit the track because there are no track segments
 class SituationError(RuntimeError):
     pass
 
