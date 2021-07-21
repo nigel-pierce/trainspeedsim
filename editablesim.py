@@ -3,6 +3,9 @@
 from simulation import Simulation, Track, TrackSeg
 from convunits import Pos, Speed, system_to_unit
 
+class SituationError(RuntimeError):
+    pass
+
 class EditableTrackSeg(TrackSeg):
     def __init__(self, index, start, end, speed):
         TrackSeg.__init__(self, index, start, end, speed)
