@@ -519,6 +519,28 @@ class TestEditableTrack(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.shorttrack.join_segs(Pos(11.4, "mi").to_smaller_unit())
 
+        import copy
+        orig_seg0 = copy.copy(self.shorttrack._track[0])
+        # join at 10.5 miles
+        self.shorttrack.join_segs(Pos(10.5, "mi").to_smaller_unit())
+        # there should now be 6 segments
+        self.assertEqual(len(self.shorttrack._track), 6)
+        # _track[0] should be the same as ever
+        self.assertEqual(orig_seg0, self.shorttrack._track[0])
+        # _track[1] should be 10.1 mi - 11.3 mi at 58.666666etc. f/s
+        self.assertEqual(self.shorttrack._track[1],
+            TrackSeg(1, Pos(10.1, "mi").to_smaller_unit(),
+                Pos(11.3, "mi").to_smaller_unit(),
+                Speed(40, "mi/h").to_smaller_unit()))
+        # _track[2] should be 11.3-11.8 mi @ 35 mph
+        self.assertEqual(self.shorttrack._track[2],
+            TrackSeg(2, Pos(11.3, "mi").to_smaller_unit(),
+                Pos(11.8, "mi").to_smaller_unit(),
+                Speed(35, "mi/h").to_smaller_unit()))
+        # I'll assume the rest are good
+        # because there is TOO MUCH TYPING
+        # (as in, of the keyboard)
+
 
 if __name__ == "__main__":
     seg = EditableTrackSeg(3, Pos(0, "mi").to_smaller_unit(), \
