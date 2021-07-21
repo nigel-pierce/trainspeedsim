@@ -399,6 +399,10 @@ class TestEditableTrack(unittest.TestCase):
         print(self.buildtrack)
 
     def test_split(self):
+        # SituationError on 0-seg track
+        with self.assertRaises(SituationError):
+            self.buildtrack.split_seg(Pos(0, "mi").to_smaller_unit())
+
         # just assume short track loaded correctly
         # well print it
         print(self.shorttrack)
