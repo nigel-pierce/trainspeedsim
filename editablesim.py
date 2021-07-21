@@ -279,6 +279,14 @@ class EditableTrack(Track):
 
         # that should do it
 
+    # Joins all segments that share a boundary
+    # mp must be on a segment boundary, or ValueError will be thrown
+    # Newly-joined TrackSeg will have speed of highest-speed of the TrackSegs
+    # that get joined. This makes it unambiguous and allows joining of 0-length
+    # segments.
+    def join_segs(self, mp):
+        pass
+
     # Checks if mp is "on boundary" of a track seg by seeing if len of tuple
     # returned by self._intersecting_segs(mp) > 1
     def _on_boundary(self, mp):
