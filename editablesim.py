@@ -289,9 +289,7 @@ class EditableTrack(Track):
             raise ValueError("{} outside bounds of track (< start)".format(mp))
         if (mp > self._track[-1].get_start()):
             raise ValueError("{} outside track bounds (> end)".format(mp))
-        print("-------\nnum segs intersecting mp 11.4: {}\n---------".format(
-            self._intersecting_segs(mp)))
-        if (self._intersecting_segs(mp) == 1):
+        if (len(self._intersecting_segs(mp)) == 1):
             raise ValueError("{} not on a track segment boundary".format(mp))
 
         pass
