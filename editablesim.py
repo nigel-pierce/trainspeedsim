@@ -498,6 +498,20 @@ class TestEditableTrack(unittest.TestCase):
             print(str(t)+", ")
         print("]")
 
+    def test_join(self):
+        # use shorttrack
+        
+        # test error situations
+        # out of bounds: before start
+        with self.assertRaises(ValueError):
+            self.shorttrack.join_segs(Pos(9.5, "mi").to_smaller_unit())
+        # out of bounds: after end
+        with self.assertRaises(ValueError):
+            self.shorttrack.join_segs(Pos(13.6, "mi").to_smaller_unit())
+        # in bounds, but not on a boundary
+        with self.assertRaises(ValueError):
+            self.shorttrack.join_segs(Pos(11.4, "mi").to_smaller_unit())
+
 
 if __name__ == "__main__":
     seg = EditableTrackSeg(3, Pos(0, "mi").to_smaller_unit(), \
