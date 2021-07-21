@@ -285,6 +285,15 @@ class EditableTrack(Track):
     # that get joined. This makes it unambiguous and allows joining of 0-length
     # segments.
     def join_segs(self, mp):
+        if (mp < self._track[0].get_start()):
+            raise ValueError("{} outside bounds of track (< start)".format(mp))
+        if (mp > self._track[-1].get_start()):
+            raise ValueError("{} outside track bounds (> end)".format(mp))
+        print("-------\nnum segs intersecting mp 11.4: {}\n---------".format(
+            self._intersecting_segs(mp)))
+        if (self._intersecting_segs(mp) == 1):
+            raise ValueError("{} not on a track segment boundary".format(mp))
+
         pass
 
     # Checks if mp is "on boundary" of a track seg by seeing if len of tuple
