@@ -279,12 +279,17 @@ class EditableTrack(Track):
     # Newly-joined TrackSeg will have speed of highest-speed of the TrackSegs
     # that get joined. This makes it unambiguous and allows joining of 0-length
     # segments.
+    # Also the newly-joined seg will have the LOWEST index of the merged segs
+    # and all subsequent segs' indices will be decremented appropriately
     def join_segs(self, mp):
         if (mp < self._track[0].get_start()):
             raise ValueError("{} outside bounds of track (< start)".format(mp))
         if (mp > self._track[-1].get_start()):
             raise ValueError("{} outside track bounds (> end)".format(mp))
+
         intersecting = self._intersecting_segs(mp)
+
+        # more checks
         if (len(intersecting) == 1):
             raise ValueError("{} not on a track segment boundary".format(mp))
         if (len(intersecting) == 0):
@@ -295,7 +300,13 @@ class EditableTrack(Track):
         # object as next TrackSeg's _start would be desirable...
         # TODO
 
-
+        #import math
+        #min_index = math.inf
+        #for s in intersecting:
+            #min_index = min(min_index
+        min_index = min(intersecting, key=lambda x: x.get_index()).get_index()
+        
+        print("*********",min_index,"*************")
 
         pass
 
