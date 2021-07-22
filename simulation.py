@@ -2,6 +2,7 @@
 
 from multidict import MultiDict
 from convunits import Pos, Speed, Accel
+import copy
 
 
 class TrackSeg:
@@ -47,16 +48,18 @@ class TrackSeg:
                 self._end == other._end and self._speed == other._speed
     
     def get_index(self):
-        return self._index
+        return copy.deepcopy(self._index) # just in case
     
+    # returns copy so you can't do something STUPID like call 
+    # seg.get_start() to modify it (self._start is a Pos, so is modifiable)
     def get_start(self):
-        return self._start
+        return copy.deepcopy(self._start)
     
     def get_end(self):
-        return self._end
+        return copy.deepcopy(self._end)
     
     def get_speed(self):
-        return self._speed
+        return copy.deepcopy(self._speed)
     
     def length(self):
         return self._end - self._start
