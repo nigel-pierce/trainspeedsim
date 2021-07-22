@@ -262,11 +262,6 @@ class EditableTrack(Track):
         seg_to_split.set_end(mp)
         new_seg = EditableTrackSeg(seg_to_split.get_index() + 1, copy.copy(mp), 
                 old_end, copy.copy(seg_to_split.get_speed()))
-        # You know, the whole thing about getters is they're supposed to not
-        # return a reference to the attribute, otherwise you'd be able to 
-        # modify an attribute via its getter...
-        # I should probably TODO have the getters in TrackSeg return copies to
-        # begin with.
 
         # insert new_seg
         new_seg_i = seg_to_split.get_index() + 1
