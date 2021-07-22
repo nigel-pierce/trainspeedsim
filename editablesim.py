@@ -257,11 +257,11 @@ class EditableTrack(Track):
 
         # make seg_to_split's end be mp, and make new seg whose start is mp
         # and end is seg_to_split's old end
-        import copy
-        old_end = copy.copy(seg_to_split.get_end())
+        old_end = seg_to_split.get_end()
         seg_to_split.set_end(mp)
+        import copy
         new_seg = EditableTrackSeg(seg_to_split.get_index() + 1, copy.copy(mp), 
-                old_end, copy.copy(seg_to_split.get_speed()))
+                old_end, seg_to_split.get_speed())
 
         # insert new_seg
         new_seg_i = seg_to_split.get_index() + 1
