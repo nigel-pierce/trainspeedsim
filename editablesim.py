@@ -305,12 +305,14 @@ class EditableTrack(Track):
         #for s in intersecting:
             #min_index = min(min_index
         min_index = min(intersecting, key=lambda x: x.get_index()).get_index()
+
+        max_index = max(intersecting, key=lambda x: x.get_index()).get_index()
         
         max_end = max(intersecting, key=lambda x: x.get_end()).get_end()
 
         max_speed = max(intersecting, key=lambda x: x.get_speed()).get_speed()
 
-        print("*********", mp.to_bigger_unit(), min_index, max_end.to_bigger_unit(), max_speed, "*************")
+        print("*********", mp.to_bigger_unit(), min_index, max_index, max_end.to_bigger_unit(), max_speed, "*************")
 
         pass
 
