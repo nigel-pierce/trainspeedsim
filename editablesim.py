@@ -515,7 +515,7 @@ class TestEditableTrack(unittest.TestCase):
             self.shorttrack.join_segs(Pos(11.4, "mi").to_smaller_unit())
 
         import copy
-        orig_seg0 = copy.copy(self.shorttrack._track[0])
+        orig_seg0 = copy.deepcopy(self.shorttrack._track[0])
         # join at 10.5 miles
         self.shorttrack.join_segs(Pos(10.5, "mi").to_smaller_unit())
         # there should now be 6 segments
