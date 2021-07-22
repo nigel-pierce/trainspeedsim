@@ -287,6 +287,10 @@ class EditableTrack(Track):
         if (len(self._intersecting_segs(mp)) == 1):
             raise ValueError("{} not on a track segment boundary".format(mp))
 
+        # It occurs to me that having one TrackSeg's _end refer to the same
+        # object as next TrackSeg's _start would be desirable...
+        # TODO
+
         pass
 
     # Checks if mp is "on boundary" of a track seg by seeing if len of tuple
