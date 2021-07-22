@@ -314,6 +314,20 @@ class EditableTrack(Track):
 
         print("*********", mp.to_bigger_unit(), min_index, max_index, max_end.to_bigger_unit(), max_speed, "*************")
 
+        # Toss unneeded segments into the ether
+        for i in range(min_index+1, max_index+1):
+            self._track.pop(i)
+
+        # modify segment at min_index to have correct properties
+        self._track[min_index].set_end(max_end)
+        self._track[min_index].set_speed(max_speed)
+
+        # adjust subsequent segments' indexes
+        for s in self._track[min_index+1:]:
+            old_i = s.get_index()
+            s.set_index(old_i - (max_index - min_index))
+
+        print("track with segments joined at", mp.to_bigger_unit(),":", self)
         pass
 
     # Checks if mp is "on boundary" of a track seg by seeing if len of tuple
