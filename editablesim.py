@@ -284,12 +284,18 @@ class EditableTrack(Track):
             raise ValueError("{} outside bounds of track (< start)".format(mp))
         if (mp > self._track[-1].get_start()):
             raise ValueError("{} outside track bounds (> end)".format(mp))
-        if (len(self._intersecting_segs(mp)) == 1):
+        intersecting = self._intersecting_segs(mp)
+        if (len(intersecting) == 1):
             raise ValueError("{} not on a track segment boundary".format(mp))
+        if (len(intersecting) == 0):
+            raise RuntimeError("{} doesn't intersect with any track segment..."\
+                    " Previous checks should have stopped this".format(mp))
 
         # It occurs to me that having one TrackSeg's _end refer to the same
         # object as next TrackSeg's _start would be desirable...
         # TODO
+
+
 
         pass
 
