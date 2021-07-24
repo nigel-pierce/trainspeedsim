@@ -330,6 +330,13 @@ class EditableTrack(Track):
         print("track with segments joined at", mp.to_bigger_unit(),":", self)
         pass
 
+    # Shifts a boundary of a track seg and of its neighbor if applicable
+    # Affects at most 2 track segs
+    # Throws if requested shift would cross another boundary
+    # A seg affected by this can be reduced to 0-length
+    def shift_boundary(mp, dist):
+        pass
+
     # Checks if mp is "on boundary" of a track seg by seeing if len of tuple
     # returned by self._intersecting_segs(mp) > 1
     def _on_boundary(self, mp):
