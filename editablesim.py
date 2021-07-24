@@ -584,6 +584,21 @@ class TestEditableTrack(unittest.TestCase):
         # because there is TOO MUCH TYPING
         # (as in, of the keyboard)
 
+    def test_shift_boundary(self):
+        # use shorttrack
+
+        # shift 10.5 mi boundary to 10.3 mi
+
+        # shift 11.3 mi boundary to 11.8 mi (as far as it'll go)
+        # (though that will result in 2 adjacent 0-length segments, with
+        # differing speeds at that, and I'm not sure how the sim will handle
+        # that.)
+
+        # shift 10.1 mi boundary to 10.0 (should throw)
+        # (or maybe shouldn't? It wouldn't if it shifted both boundaries
+        # of the 0-speed/0-length segment)
+
+        # shift 10.3 mi boundary to 9.8 (should throw)
 
 if __name__ == "__main__":
     seg = EditableTrackSeg(3, Pos(0, "mi").to_smaller_unit(), \
