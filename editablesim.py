@@ -284,6 +284,8 @@ class EditableTrack(Track):
     def join_segs(self, mp):
         if len(self._track) == 0:
             raise SituationError("no track segments exist")
+        if len(self._track) == 1:
+            raise SituationError("only 1 track segment exists (need >= 2)"
         if (mp < self._track[0].get_start()):
             raise ValueError("{} outside bounds of track (< start)".format(mp))
         if (mp > self._track[-1].get_end()):
