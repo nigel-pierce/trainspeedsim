@@ -286,7 +286,7 @@ class EditableTrack(Track):
             raise SituationError("no track segments exist")
         if (mp < self._track[0].get_start()):
             raise ValueError("{} outside bounds of track (< start)".format(mp))
-        if (mp > self._track[-1].get_start()):
+        if (mp > self._track[-1].get_end()):
             raise ValueError("{} outside track bounds (> end)".format(mp))
 
         intersecting = self._intersecting_segs(mp)
