@@ -597,6 +597,8 @@ class TestEditableTrack(unittest.TestCase):
         # shift 10.1 mi boundary to 10.0 (should throw)
         # (or maybe shouldn't? It wouldn't if it shifted both boundaries
         # of the 0-speed/0-length segment)
+        # (but if it did shift both boundaries, could result in a 0-length
+        # seg pileup, which would be bad)
 
         # shift 10.3 mi boundary to 9.8 (should throw)
 
