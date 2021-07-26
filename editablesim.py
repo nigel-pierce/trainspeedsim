@@ -295,7 +295,8 @@ class EditableTrack(Track):
 
         # more checks
         if (len(intersecting) == 1):
-            raise ValueError("{} not on a track segment boundary".format(mp))
+            raise ValueError("{} not on a boundary between track segments" \
+                "".format(mp))
         if (len(intersecting) == 0):
             raise RuntimeError("{} doesn't intersect with any track segment..."\
                     " Previous checks should have stopped this".format(mp))
