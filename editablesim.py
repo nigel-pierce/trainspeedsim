@@ -282,6 +282,8 @@ class EditableTrack(Track):
     # Also the newly-joined seg will have the LOWEST index of the merged segs
     # and all subsequent segs' indices will be decremented appropriately
     def join_segs(self, mp):
+        if len(self._track) == 0:
+            raise SituationError("no track segments exist")
         if (mp < self._track[0].get_start()):
             raise ValueError("{} outside bounds of track (< start)".format(mp))
         if (mp > self._track[-1].get_start()):
