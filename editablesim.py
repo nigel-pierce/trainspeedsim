@@ -462,9 +462,9 @@ class TestEditableTrack(unittest.TestCase):
 
 
         # append another 0-len seg (should throw)
-        #with self.assertRaises(ValueError):
-        #    self.buildtrack.append_seg(Speed(10, "mi/h").to_smaller_unit(),
-        #            Pos(0, "mi").to_smaller_unit())
+        with self.assertRaises(ValueError):
+            self.buildtrack.append_seg(Speed(10, "mi/h").to_smaller_unit(),
+                    Pos(0, "mi").to_smaller_unit())
 
         # print it so far
         print(self.buildtrack)
