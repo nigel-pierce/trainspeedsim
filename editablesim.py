@@ -607,12 +607,21 @@ class TestEditableTrack(unittest.TestCase):
         # (though that will result in 2 adjacent 0-length segments, with
         # differing speeds at that, and I'm not sure how the sim will handle
         # that.)
+        # (so let's throw for that)
 
         # shift 10.1 mi boundary to 10.0 (should throw)
         # (or maybe shouldn't? It wouldn't if it shifted both boundaries
         # of the 0-speed/0-length segment)
         # (but if it did shift both boundaries, could result in a 0-length
         # seg pileup, which would be bad)
+        # (well I'll say as long as it DOESN'T result in a 0-length pileup,
+        # it's valid)
+        # SO this SHOULDN'T throw
+        # No... even if it doesn't result in a pileup, it's ambiguous as to
+        # whether to move both boundaries or just one or the other...
+        # so it SHOULD throw, maybe a SituationError
+        # or how about this: an AmbiguousBoundaryError, a subclass of
+        # SituationError
 
         # shift 10.3 mi boundary to 9.8 (should throw)
         pass
