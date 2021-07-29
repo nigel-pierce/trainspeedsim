@@ -229,6 +229,8 @@ class EditableTrack(Track):
             start = Pos(0, pos_unit).to_smaller_unit()
             end = length
         else:
+            # throw if trying to append 0-len seg to another 0-len seg
+            #if self._track[-1]
             index = self._track[-1].get_index() + 1
             start = self._track[-1].get_end()
             end = start + length
@@ -285,7 +287,7 @@ class EditableTrack(Track):
         if len(self._track) == 0:
             raise SituationError("no track segments exist")
         if len(self._track) == 1:
-            raise SituationError("only 1 track segment exists (need >= 2)"
+            raise SituationError("only 1 track segment exists (need >= 2)")
         if (mp < self._track[0].get_start()):
             raise ValueError("{} outside bounds of track (< start)".format(mp))
         if (mp > self._track[-1].get_end()):
@@ -458,6 +460,12 @@ class TestEditableTrack(unittest.TestCase):
         self.buildtrack.append_seg(Speed(0, "mi/h").to_smaller_unit(),
                 Pos(0, "mi").to_smaller_unit())
 
+
+        # append another 0-len seg (should throw)
+        #with self.assertRaises(ValueError):
+        #    self.buildtrack.append_seg(Speed(10, "mi/h").to_smaller_unit(),
+        #            Pos(0, "mi").to_smaller_unit())
+
         # print it so far
         print(self.buildtrack)
 
@@ -606,6 +614,7 @@ class TestEditableTrack(unittest.TestCase):
         # seg pileup, which would be bad)
 
         # shift 10.3 mi boundary to 9.8 (should throw)
+        pass
 
 if __name__ == "__main__":
     seg = EditableTrackSeg(3, Pos(0, "mi").to_smaller_unit(), \
