@@ -10,7 +10,7 @@ class SituationError(RuntimeError):
     pass
 
 # For when trying to move/shift boundary of 0-length seg
-class AmbibuousBoundaryError(SituationError):
+class AmbiguousBoundaryError(SituationError):
     pass
 
 class EditableTrackSeg(TrackSeg):
