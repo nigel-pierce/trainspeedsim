@@ -9,6 +9,10 @@ from convunits import Pos, Speed, system_to_unit
 class SituationError(RuntimeError):
     pass
 
+# For when trying to move/shift boundary of 0-length seg
+class AmbibuousBoundaryError(SituationError):
+    pass
+
 class EditableTrackSeg(TrackSeg):
     def __init__(self, index, start, end, speed):
         TrackSeg.__init__(self, index, start, end, speed)
