@@ -606,12 +606,21 @@ class TestEditableTrack(unittest.TestCase):
         # use shorttrack
 
         # shift 10.5 mi boundary to 10.3 mi
+        self.shorttrack.shift_boundary(Pos(10.5, "mi").to_smaller_unit(),
+                Pos(-0.2, "mi").to_smaller_unit())
+        self.assertEqual(self.shorttrack._track[1].get_end(),
+                Pos(10.3, "mi").to_smaller_unit())
+        self.assertEqual(self.shorttrack._track[2].get_start(),
+                Pos(10.3, "mi").to_smaller_unit())
 
         # shift 11.3 mi boundary to 11.8 mi (as far as it'll go)
         # (though that will result in 2 adjacent 0-length segments, with
         # differing speeds at that, and I'm not sure how the sim will handle
         # that.)
         # (so let's throw for that)
+        with self.assertRaises(Adjacent0LenError):
+            self.shorttrack.shift_boundary(Pos(11.3, "mi").to_smaller_unit(),
+                    Pos(0.5, "mi").to_smaller_unit())
 
         # shift 10.1 mi boundary to 10.0 (should throw)
         # (or maybe shouldn't? It wouldn't if it shifted both boundaries
