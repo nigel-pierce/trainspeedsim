@@ -346,7 +346,7 @@ class EditableTrack(Track):
     # Affects at most 2 track segs
     # Throws if requested shift would cross another boundary
     # A seg affected by this can be reduced to 0-length
-    def shift_boundary(mp, dist):
+    def shift_boundary(self, mp, dist):
         pass
 
     # Checks if mp is "on boundary" of a track seg by seeing if len of tuple
