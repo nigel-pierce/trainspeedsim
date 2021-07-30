@@ -412,6 +412,7 @@ class EditableTrack(Track):
 
     # mp "intersects" any track segment where start <= mp <= end
     # hence it can intersect on boundaries and 0-length segments
+    # returns list of intersecting segs IN INDEX ORDER
     def _intersecting_segs(self, mp):
         if (mp < 0):
             raise ValueError("mp must be non-negative")
@@ -465,21 +466,17 @@ class EditableTrack(Track):
 
         # check if other segs before or after check_index also intersected
         intersected = []
-        the_seg = self._track[check_index]
-        intersected.append(the_seg)
         # before
-        i = check_index - 1
-        while i >= 0 and self._track[i].get_end() == mp:
-            intersected.append(self._track[i])
-            i = i - 1
+        low_i = check_index
+        while low_i-1 >= 0 and self._track[low_i-1].get_end() == mp:
+            low_i = low_i - 1
         # after
-        i = check_index + 1
-        while i < len(self._track) and self._track[i].get_start() == mp:
-            intersected.append(self._track[i])
-            i = i + 1
+        hi_i = check_index
+        while hi_i+1 < len(self._track) \
+                and self._track[hi_i+1].get_start() == mp:
+            hi_i = hi_i + 1
 
-
-        return intersected
+        return self._track[low_i:hi_i+1]
 
 
 class TestEditableTrack(unittest.TestCase):
