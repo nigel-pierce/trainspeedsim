@@ -370,7 +370,39 @@ class EditableTrack(Track):
         # NOW to the mean & potatoes
         # I mean meat
 
-
+        if len(intersecting) == 2:
+            # either on boundary between 2 non-zero-length segments
+            # or on boundary between zero-length seg and non-zero, at start
+            # or end of track.
+            # also a quick check
+            if intersecting[0].length() == 0 and intersecting[1].length() == 0:
+                raise RuntimeError("Multiple 0-length segments at "+str(mp)+\
+                        "(programming error)")
+            elif intersecting[0].length() == 0:
+                pass
+            elif intersecting[1].length() == 0:
+                pass
+            else:
+                # both non-0-length
+                pass
+        elif len(intersecting) == 3:
+            # on boundary representing non0-length,0-length,non0 segments
+            # make sure of that
+            #if intersecting[0].length() !
+            # !ABC v A!BC v AB!C
+            # (shorten to X v Y v Z)
+            # by le whoever's law is equivalent to
+            # !(!X ^ !Y ^ !Z)
+            # ???
+            # oh just make a function
+            # if self._only_one_is_0_length(intersecting):
+            # Actually better yet just make _intersecting_segs() return them
+            # in index order
+            pass
+        else:
+            # somehow we have multiple adjacent 0-length segments
+            raise Adjacent0LenError("Multiple adjacent 0-length segs at "+\
+                    str(mp))
         pass
 
     # Checks if mp is "on boundary" of a track seg by seeing if len of tuple
