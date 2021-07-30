@@ -351,6 +351,26 @@ class EditableTrack(Track):
     # * shift to left shifts start only
     # * shift to right shifts end only
     def shift_boundary(self, mp, dist):
+        if len(self._track) == 0:
+            raise SituationError("no track segments exist")
+        if len(self._track) == 1:
+            raise SituationError("only 1 track segment exists (need >= 2)")
+        if (mp < self._track[0].get_start()):
+            raise ValueError("{} outside bounds of track (< start)".format(mp))
+        if (mp > self._track[-1].get_end()):
+            raise ValueError("{} outside track bounds (> end)".format(mp))
+
+        intersecting = self._intersecting_segs(mp)
+
+        # more checks
+        if (len(intersecting) == 0):
+            raise RuntimeError("{} doesn't intersect with any track segment..."\
+                    " Previous checks should have stopped this".format(mp))
+
+        # NOW to the mean & potatoes
+        # I mean meat
+
+
         pass
 
     # Checks if mp is "on boundary" of a track seg by seeing if len of tuple
