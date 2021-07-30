@@ -635,6 +635,20 @@ class TestEditableTrack(unittest.TestCase):
         # so it SHOULD throw, maybe a SituationError
         # or how about this: an AmbiguousBoundaryError, a subclass of
         # SituationError
+        # WELL if I compare this situation to the one of a seg that's only 1 
+        # sim-seg long, I am free to move its start to the left, but not to
+        # the right, and I am free to move its end to the right, but not to
+        # the left. Well actually I am but that's not the point. The point is,
+        # I'm largely allowed to move its start to the left, but only 1 sim-
+        # seg to the right, and to move its end to the right, but only 1 sim-
+        # seg to the left. So by extension, the start of a 0-length seg can
+        # be moved to the left but not the right, and the end can be moved
+        # to the right but not to the left. Yes.
+        # so this SHOULDN'T throw simply for the reason of an "ambiguous" 
+        # boundary.
+        # ... but it should throw because it's trying to increase length of a
+        # 0-speed seg ;)
+
 
         # shift 10.3 mi boundary to 9.8 (should throw)
         pass
