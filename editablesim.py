@@ -346,6 +346,10 @@ class EditableTrack(Track):
     # Affects at most 2 track segs
     # Throws if requested shift would cross another boundary
     # A seg affected by this can be reduced to 0-length
+    # Shifting boundary of 0-length seg:
+    # * any shift on 0-speed seg: NOT OK
+    # * shift to left shifts start only
+    # * shift to right shifts end only
     def shift_boundary(self, mp, dist):
         pass
 
