@@ -648,7 +648,9 @@ class TestEditableTrack(unittest.TestCase):
         # boundary.
         # ... but it should throw because it's trying to increase length of a
         # 0-speed seg ;)
-
+        with self.assertRaises(NonzeroLengthOfZeroSpeedSegError):
+            self.shorttrack.shift_boundary(Pos(10.1, "mi").to_sm(), 
+                    Pos(-0.1, "mi").to_sm())
 
         # shift 10.3 mi boundary to 9.8 (should throw)
         pass
