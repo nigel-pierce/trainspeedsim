@@ -119,6 +119,13 @@ class ConvertibleUnit(HasUnit):
         assert self._unit in self._smaller, "cannot smallify" # keys are the big units
         return self.convert_to(self._smaller[self._unit])
 
+    # These next two make my life easier
+    def to_bg(self):
+        return self.to_bigger_unit()
+
+    def to_sm(self):
+        return self.to_smaller_unit()
+
 
     def convert_to(self, unit):
         # find path from self._unit to unit
