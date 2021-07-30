@@ -398,6 +398,10 @@ class EditableTrack(Track):
             # if self._only_one_is_0_length(intersecting):
             # Actually better yet just make _intersecting_segs() return them
             # in index order
+            if not (intersecting[0].length() > 0 and intersecting[1].length() \
+                    == 0 and intersecting[2].length() > 0):
+                raise RuntimeError("3 segs intersected by "+str(mp)+" but not"\
+                        " following non0-length,0-length,non0-length pattern")
             pass
         else:
             # somehow we have multiple adjacent 0-length segments
