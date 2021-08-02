@@ -379,12 +379,12 @@ class EditableTrack(Track):
                 raise RuntimeError("Multiple 0-length segments at "+str(mp)+\
                         "(programming error)")
             elif intersecting[0].length() == 0:
-                pass
+                raise NotImplementedError
             elif intersecting[1].length() == 0:
-                pass
+                raise NotImplementedError
             else:
                 # both non-0-length
-                pass
+                raise NotImplementedError
         elif len(intersecting) == 3:
             # on boundary representing non0-length,0-length,non0 segments
             # make sure of that
@@ -402,7 +402,7 @@ class EditableTrack(Track):
                     == 0 and intersecting[2].length() > 0):
                 raise RuntimeError("3 segs intersected by "+str(mp)+" but not"\
                         " following non0-length,0-length,non0-length pattern")
-            pass
+            raise NotImplementedError
         else:
             # somehow we have multiple adjacent 0-length segments
             raise Adjacent0LenError("Multiple adjacent 0-length segs at "+\
