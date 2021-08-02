@@ -374,12 +374,7 @@ class EditableTrack(Track):
             # either on boundary between 2 non-zero-length segments
             # or on boundary between zero-length seg and non-zero, at start
             # or end of track.
-            # also a quick check
-            if intersecting[0].length() == 0 and intersecting[1].length() == 0:
-                raise RuntimeError("Multiple 0-length segments at "+str(mp)+\
-                        "(programming error)")
-            else:
-                self._shift_2_boundary(intersecting)
+            self._shift_2_boundary(intersecting, dist)
         elif len(intersecting) == 3:
             # on boundary representing non0-length,0-length,non0 segments
             # make sure of that
@@ -404,10 +399,14 @@ class EditableTrack(Track):
                     str(mp))
         pass
 
-    def _shift_2_boundary(self, intersecting):
+    def _shift_2_boundary(self, intersecting, dist):
         """shifts boundary between 2 non-0-length segments or one non-0-length
         and one 0-length segment"""
-        if intersecting[0].length() == 0:
+        # also a quick check
+        if intersecting[0].length() == 0 and intersecting[1].length() == 0:
+            raise RuntimeError("Multiple 0-length segments at "+str(mp)+\
+                    "(programming error)")
+        elif intersecting[0].length() == 0:
             raise NotImplementedError
         elif intersecting[1].length() == 0:
             raise NotImplementedError
