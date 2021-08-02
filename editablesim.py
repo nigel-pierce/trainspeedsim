@@ -378,13 +378,8 @@ class EditableTrack(Track):
             if intersecting[0].length() == 0 and intersecting[1].length() == 0:
                 raise RuntimeError("Multiple 0-length segments at "+str(mp)+\
                         "(programming error)")
-            elif intersecting[0].length() == 0:
-                raise NotImplementedError
-            elif intersecting[1].length() == 0:
-                raise NotImplementedError
             else:
-                # both non-0-length
-                raise NotImplementedError
+                self._shift_2_boundary(intersecting)
         elif len(intersecting) == 3:
             # on boundary representing non0-length,0-length,non0 segments
             # make sure of that
@@ -408,6 +403,17 @@ class EditableTrack(Track):
             raise Adjacent0LenError("Multiple adjacent 0-length segs at "+\
                     str(mp))
         pass
+
+    def _shift_2_boundary(self, intersecting):
+        """shifts boundary between 2 non-0-length segments or one non-0-length
+        and one 0-length segment"""
+        if intersecting[0].length() == 0:
+            raise NotImplementedError
+        elif intersecting[1].length() == 0:
+            raise NotImplementedError
+        else:
+            # both non-0-length
+            raise NotImplementedError
 
     # Checks if mp is "on boundary" of a track seg by seeing if len of tuple
     # returned by self._intersecting_segs(mp) > 1
