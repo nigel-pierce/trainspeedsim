@@ -404,8 +404,7 @@ class EditableTrack(Track):
         and one 0-length segment"""
         # also a quick check
         if intersecting[0].length() == 0 and intersecting[1].length() == 0:
-            raise RuntimeError("Multiple 0-length segments at "+str(mp)+\
-                    "(programming error)")
+            raise Adjacent0LenError("Multiple 0-length segments at "+str(mp))
         elif intersecting[0].length() == 0:
             raise NotImplementedError
         elif intersecting[1].length() == 0:
