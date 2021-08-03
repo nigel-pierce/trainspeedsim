@@ -411,6 +411,19 @@ class EditableTrack(Track):
             raise NotImplementedError
         else:
             # both non-0-length
+            # shift end of [0] and start of [1]
+            if dist > 0:
+                # trying to shift right
+                if intersecting[1].get_start()+dist > intersecting[1].get_end():
+                    raise ValueError("moving boundary at {} by {} moves beyond"\
+                            "segment end {}".format(intersecting[1].get_start(),
+                            dist, intersecting[1].get_end()))
+            elif dist < 0:
+                # trying to shift left
+                if intersecting[0].get_end()+dist < intersecting[0].get_start():
+                    raise ValueError("moving boundary at {} by {} moves beyond"\
+                            "segment start {}".format(intersecting[0].get_end(),
+                            dist, intersecting[0].get_start()))
             raise NotImplementedError
 
     # Checks if mp is "on boundary" of a track seg by seeing if len of tuple
