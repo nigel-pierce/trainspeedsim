@@ -418,8 +418,6 @@ class EditableTrack(Track):
                     raise ValueError("moving boundary at {} by {} moves beyond"\
                             "segment end {}".format(intersecting[1].get_start(),
                             dist, intersecting[1].get_end()))
-                intersecting[0].set_end(intersecting[0].get_end()+dist)
-                intersecting[1].set_start(intersecting[1].get_start()+dist)
             elif dist < 0:
                 # trying to shift left
                 if intersecting[0].get_end()+dist < intersecting[0].get_start():
@@ -427,7 +425,11 @@ class EditableTrack(Track):
                             "segment start {}".format(intersecting[0].get_end(),
                             dist, intersecting[0].get_start()))
 
-            # postconditions
+            # do the actual work
+            intersecting[0].set_end(intersecting[0].get_end()+dist)
+            intersecting[1].set_start(intersecting[1].get_start()+dist)
+
+            # invariant
             if intersecting[0].get_end() != intersecting[1].get_start():
                 raise RuntimeError("Track seg {} end {} != seg {} start {}"\
                         .format(intersecting[0].get_index(),
