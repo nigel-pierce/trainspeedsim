@@ -14,8 +14,9 @@ class AmbiguousBoundaryError(SituationError):
     pass
 
 class Adjacent0LenError(RuntimeError):
-    """Two or more 0-length track segments share the same start/end
-    (Indicates programming error)"""
+    """Two or more 0-length track segments share the same start/end or such
+    a situation would be created (Does not necessarily indicate programming 
+    error)"""
     pass
 
 class EditableTrackSeg(TrackSeg):
