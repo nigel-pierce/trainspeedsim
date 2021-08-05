@@ -231,7 +231,7 @@ class EditableTrack(Track):
         if len(self._track) == 0:
             index = 0
             print("################ THE IMPORTANT POS ####################")
-            start = Pos(0, pos_unit).to_smaller_unit() # DON'T make 0 a str!
+            start = Pos('0', pos_unit).to_smaller_unit()
             print("#######################################################")
             end = length
         else:
