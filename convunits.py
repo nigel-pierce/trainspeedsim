@@ -59,7 +59,7 @@ class HasUnit: # virtual/interface-ish
             self._val = Decimal(val)
         else:
             self._val = val
-            print("self._val =", self._val, "("+str(type(self._val))+")")
+            #print("self._val =", self._val, "("+str(type(self._val))+")")
         self._unit = unit
 
     @preservecontext
@@ -224,7 +224,7 @@ class Pos(ConvertibleUnit):
     # conversions
     # should be sufficient to convert between any of these in any direction
     _conv = {"f":  {"mi": Fraction(1,5280),  \
-                   "m":  Fraction(0.3048),  \
+                   "m":  Fraction('0.3048'),  \
                    "in": Fraction(12)     }, # just to spice things up\
             "mi": {"f":  Fraction(5280)   },\
             "m":  {"f":  Fraction(3.2808399), # TODO make it 1/0.3048
