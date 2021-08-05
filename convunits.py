@@ -1,6 +1,7 @@
 
 from fractions import Fraction
 from decimal import Decimal
+import decimal
 
 # TODO add accel
 def system_to_unit(units, unit_type, size):
@@ -43,10 +44,21 @@ def system_to_unit(units, unit_type, size):
 class HasUnit: # virtual/interface-ish
     # Subclasses will define the values, and units
 
+    # decorator b/c needs its own decimal context
+    def preservecontext(f):
+        def preserver(*args, **kwargs):
+            oldcontext = decimal.getcontext()
+            decimal.setcontext(decimal.ExtendedContext)
+            result = f(*args, **kwargs)
+            decimal.setcontext(oldcontext)
+            return result
+        return preserver
+
     def __init__(self, val, unit):
         self._val = val
         self._unit = unit
 
+    @preservecontext
     def __str__(self):
         return str(self._val)+" "+self._unit
 
@@ -73,36 +85,45 @@ class HasUnit: # virtual/interface-ish
 
         return to_compare
 
+    @preservecontext
     def __eq__(self, other):
         return self._val == self._compare_to(other)
 
+    @preservecontext
     def __lt__(self, other):
         return self._val < self._compare_to(other)
 
+    @preservecontext
     def __le__(self, other):
         to_compare = self._compare_to(other)
         return self < to_compare or self == to_compare
 
+    @preservecontext
     def __gt__(self, other):
         return not self <= other
 
+    @preservecontext
     def __ge__(self, other):
         return not self < other
         
     # maths
+    @preservecontext
     def __add__(self, other):
         to_math = self._compare_to(other)
         return Pos(self._val + to_math, self._unit)
 
+    @preservecontext
     def __sub__(self, other):
         to_math = self._compare_to(other)
         return Pos(self._val - to_math, self._unit)
 
+    @preservecontext
     def __mod__(self, other):
         to_math = self._compare_to(other)
         return Pos(self._val % to_math, self._unit)
 
     # formatting just defers to float
+    @preservecontext
     def __format__(self, format_spec):
         return format(self._val, format_spec) + " " + self._unit
 
@@ -128,6 +149,7 @@ class ConvertibleUnit(HasUnit):
         return self.to_smaller_unit()
 
 
+    @HasUnit.preservecontext
     def convert_to(self, unit):
         # find path from self._unit to unit
         # the graph is stored as a dict where each key is a node and value is a 
@@ -182,6 +204,7 @@ class ConvertibleUnit(HasUnit):
 
         return finalpath
 
+    @HasUnit.preservecontext
     def _conv_calc(self, finalpath):
         result = self._val
         unit_from = finalpath[0]
