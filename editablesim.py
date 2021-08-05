@@ -69,8 +69,8 @@ import unittest
 
 class TestEditableTrackSegMethods(unittest.TestCase):
     def setUp(self):
-        self.seg = EditableTrackSeg(14, Pos(11.4, "mi").to_smaller_unit(),
-                Pos(13.5, "mi").to_smaller_unit(), Speed(25,
+        self.seg = EditableTrackSeg(14, Pos('11.4', "mi").to_smaller_unit(),
+                Pos('13.5', "mi").to_smaller_unit(), Speed('25',
                 "mi/h").to_smaller_unit())
 
     def test_set_index(self):
@@ -87,121 +87,121 @@ class TestEditableTrackSegMethods(unittest.TestCase):
 
     def test_set_start(self):
         # confirm initial seg value
-        self.assertEqual(self.seg.get_start(), Pos(11.4,
+        self.assertEqual(self.seg.get_start(), Pos('11.4',
                 "mi").to_smaller_unit())
-        self.assertEqual(self.seg.get_end(), Pos(13.5, 
+        self.assertEqual(self.seg.get_end(), Pos('13.5', 
                 "mi").to_smaller_unit())
 
         # set start < end
-        self.seg.set_start(Pos(10.8, "mi").to_smaller_unit())
+        self.seg.set_start(Pos('10.8', "mi").to_smaller_unit())
         self.assertEqual(self.seg.get_start(), 
-                Pos(10.8, "mi").to_smaller_unit())
+                Pos('10.8', "mi").to_smaller_unit())
 
         # set start > end (should throw)
         with self.assertRaises(ValueError):
-            self.seg.set_start(Pos(15, "mi").to_smaller_unit())
+            self.seg.set_start(Pos('15', "mi").to_smaller_unit())
 
         # set start so length == 0
-        self.assertEqual(self.seg.get_end(), Pos(13.5, 
+        self.assertEqual(self.seg.get_end(), Pos('13.5', 
                 "mi").to_smaller_unit())
-        self.seg.set_start(Pos(13.5, "mi").to_smaller_unit())
+        self.seg.set_start(Pos('13.5', "mi").to_smaller_unit())
         self.assertEqual(self.seg.get_start(),
-                Pos(13.5, "mi").to_smaller_unit())
+                Pos('13.5', "mi").to_smaller_unit())
 
         # set_start should throw ValueError IFF speed is 0 and length > 0
-        self.seg.set_speed(Speed(0, "mi/h").to_smaller_unit())
+        self.seg.set_speed(Speed('0', "mi/h").to_smaller_unit())
         self.assertEqual(self.seg.get_speed(), 
-                Speed(0, "mi/h").to_smaller_unit())
+                Speed('0', "mi/h").to_smaller_unit())
         with self.assertRaises(ValueError):
-            self.seg.set_start(Pos(13.4, "mi").to_smaller_unit())
+            self.seg.set_start(Pos('13.4', "mi").to_smaller_unit())
 
     def test_set_end(self):
         # check initial start & end values
         self.assertEqual(self.seg.get_start(),
-                Pos(11.4, "mi").to_smaller_unit())
-        self.assertEqual(self.seg.get_end(), Pos(13.5, "mi").to_smaller_unit())
+                Pos('11.4', "mi").to_smaller_unit())
+        self.assertEqual(self.seg.get_end(), Pos('13.5', "mi").to_smaller_unit())
 
         # set end farther to 14 miles and check
-        self.seg.set_end(Pos(14, "mi").to_smaller_unit())
-        self.assertEqual(self.seg.get_end(), Pos(14, "mi").to_smaller_unit())
+        self.seg.set_end(Pos('14', "mi").to_smaller_unit())
+        self.assertEqual(self.seg.get_end(), Pos('14', "mi").to_smaller_unit())
         
         # set end to earlier than start (should throw)
         with self.assertRaises(ValueError):
-            self.seg.set_end(Pos(10, "mi").to_smaller_unit())
+            self.seg.set_end(Pos('10', "mi").to_smaller_unit())
 
         # set end to equal start and check
-        self.seg.set_end(Pos(11.4, "mi").to_smaller_unit())
+        self.seg.set_end(Pos('11.4', "mi").to_smaller_unit())
         self.assertEqual(self.seg.get_start(),
-            Pos(11.4, "mi").to_smaller_unit())
+            Pos('11.4', "mi").to_smaller_unit())
         self.assertEqual(self.seg.get_start(), self.seg.get_end())
 
         # set_end should throw ValueError IFF speed is 0 and length > 0
-        self.seg.set_speed(Speed(0, "mi/h").to_smaller_unit())
+        self.seg.set_speed(Speed('0', "mi/h").to_smaller_unit())
         self.assertEqual(self.seg.get_speed(), 
-            Speed(0, "mi/h").to_smaller_unit())
+            Speed('0', "mi/h").to_smaller_unit())
         with self.assertRaises(ValueError):
-            self.seg.set_end(Pos(11.6, "mi").to_smaller_unit())
+            self.seg.set_end(Pos('11.6', "mi").to_smaller_unit())
 
     def test_set_speed(self):
         # check initial start & end values
         self.assertEqual(self.seg.get_start(),
-                Pos(11.4, "mi").to_smaller_unit())
-        self.assertEqual(self.seg.get_end(), Pos(13.5, "mi").to_smaller_unit())
+                Pos('11.4', "mi").to_smaller_unit())
+        self.assertEqual(self.seg.get_end(), Pos('13.5', "mi").to_smaller_unit())
 
         # set speed < 0 (should throw)
         with self.assertRaises(ValueError):
-            self.seg.set_speed(Speed(-3, "mi/h").to_smaller_unit())
+            self.seg.set_speed(Speed('-3', "mi/h").to_smaller_unit())
 
         # set speed to 100 mi/h
-        self.seg.set_speed(Speed(100, "mi/h").to_smaller_unit())
+        self.seg.set_speed(Speed('100', "mi/h").to_smaller_unit())
         self.assertEqual(self.seg.get_speed(),
-                Speed(100, "mi/h").to_smaller_unit())
+                Speed('100', "mi/h").to_smaller_unit())
 
         # set speed to 0 mi/h, while length > 0 (should throw)
         self.assertGreater(self.seg.length(), 0)
         with self.assertRaises(ValueError):
-            self.seg.set_speed(Speed(0, "mi/h").to_smaller_unit())
+            self.seg.set_speed(Speed('0', "mi/h").to_smaller_unit())
 
         # set speed 0 mi/h while length == 0
-        self.seg.set_end(Pos(20, "mi").to_smaller_unit())
-        self.seg.set_start(Pos(20, "mi").to_smaller_unit())
+        self.seg.set_end(Pos('20', "mi").to_smaller_unit())
+        self.seg.set_start(Pos('20', "mi").to_smaller_unit())
         self.assertEqual(self.seg.length(), 0)
-        self.seg.set_speed(Speed(0, "mi/h").to_smaller_unit())
+        self.seg.set_speed(Speed('0', "mi/h").to_smaller_unit())
         self.assertEqual(self.seg.get_speed(), 0)
 
         # set speed > 0 mi/h while length == 0
         self.assertEqual(self.seg.length(), 0)
-        self.seg.set_speed(Speed(20, "mi/h").to_smaller_unit())
+        self.seg.set_speed(Speed('20', "mi/h").to_smaller_unit())
         self.assertEqual(self.seg.get_speed(), 
-                Speed(20, "mi/h").to_smaller_unit())
+                Speed('20', "mi/h").to_smaller_unit())
 
     def test_set_start_end(self):
         # check initial start & end values
         self.assertEqual(self.seg.get_start(),
-                Pos(11.4, "mi").to_smaller_unit())
-        self.assertEqual(self.seg.get_end(), Pos(13.5, "mi").to_smaller_unit())
+                Pos('11.4', "mi").to_smaller_unit())
+        self.assertEqual(self.seg.get_end(), Pos('13.5', "mi").to_smaller_unit())
 
         # set start and end to > current end
-        self.seg.set_start_end(Pos(14, "mi").to_smaller_unit(),
-                Pos(15, "mi").to_smaller_unit())
-        self.assertEqual(self.seg.get_start(), Pos(14, "mi").to_smaller_unit())
-        self.assertEqual(self.seg.get_end(), Pos(15, "mi").to_smaller_unit())
+        self.seg.set_start_end(Pos('14', "mi").to_smaller_unit(),
+                Pos('15', "mi").to_smaller_unit())
+        self.assertEqual(self.seg.get_start(), Pos('14', "mi").to_smaller_unit())
+        self.assertEqual(self.seg.get_end(), Pos('15', "mi").to_smaller_unit())
 
         # set start > end (should throw)
         with self.assertRaises(ValueError):
-            self.seg.set_start_end(Pos(16, "mi").to_smaller_unit(),
-                    Pos(10, "mi").to_smaller_unit())
+            self.seg.set_start_end(Pos('16', "mi").to_smaller_unit(),
+                    Pos('10', "mi").to_smaller_unit())
 
         # set start == end
-        self.seg.set_start_end(Pos(9.5, "mi").to_smaller_unit(),
-                Pos(9.5, "mi").to_smaller_unit())
+        self.seg.set_start_end(Pos('9.5', "mi").to_smaller_unit(),
+                Pos('9.5', "mi").to_smaller_unit())
         self.assertEqual(self.seg.get_start(), self.seg.get_end())
         
         # set start < end with 0 speed, should throw
-        self.seg.set_speed(Speed(0, "mi/h").to_smaller_unit())
+        self.seg.set_speed(Speed('0', "mi/h").to_smaller_unit())
         with self.assertRaises(ValueError):
-            self.seg.set_start_end(Pos(8, "mi").to_smaller_unit(),
-                    Pos(9.9, "mi").to_smaller_unit())
+            self.seg.set_start_end(Pos('8', "mi").to_smaller_unit(),
+                    Pos('9.9', "mi").to_smaller_unit())
 
 
 class EditableTrack(Track):
