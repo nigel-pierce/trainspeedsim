@@ -339,3 +339,18 @@ if __name__ == "__main__":
         print(invalid_acc)
     except ValueError as e:
         print(repr(e))
+
+    dfoot = Pos('1', 'f')
+    print(dfoot)
+
+    d1pt1foot = Pos('1.1', 'f')
+    print(d1pt1foot)
+
+    print("...compared to float-based...")
+    f1pt1foot = Pos(1.1, 'f')
+    print(repr(f1pt1foot))
+    print("OK I cheated in HasUnit by rounding val on repr/str, let's access _val directly")
+    print(f1pt1foot._val)
+    print("I swear this  shouldn't be working, let's try some math")
+    print("2.2 f = 1.1 f + 1.1 f:", Pos(1.1, 'f')+Pos(1.1,'f'))
+    print("WHY ISN'T THIS WORKING BY NOT WORKING")
