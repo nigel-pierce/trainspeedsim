@@ -354,3 +354,16 @@ if __name__ == "__main__":
     print("I swear this  shouldn't be working, let's try some math")
     print("2.2 f = 1.1 f + 1.1 f:", Pos(1.1, 'f')+Pos(1.1,'f'))
     print("WHY ISN'T THIS WORKING BY NOT WORKING")
+
+    s = "Pos(0.1, 'f')"+"+Pos(0.1, 'f')"*8
+    point1_9times = eval(s)
+    print("Let's try 0.9 f as 0.1 f + itself 9 times (so effectively 9*0.1):", 
+        point1_9times)
+    print("AH-HA There it is!")
+    
+    s = "Pos('0.1', 'f')"+"+Pos('0.1', 'f')"*8
+    dpoint1_9times = eval(s)
+    print("Now let's try with Decimal (with Pos('0.1', 'f') etc.):",
+            dpoint1_9times)
+    print("See? Drop-in replacement.")
+    
