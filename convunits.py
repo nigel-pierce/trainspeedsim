@@ -84,7 +84,8 @@ class HasUnit: # virtual/interface-ish
         elif isinstance(other, (int, float)):
             to_compare = other
         else:
-            raise TypeError("incomparable types")
+            raise TypeError("incomparable types "+str(type(self))+", " \
+                    +str(type(other)))
 
         return to_compare
 
