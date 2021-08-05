@@ -741,28 +741,29 @@ class TestEditableTrack(unittest.TestCase):
         pass
 
 if __name__ == "__main__":
-    seg = EditableTrackSeg(3, Pos(0, "mi").to_smaller_unit(), \
-            Pos(0, "mi").to_smaller_unit(), Speed(0, "mi/h").to_smaller_unit())
+    seg = EditableTrackSeg(3, Pos('0', "mi").to_smaller_unit(), \
+            Pos('0', "mi").to_smaller_unit(), Speed('0', 
+                "mi/h").to_smaller_unit())
     print(seg)
 
     print("Testing invalid (Editable)TrackSegs on construction")
     try:
-        seg2 = EditableTrackSeg(-2, Pos(0.2, "mi").to_smaller_unit(),
-                Pos(0.3, "mi").to_smaller_unit(), Speed(100, 
+        seg2 = EditableTrackSeg(-2, Pos('0.2', "mi").to_smaller_unit(),
+                Pos('0.3', "mi").to_smaller_unit(), Speed('100', 
                 "mi/h").to_smaller_unit())
         print(seg2)
     except Exception as e:
         print(repr(e))
     try:
-        seg2 = EditableTrackSeg(1, Pos(1, "mi").to_smaller_unit(),
-                Pos(0.9, "mi").to_smaller_unit(), Speed(25, 
+        seg2 = EditableTrackSeg(1, Pos('1', "mi").to_smaller_unit(),
+                Pos('0.9', "mi").to_smaller_unit(), Speed('25', 
                 "mi/h").to_smaller_unit())
         print(seg2)
     except Exception as e:
         print(repr(e))
     try:
-        seg2 = EditableTrackSeg(10, Pos(30, "mi").to_smaller_unit(),
-                Pos(30.1, "mi").to_smaller_unit(), Speed(0, 
+        seg2 = EditableTrackSeg(10, Pos('30', "mi").to_smaller_unit(),
+                Pos('30.1', "mi").to_smaller_unit(), Speed('0', 
                 "mi/h").to_smaller_unit())
         # I need to make it so I don't need to call to_smaller_unit() so much
         print(seg2)
@@ -771,8 +772,8 @@ if __name__ == "__main__":
 
     print("Testing valid speed > 0 when TrackSeg length == 0")
     try:
-        seg2 = EditableTrackSeg(10, Pos(30, "mi").to_smaller_unit(),
-                Pos(30, "mi").to_smaller_unit(), Speed(10, 
+        seg2 = EditableTrackSeg(10, Pos('30', "mi").to_smaller_unit(),
+                Pos('30', "mi").to_smaller_unit(), Speed('10', 
                 "mi/h").to_smaller_unit())
         # Actually this should be OK
         print(seg2)
