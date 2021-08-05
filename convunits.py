@@ -55,7 +55,10 @@ class HasUnit: # virtual/interface-ish
         return preserver
 
     def __init__(self, val, unit):
-        self._val = val
+        if isinstance(val, str):
+            self._val = Decimal(val)
+        else:
+            self._val = val
         self._unit = unit
 
     @preservecontext
