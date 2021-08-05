@@ -13,6 +13,11 @@ class SituationError(RuntimeError):
 class AmbiguousBoundaryError(SituationError):
     pass
 
+class Adjacent0LenError(RuntimeError):
+    """Two or more 0-length track segments share the same start/end
+    (Indicates programming error)"""
+    pass
+
 class EditableTrackSeg(TrackSeg):
     def __init__(self, index, start, end, speed):
         TrackSeg.__init__(self, index, start, end, speed)
