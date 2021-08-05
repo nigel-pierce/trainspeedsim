@@ -227,7 +227,7 @@ class Pos(ConvertibleUnit):
                    "m":  Fraction(0.3048),  \
                    "in": Fraction(12)     }, # just to spice things up\
             "mi": {"f":  Fraction(5280)   },\
-            "m":  {"f":  Fraction(3.2808399), \
+            "m":  {"f":  Fraction(3.2808399), # TODO make it 1/0.3048
                     "cm": Fraction(100),    \
                     "km": Fraction(1, 1000) },  \
             "in": {"f":  Fraction(1, 12) }, \
