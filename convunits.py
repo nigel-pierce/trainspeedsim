@@ -59,7 +59,6 @@ class HasUnit: # virtual/interface-ish
             self._val = Decimal(val)
         else:
             self._val = val
-            print("self._val =", self._val, "("+str(type(self._val))+")")
         self._unit = unit
 
     @preservecontext
