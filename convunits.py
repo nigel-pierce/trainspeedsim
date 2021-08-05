@@ -1,5 +1,6 @@
 
 from fractions import Fraction
+from decimal import Decimal
 
 # TODO add accel
 def system_to_unit(units, unit_type, size):
