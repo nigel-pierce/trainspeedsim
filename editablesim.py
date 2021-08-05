@@ -528,33 +528,33 @@ class TestEditableTrack(unittest.TestCase):
 
     def test_append(self):
         # append first TrackSeg
-        self.buildtrack.append_seg(Speed(30, "mi/h").to_smaller_unit(),
-                Pos(1.1, "mi").to_smaller_unit())
+        self.buildtrack.append_seg(Speed('30', "mi/h").to_smaller_unit(),
+                Pos('1.1', "mi").to_smaller_unit())
         self.assertEqual(self.buildtrack._track[0], EditableTrackSeg(0,
-            Pos(0, "mi").to_smaller_unit(), Pos(1.1, "mi").to_smaller_unit(),
-            Speed(30, "mi/h").to_smaller_unit()))
+            Pos('0', "mi").to_smaller_unit(), Pos('1.1', "mi").to_smaller_unit(),
+            Speed('30', "mi/h").to_smaller_unit()))
 
         # append to that
-        self.buildtrack.append_seg(Speed(45, "mi/h").to_smaller_unit(),
-                Pos(2.1, "mi").to_smaller_unit())
+        self.buildtrack.append_seg(Speed('45', "mi/h").to_smaller_unit(),
+                Pos('2.1', "mi").to_smaller_unit())
         self.assertEqual(self.buildtrack._track[1], EditableTrackSeg(1,
-            Pos(1.1, "mi").to_smaller_unit(), Pos(3.2, "mi").to_smaller_unit(),
-            Speed(45, "mi/h").to_smaller_unit()))
+            Pos('1.1', "mi").to_smaller_unit(), Pos('3.2', "mi").to_smaller_unit(),
+            Speed('45', "mi/h").to_smaller_unit()))
 
         # append a third segment, but invalid
         with self.assertRaises(ValueError):
-            self.buildtrack.append_seg(Speed(0, "mi/h").to_smaller_unit(),
-                Pos(0.1, "mi").to_smaller_unit())
+            self.buildtrack.append_seg(Speed('0', "mi/h").to_smaller_unit(),
+                Pos('0.1', "mi").to_smaller_unit())
 
         # append a real third segment, 0mph, 0-length
-        self.buildtrack.append_seg(Speed(0, "mi/h").to_smaller_unit(),
-                Pos(0, "mi").to_smaller_unit())
+        self.buildtrack.append_seg(Speed('0', "mi/h").to_smaller_unit(),
+                Pos('0', "mi").to_smaller_unit())
 
 
         # append another 0-len seg (should throw)
         with self.assertRaises(ValueError):
-            self.buildtrack.append_seg(Speed(10, "mi/h").to_smaller_unit(),
-                    Pos(0, "mi").to_smaller_unit())
+            self.buildtrack.append_seg(Speed('10', "mi/h").to_smaller_unit(),
+                    Pos('0', "mi").to_smaller_unit())
 
         # print it so far
         print(self.buildtrack)
@@ -562,7 +562,7 @@ class TestEditableTrack(unittest.TestCase):
     def test_split(self):
         # SituationError on 0-seg track
         with self.assertRaises(SituationError):
-            self.buildtrack.split_seg(Pos(0, "mi").to_smaller_unit())
+            self.buildtrack.split_seg(Pos('0', "mi").to_smaller_unit())
 
         # just assume short track loaded correctly
         # well print it
@@ -570,37 +570,37 @@ class TestEditableTrack(unittest.TestCase):
 
         # should split seg 5 into id 5 11.8-12mi @ 50mph and id 6 12-12.5mi
         # @ 50 mph (and shift subsequent ones id's to old id + 1)
-        twelvemiles = Pos(12.0, "mi").to_smaller_unit()
+        twelvemiles = Pos('12.0', "mi").to_smaller_unit()
         self.shorttrack.split_seg(twelvemiles)
 
         self.assertEqual(len(self.shorttrack._track), 8)
         self.assertEqual(self.shorttrack._track[5], EditableTrackSeg(5,
-            Pos(11.8, "mi").to_smaller_unit(), twelvemiles, 
-            Speed(50, "mi/h").to_smaller_unit()))
+            Pos('11.8', "mi").to_smaller_unit(), twelvemiles, 
+            Speed('50', "mi/h").to_smaller_unit()))
         self.assertEqual(self.shorttrack._track[6], TrackSeg(6, twelvemiles,
-            Pos(12.5, "mi").to_smaller_unit(), 
-            Speed(50, "mi/h").to_smaller_unit()))
+            Pos('12.5', "mi").to_smaller_unit(), 
+            Speed('50', "mi/h").to_smaller_unit()))
         self.assertEqual(self.shorttrack._track[7].get_index(), 7)
 
         print("Split seg of ",self.shorttrack)
 
         # try to split 0-length seg (should throw)
         with self.assertRaises(ValueError):
-            self.shorttrack.split_seg(Pos(11.8, "mi").to_smaller_unit())
+            self.shorttrack.split_seg(Pos('11.8', "mi").to_smaller_unit())
 
         # try to split on seg boundary (should throw)
         with self.assertRaises(ValueError):
-            self.shorttrack.split_seg(Pos(10.5, "mi").to_smaller_unit())
+            self.shorttrack.split_seg(Pos('10.5', "mi").to_smaller_unit())
 
     def test__intersecting_segs(self):
         # assume loaded track correctly
 
         # intersect in middle of seg
-        inter = self.shorttrack._intersecting_segs(Pos(11.5, 
+        inter = self.shorttrack._intersecting_segs(Pos('11.5', 
             "mi").to_smaller_unit())
         self._print_intersecting_segs(inter)
-        track1 = EditableTrackSeg(3, Pos(11.3, "mi").to_smaller_unit(),
-                Pos(11.8, "mi").to_smaller_unit(), Speed(35, 
+        track1 = EditableTrackSeg(3, Pos('11.3', "mi").to_smaller_unit(),
+                Pos('11.8', "mi").to_smaller_unit(), Speed('35', 
                 "mi/h").to_smaller_unit())
         self.assertIn(track1, inter)
         # Gawd writing that takes forever
@@ -608,7 +608,7 @@ class TestEditableTrack(unittest.TestCase):
         self.assertEqual(len(inter), 1)
 
         # intersect boundary of 2 segs
-        inter = self.shorttrack._intersecting_segs(Pos(11.3,
+        inter = self.shorttrack._intersecting_segs(Pos('11.3',
             "mi").to_smaller_unit())
         self._print_intersecting_segs(inter)
         self.assertEqual(len(inter), 2)
@@ -616,7 +616,7 @@ class TestEditableTrack(unittest.TestCase):
         self.assertIn(self.shorttrack._track[3], inter)
 
         # intersect 0-length seg
-        inter = self.shorttrack._intersecting_segs(Pos(11.8,
+        inter = self.shorttrack._intersecting_segs(Pos('11.8',
             "mi").to_smaller_unit())
         self._print_intersecting_segs(inter)
         self.assertEqual(len(inter), 3)
@@ -626,11 +626,11 @@ class TestEditableTrack(unittest.TestCase):
 
         # intersect outside of range (throws)
         with self.assertRaises(ValueError):
-            inter = self.shorttrack._intersecting_segs(Pos(0,
+            inter = self.shorttrack._intersecting_segs(Pos('0',
                 "mi").to_smaller_unit())
 
         # intersect very start of track
-        inter = self.shorttrack._intersecting_segs(Pos(10.1,
+        inter = self.shorttrack._intersecting_segs(Pos('10.1',
             "mi").to_smaller_unit())
         self._print_intersecting_segs(inter)
         self.assertEqual(len(inter), 2)
@@ -638,7 +638,7 @@ class TestEditableTrack(unittest.TestCase):
         self.assertIn(self.shorttrack._track[1], inter)
 
         # intersect very end of track
-        inter = self.shorttrack._intersecting_segs(Pos(12.5,
+        inter = self.shorttrack._intersecting_segs(Pos('12.5',
             "mi").to_smaller_unit())
         self._print_intersecting_segs(inter)
         self.assertEqual(len(inter), 2)
@@ -657,32 +657,32 @@ class TestEditableTrack(unittest.TestCase):
         # test error situations
         # out of bounds: before start
         with self.assertRaises(ValueError):
-            self.shorttrack.join_segs(Pos(9.5, "mi").to_smaller_unit())
+            self.shorttrack.join_segs(Pos('9.5', "mi").to_smaller_unit())
         # out of bounds: after end
         with self.assertRaises(ValueError):
-            self.shorttrack.join_segs(Pos(13.6, "mi").to_smaller_unit())
+            self.shorttrack.join_segs(Pos('13.6', "mi").to_smaller_unit())
         # in bounds, but not on a boundary
         with self.assertRaises(ValueError):
-            self.shorttrack.join_segs(Pos(11.4, "mi").to_smaller_unit())
+            self.shorttrack.join_segs(Pos('11.4', "mi").to_smaller_unit())
 
         import copy
         orig_seg0 = copy.deepcopy(self.shorttrack._track[0])
         # join at 10.5 miles
-        self.shorttrack.join_segs(Pos(10.5, "mi").to_smaller_unit())
+        self.shorttrack.join_segs(Pos('10.5', "mi").to_smaller_unit())
         # there should now be 6 segments
         self.assertEqual(len(self.shorttrack._track), 6)
         # _track[0] should be the same as ever
         self.assertEqual(orig_seg0, self.shorttrack._track[0])
         # _track[1] should be 10.1 mi - 11.3 mi at 58.666666etc. f/s
         self.assertEqual(self.shorttrack._track[1],
-            TrackSeg(1, Pos(10.1, "mi").to_smaller_unit(),
-                Pos(11.3, "mi").to_smaller_unit(),
-                Speed(40, "mi/h").to_smaller_unit()))
+            TrackSeg(1, Pos('10.1', "mi").to_smaller_unit(),
+                Pos('11.3', "mi").to_smaller_unit(),
+                Speed('40', "mi/h").to_smaller_unit()))
         # _track[2] should be 11.3-11.8 mi @ 35 mph
         self.assertEqual(self.shorttrack._track[2],
-            TrackSeg(2, Pos(11.3, "mi").to_smaller_unit(),
-                Pos(11.8, "mi").to_smaller_unit(),
-                Speed(35, "mi/h").to_smaller_unit()))
+            TrackSeg(2, Pos('11.3', "mi").to_smaller_unit(),
+                Pos('11.8', "mi").to_smaller_unit(),
+                Speed('35', "mi/h").to_smaller_unit()))
         # I'll assume the rest are good
         # because there is TOO MUCH TYPING
         # (as in, of the keyboard)
@@ -691,12 +691,12 @@ class TestEditableTrack(unittest.TestCase):
         # use shorttrack
 
         # shift 10.5 mi boundary to 10.3 mi
-        self.shorttrack.shift_boundary(Pos(10.5, "mi").to_smaller_unit(),
-                Pos(-0.2, "mi").to_smaller_unit())
+        self.shorttrack.shift_boundary(Pos('10.5', "mi").to_smaller_unit(),
+                Pos('-0.2', "mi").to_smaller_unit())
         self.assertEqual(self.shorttrack._track[1].get_end(),
-                Pos(10.3, "mi").to_smaller_unit())
+                Pos('10.3', "mi").to_smaller_unit())
         self.assertEqual(self.shorttrack._track[2].get_start(),
-                Pos(10.3, "mi").to_smaller_unit())
+                Pos('10.3', "mi").to_smaller_unit())
 
         # shift 11.3 mi boundary to 11.8 mi (as far as it'll go)
         # (though that will result in 2 adjacent 0-length segments, with
@@ -704,8 +704,8 @@ class TestEditableTrack(unittest.TestCase):
         # that.)
         # (so let's throw for that)
         with self.assertRaises(Adjacent0LenError):
-            self.shorttrack.shift_boundary(Pos(11.3, "mi").to_smaller_unit(),
-                    Pos(0.5, "mi").to_smaller_unit())
+            self.shorttrack.shift_boundary(Pos('11.3', "mi").to_smaller_unit(),
+                    Pos('0.5', "mi").to_smaller_unit())
 
         # shift 10.1 mi boundary to 10.0 (should throw)
         # (or maybe shouldn't? It wouldn't if it shifted both boundaries
@@ -734,8 +734,8 @@ class TestEditableTrack(unittest.TestCase):
         # ... but it should throw because it's trying to increase length of a
         # 0-speed seg ;)
         with self.assertRaises(NonzeroLengthOfZeroSpeedSegError):
-            self.shorttrack.shift_boundary(Pos(10.1, "mi").to_sm(), 
-                    Pos(-0.1, "mi").to_sm())
+            self.shorttrack.shift_boundary(Pos('10.1', "mi").to_sm(), 
+                    Pos('-0.1', "mi").to_sm())
 
         # shift 10.3 mi boundary to 9.8 (should throw)
         pass
