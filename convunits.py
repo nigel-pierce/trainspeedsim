@@ -365,5 +365,12 @@ if __name__ == "__main__":
     dpoint1_9times = eval(s)
     print("Now let's try with Decimal (with Pos('0.1', 'f') etc.):",
             dpoint1_9times)
+    
     print("See? Drop-in replacement.")
+
+    print("Convert decimalized 0.9 f to m:", dpoint1_9times.convert_to('m'))
+
+    dsum1 = dpoint1_9times+Pos('0.1', 'f')
+    print("'0.9' f + '0.1' f:",dsum1)
+    print("that, to m:", dsum1.convert_to('m'))
     
