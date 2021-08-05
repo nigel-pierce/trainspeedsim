@@ -230,7 +230,9 @@ class EditableTrack(Track):
         pos_unit = system_to_unit(self._units, "pos", "big")
         if len(self._track) == 0:
             index = 0
+            print("################ THE IMPORTANT POS ####################")
             start = Pos(0, pos_unit).to_smaller_unit() # DON'T make 0 a str!
+            print("#######################################################")
             end = length
         else:
             # throw if trying to append 0-len seg to another 0-len seg
