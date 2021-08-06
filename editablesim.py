@@ -23,6 +23,10 @@ class Adjacent0LenPotentialError(SituationError):
     same start/end (does not indicate programming error)"""
     pass
 
+class Non0LengthOf0SpeedSegPotentialError(SituationError):
+    """Operation would cause a 0-speed track segment to have non-0 length"""
+    pass
+
 class EditableTrackSeg(TrackSeg):
     def __init__(self, index, start, end, speed):
         TrackSeg.__init__(self, index, start, end, speed)
