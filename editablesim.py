@@ -129,7 +129,7 @@ class TestEditableTrackSegMethods(unittest.TestCase):
         self.seg.set_speed(Speed('0', "mi/h").to_smaller_unit())
         self.assertEqual(self.seg.get_speed(), 
                 Speed('0', "mi/h").to_smaller_unit())
-        with self.assertRaises(ValueError):
+        with self.assertRaises(Non0LengthOf0SpeedSegPotentialError):
             self.seg.set_start(Pos('13.4', "mi").to_smaller_unit())
 
     def test_set_end(self):
@@ -156,7 +156,7 @@ class TestEditableTrackSegMethods(unittest.TestCase):
         self.seg.set_speed(Speed('0', "mi/h").to_smaller_unit())
         self.assertEqual(self.seg.get_speed(), 
             Speed('0', "mi/h").to_smaller_unit())
-        with self.assertRaises(ValueError):
+        with self.assertRaises(Non0LengthOf0SpeedSegPotentialError):
             self.seg.set_end(Pos('11.6', "mi").to_smaller_unit())
 
     def test_set_speed(self):
@@ -216,7 +216,7 @@ class TestEditableTrackSegMethods(unittest.TestCase):
         
         # set start < end with 0 speed, should throw
         self.seg.set_speed(Speed('0', "mi/h").to_smaller_unit())
-        with self.assertRaises(ValueError):
+        with self.assertRaises(Non0LengthOf0SpeedSegPotentialError):
             self.seg.set_start_end(Pos('8', "mi").to_smaller_unit(),
                     Pos('9.9', "mi").to_smaller_unit())
 
