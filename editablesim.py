@@ -426,24 +426,39 @@ class EditableTrack(Track):
             # shift end of [0] and start of [1]
             if dist > 0:
                 # trying to shift right
-                rseg_start = intersecting[1].get_start()
-                rseg_new_start = rseg_start + dist 
-                rseg_end = intersecting[1].get_end()
-                if rseg_new_start == rseg_end:
-                    new_intersect = self._intersecting_segs(rseg_end)
-                    if len(new_intersect) > 0 and new_intersect[0].length()==0:
-                        raise Adjacent0LenPotentialError("moving boundary at "\
-                                "{} by {} creates multiple 0-length segments "\
-                                "at {}".format(rseg_start, dist, rseg_end))
-                if rseg_new_start > rseg_end:
+                shrinkseg = intersecting[1]
+                shrinkseg_boundary = intersecting[1].get_start()
+                shrinkseg_new_boundary = shrinkseg_boundary + dist 
+                shrinkseg_other_end = intersecting[1].get_end()
+                direction = '+' # the next segment to the right
+                if shrinkseg_new_boundary > shrinkseg_other_end:
                     raise ValueError("moving boundary at {} by {} moves beyond"\
-                            "segment end {}".format(rseg_start, dist, rseg_end))
+                            "segment end {}".format(shrinkseg_boundary, dist,
+                                shrinkseg_other_end))
             elif dist < 0:
                 # trying to shift left
-                if intersecting[0].get_end()+dist < intersecting[0].get_start():
+                shrinkseg = intersecting[0]
+                shrinkseg_boundary = intersecting[0].get_end()
+                shrinkseg_new_boundary = shrinkseg_boundary + dist 
+                shrinkseg_other_end = intersecting[0].get_start()
+                direction = '-' # next segment to the left
+                if shrinkseg_new_boundary < shrinkseg_other_end:
                     raise ValueError("moving boundary at {} by {} moves beyond"\
-                            "segment start {}".format(intersecting[0].get_end(),
-                            dist, intersecting[0].get_start()))
+                            "segment start {}".format(shrinkseg_boundary, dist,
+                                shrinkseg_other_end))
+            else:
+                # moving boundary by 0 distance needs no action
+                return
+
+            # check if this might make shrunken seg 0-length
+            if shrinkseg_new_boundary == shrinkseg_other_end:
+                # make sure resulting 0-length seg not next to another 0-length
+                adjacent_seg = self._seg_adjacent_to(shrinkseg, direction)
+                if adjacent_seg is not None and adjacent_seg.length()==0:
+                    raise Adjacent0LenPotentialError("moving boundary at "\
+                            "{} by {} creates multiple 0-length segments "\
+                            "at {}".format(shrinkseg_boundary, dist,
+                                shrinkseg_other_end))
 
             # do the actual work
             intersecting[0].set_end(intersecting[0].get_end()+dist)
@@ -456,6 +471,22 @@ class EditableTrack(Track):
                             intersecting[0].get_end(),
                             intersecting[1].get_index(),
                             intersecting[1].get_start()))
+
+    def _seg_adjacent_to(self, seg, direction):
+        """returns track seg next to seg in + or - direction or None if no
+        such seg exists"""
+        if direction not in ('+', '-'):
+            raise ValueError("direction must be one of '+' or '-'")
+        if seg.get_index() == 0 or seg.get_index() == len(self._track)-1:
+            return None
+        if direction == '+':
+            direction_num = 1
+        elif direction == '-':
+            direction_num = -1
+        else:
+            raise RuntimeError("Shouldn't get here")
+        adjacent_i = seg.get_index() + direction_num
+        return self._track[adjacent_i]
 
     # Checks if mp is "on boundary" of a track seg by seeing if len of tuple
     # returned by self._intersecting_segs(mp) > 1
