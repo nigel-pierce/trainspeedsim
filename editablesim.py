@@ -422,10 +422,18 @@ class EditableTrack(Track):
             # shift end of [0] and start of [1]
             if dist > 0:
                 # trying to shift right
-                if intersecting[1].get_start()+dist > intersecting[1].get_end():
+                rseg_start = intersecting[1].get_start()
+                rseg_new_start = rseg_start + dist 
+                rseg_end = intersecting[1].get_end()
+                if rseg_new_start == rseg_end:
+                    new_intersect = self._intersecting_segs(rseg_end)
+                    if len(new_intersect) > 0 and new_intersect[0].length()==0:
+                        raise Adjacent0LenError("moving boundary at {} by {} "\
+                                "creates multiple 0-length segments at {}",
+                                rseg_start, dist, rseg_end)
+                if rseg_new_start > rseg_end:
                     raise ValueError("moving boundary at {} by {} moves beyond"\
-                            "segment end {}".format(intersecting[1].get_start(),
-                            dist, intersecting[1].get_end()))
+                            "segment end {}".format(rseg_start, dist, rseg_end))
             elif dist < 0:
                 # trying to shift left
                 if intersecting[0].get_end()+dist < intersecting[0].get_start():
