@@ -476,7 +476,7 @@ class EditableTrack(Track):
             try:
                 intersecting[0].set_end(lseg_orig_end+dist)
                 intersecting[1].set_start(rseg_orig_start+dist)
-            except ValueError as e:
+            except Non0LengthOf0SpeedSegPotentialError as e:
                 # undo what might have been done
                 intersecting[0].set_end(lseg_orig_end)
                 # technically don't need next line but included for symmetry
