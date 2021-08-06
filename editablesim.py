@@ -50,14 +50,16 @@ class EditableTrackSeg(TrackSeg):
         if start > self._end:
             raise ValueError("start must be <= end")
         if self._speed == 0 and start != self._end:
-            raise ValueError("start and end must be equal if speed is 0")
+            raise Non0LengthOf0SpeedSegPotentialError("start and end must be "\
+                    "equal if speed is 0")
         self._start = start
 
     def set_end(self, end):
         if self._start > end:
             raise ValueError("start must be <= end")
         if self._speed == 0 and self._start != end:
-            raise ValueError("start and end must be equal if speed is 0")
+            raise Non0LengthOf0SpeedSegPotentialError("start and end must be "\
+                    "equal if speed is 0")
         self._end = end
 
     def set_speed(self, speed):
@@ -73,7 +75,8 @@ class EditableTrackSeg(TrackSeg):
         if start > end:
             raise ValueError("start must be <= end")
         if self._speed == 0 and start != end:
-            raise ValueError("start and end must be equal if speed is 0")
+            raise Non0LengthOf0SpeedSegPotentialError("start and end must be "\
+                    "equal if speed is 0")
         self._start = start
         self._end = end
 
@@ -800,7 +803,7 @@ class TestEditableTrack(unittest.TestCase):
         # boundary.
         # ... but it should throw because it's trying to increase length of a
         # 0-speed seg ;)
-        with self.assertRaises(NonzeroLengthOfZeroSpeedSegError):
+        with self.assertRaises(Non0LengthOf0SpeedSegPotentialError):
             self.shorttrack.shift_boundary(Pos('10.1', "mi").to_sm(), 
                     Pos('-0.1', "mi").to_sm())
 
