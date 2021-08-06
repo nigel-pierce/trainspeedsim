@@ -407,8 +407,8 @@ class EditableTrack(Track):
             raise NotImplementedError
         else:
             # somehow we have multiple adjacent 0-length segments
-            raise Adjacent0LenError("Multiple adjacent 0-length segs at "+\
-                    str(mp))
+            raise Adjacent0LenExistsError("Multiple adjacent 0-length segs at "\
+                    + str(mp) + " (programming error)")
         pass
 
     def _shift_2_boundary(self, intersecting, dist):
@@ -432,9 +432,9 @@ class EditableTrack(Track):
                 if rseg_new_start == rseg_end:
                     new_intersect = self._intersecting_segs(rseg_end)
                     if len(new_intersect) > 0 and new_intersect[0].length()==0:
-                        raise Adjacent0LenError("moving boundary at {} by {} "\
-                                "creates multiple 0-length segments at {}",
-                                rseg_start, dist, rseg_end)
+                        raise Adjacent0LenPotentialError("moving boundary at "\
+                                "{} by {} creates multiple 0-length segments "\
+                                "at {}".format(rseg_start, dist, rseg_end))
                 if rseg_new_start > rseg_end:
                     raise ValueError("moving boundary at {} by {} moves beyond"\
                             "segment end {}".format(rseg_start, dist, rseg_end))
@@ -723,7 +723,7 @@ class TestEditableTrack(unittest.TestCase):
         # differing speeds at that, and I'm not sure how the sim will handle
         # that.)
         # (so let's throw for that)
-        with self.assertRaises(Adjacent0LenError):
+        with self.assertRaises(Adjacent0LenPotentialError):
             self.shorttrack.shift_boundary(Pos('11.3', "mi").to_smaller_unit(),
                     Pos('0.5', "mi").to_smaller_unit())
 
