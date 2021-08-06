@@ -460,9 +460,21 @@ class EditableTrack(Track):
                             "at {}".format(shrinkseg_boundary, dist,
                                 shrinkseg_other_end))
 
+            # save old values in case we need to back out
+            # (e.g. trying to make length of 0-speed seg nonzero)
+            lseg_orig_end = intersecting[0].get_end()
+            rseg_orig_start = intersecting[1].get_start()
+
             # do the actual work
-            intersecting[0].set_end(intersecting[0].get_end()+dist)
-            intersecting[1].set_start(intersecting[1].get_start()+dist)
+            try:
+                intersecting[0].set_end(lseg_orig_end+dist)
+                intersecting[1].set_start(rseg_orig_start+dist)
+            except ValueError as e:
+                # undo what might have been done
+                intersecting[0].set_end(lseg_orig_end)
+                # technically don't need next line but included for symmetry
+                intersecting[1].set_start(rseg_orig_start)
+                raise e
 
             # invariant
             if intersecting[0].get_end() != intersecting[1].get_start():
