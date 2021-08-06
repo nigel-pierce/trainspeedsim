@@ -13,10 +13,14 @@ class SituationError(RuntimeError):
 class AmbiguousBoundaryError(SituationError):
     pass
 
-class Adjacent0LenError(RuntimeError):
-    """Two or more 0-length track segments share the same start/end or such
-    a situation would be created (Does not necessarily indicate programming 
-    error)"""
+class Adjacent0LenExistsError(RuntimeError):
+    """Two or more 0-length track segments already share the same start/end
+    (indicates programming error)"""
+    pass
+
+class Adjacent0LenPotentialError(SituationError):
+    """Operation would cause two or more 0-length track segments to share the
+    same start/end (does not indicate programming error)"""
     pass
 
 class EditableTrackSeg(TrackSeg):
