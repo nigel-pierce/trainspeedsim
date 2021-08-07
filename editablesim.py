@@ -426,9 +426,23 @@ class EditableTrack(Track):
             raise Adjacent0LenExistsError("Multiple 0-length segments at "\
                     +str(mp))
         elif intersecting[0].length() == 0:
-            raise NotImplementedError
+            if dist > 0:
+                # shift end right
+                # should work same as enclosing elif's 'else' -- goto? ;)
+                raise NotImplementedError
+            elif dist < 0:
+                # shift start left
+                # cannot use upcoming else
+                raise NotImplementedError
         elif intersecting[1].length() == 0:
-            raise NotImplementedError
+            if dist > 0:
+                # shift end right
+                # cannot use upcoming else
+                raise NotImplementedError
+            elif dist < 0:
+                # shift start left
+                # can use upcoming else
+                raise NotImplementedError
         else:
             # both non-0-length
             # shift end of [0] and start of [1]
