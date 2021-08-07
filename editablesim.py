@@ -448,55 +448,6 @@ class EditableTrack(Track):
             # should not get here
             raise RuntimeError("programming error")
 
-        # the rest of these need to be reorganized to go in above if-chain
-        # TODO
-        elif intersecting[0].length() == 0:
-            if dist > 0:
-                # shift end right
-                # should work same as enclosing elif's 'else' -- goto? ;)
-                raise NotImplementedError
-            elif dist < 0:
-                # shift start left
-                # cannot use upcoming else
-                raise NotImplementedError
-        elif intersecting[1].length() == 0:
-            if dist > 0:
-                # shift end right
-                # cannot use upcoming else
-                raise NotImplementedError
-            elif dist < 0:
-                # shift start left
-                # can use upcoming else
-                raise NotImplementedError
-        else:
-            # both non-0-length
-            # shift end of [0] and start of [1]
-            if dist > 0:
-                # trying to shift right
-                shrinkseg = intersecting[1]
-                shrinkseg_boundary = intersecting[1].get_start()
-                shrinkseg_new_boundary = shrinkseg_boundary + dist 
-                shrinkseg_other_end = intersecting[1].get_end()
-                direction = '+' # the next segment to the right
-                if shrinkseg_new_boundary > shrinkseg_other_end:
-                    raise ValueError("moving boundary at {} by {} moves beyond"\
-                            "segment end {}".format(shrinkseg_boundary, dist,
-                                shrinkseg_other_end))
-            elif dist < 0:
-                # trying to shift left
-                shrinkseg = intersecting[0]
-                shrinkseg_boundary = intersecting[0].get_end()
-                shrinkseg_new_boundary = shrinkseg_boundary + dist 
-                shrinkseg_other_end = intersecting[0].get_start()
-                direction = '-' # next segment to the left
-                if shrinkseg_new_boundary < shrinkseg_other_end:
-                    raise ValueError("moving boundary at {} by {} moves beyond"\
-                            "segment start {}".format(shrinkseg_boundary, dist,
-                                shrinkseg_other_end))
-            else:
-                # moving boundary by 0 distance needs no action
-                return
-
 
     def _shrink_seg_expand_other(self, shrinkseg, intersecting, dist):
         if len(intersecting) != 2:
