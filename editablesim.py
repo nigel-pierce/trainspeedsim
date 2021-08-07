@@ -429,11 +429,12 @@ class EditableTrack(Track):
         if dist > 0 and intersecting[1].length() != 0:
             # intersecting[0] expands rightward while intersecting[1] shrinks
             # (intersecting[0] can be 0-length)
-            #self.shrink_seg_expand_other(intersecting[1], dist
+            self._shrink_seg_expand_other(intersecting[1], intersecting, dist)
             raise NotImplementedError
         elif dist < 0 and intersecting[0].length() != 0:
             # intersecting[0] shrinks leftward while intersecting[1] expands
             # (intersecting[1] can be 0-length)
+            self._shrink_seg_expand_other(intersecting[0], intersecting, dist)
             raise NotImplementedError
         elif dist > 0 and intersecting[1].length() == 0:
             # intersecting[1] (0-length) expands rightward while intersecting[0]
