@@ -425,6 +425,30 @@ class EditableTrack(Track):
         if intersecting[0].length() == 0 and intersecting[1].length() == 0:
             raise Adjacent0LenExistsError("Multiple 0-length segments at "\
                     +str(mp))
+
+        if dist > 0 and intersecting[1].length() != 0:
+            # intersecting[0] expands rightward while intersecting[1] shrinks
+            # (intersecting[0] can be 0-length)
+            #self.shrink_seg_expand_other(intersecting[1], dist
+            raise NotImplementedError
+        elif dist < 0 and intersecting[0].length() != 0:
+            # intersecting[0] shrinks leftward while intersecting[1] expands
+            # (intersecting[1] can be 0-length)
+            raise NotImplementedError
+        elif dist > 0 and intersecting[1].length() == 0:
+            # intersecting[1] (0-length) expands rightward while intersecting[0]
+            # does not change
+            raise NotImplementedError
+        elif dist < 0 and intersecting[0].length() == 0:
+            # intersecting[0] (0-length) expands leftward while intersecting[1]
+            # does not change
+            raise NotImplementedError
+        else:
+            # should not get here
+            raise RuntimeError("programming error")
+
+        # the rest of these need to be reorganized to go in above if-chain
+        # TODO
         elif intersecting[0].length() == 0:
             if dist > 0:
                 # shift end right
