@@ -444,6 +444,8 @@ class EditableTrack(Track):
             # intersecting[0] (0-length) expands leftward while intersecting[1]
             # does not change
             raise NotImplementedError
+        elif dist == 0:
+            return
         else:
             # should not get here
             raise RuntimeError("programming error")
