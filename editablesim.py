@@ -531,6 +531,35 @@ class EditableTrack(Track):
                             intersecting[1].get_index(),
                             intersecting[1].get_start()))
 
+
+    def _shrink_seg_expand_other(self, shrinkseg, intersecting, dist):
+        if len(intersecting) != 2:
+            raise RuntimeError("Programming error")
+        if not (shrinkseg is intersecting[0] or shrinkseg is intersecting[1]):
+            raise RuntimeError("Programming error")
+
+        if dist > 0:
+            # trying to shift right
+            shrinkseg_boundary = shrinkseg.get_start()
+            shrinkseg_new_boundary = shrinkseg_boundary + dist 
+            shrinkseg_other_end = shrinkseg.get_end()
+            direction = '+' # the next segment to the right
+            if shrinkseg_new_boundary > shrinkseg_other_end:
+                raise ValueError("moving boundary at {} by {} moves beyond"\
+                        "segment end {}".format(shrinkseg_boundary, dist,
+                            shrinkseg_other_end))
+        elif dist < 0:
+            # trying to shift left
+            shrinkseg_boundary = shrinkseg.get_end()
+            shrinkseg_new_boundary = shrinkseg_boundary + dist 
+            shrinkseg_other_end = shrinkseg.get_start()
+            direction = '-' # next segment to the left
+            if shrinkseg_new_boundary < shrinkseg_other_end:
+                raise ValueError("moving boundary at {} by {} moves beyond"\
+                        "segment start {}".format(shrinkseg_boundary, dist,
+                            shrinkseg_other_end))
+
+        
     def _seg_adjacent_to(self, seg, direction):
         """returns track seg next to seg in + or - direction or None if no
         such seg exists"""
