@@ -385,6 +385,8 @@ class EditableTrack(Track):
         if (len(intersecting) == 0):
             raise RuntimeError("{} doesn't intersect with any track segment..."\
                     " Previous checks should have stopped this".format(mp))
+        elif len(intersecting) == 1:
+            raise RuntimeError("{} not on track segment boundary".format(mp))
 
         # NOW to the mean & potatoes
         # I mean meat
