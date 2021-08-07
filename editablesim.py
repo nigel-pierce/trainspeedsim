@@ -430,12 +430,10 @@ class EditableTrack(Track):
             # intersecting[0] expands rightward while intersecting[1] shrinks
             # (intersecting[0] can be 0-length)
             self._shrink_seg_expand_other(intersecting[1], intersecting, dist)
-            raise NotImplementedError
         elif dist < 0 and intersecting[0].length() != 0:
             # intersecting[0] shrinks leftward while intersecting[1] expands
             # (intersecting[1] can be 0-length)
             self._shrink_seg_expand_other(intersecting[0], intersecting, dist)
-            raise NotImplementedError
         elif dist > 0 and intersecting[1].length() == 0:
             # intersecting[1] (0-length) expands rightward while intersecting[0]
             # does not change
@@ -499,40 +497,6 @@ class EditableTrack(Track):
                 # moving boundary by 0 distance needs no action
                 return
 
-            # check if this might make shrunken seg 0-length
-            if shrinkseg_new_boundary == shrinkseg_other_end:
-                # make sure resulting 0-length seg not next to another 0-length
-                adjacent_seg = self._seg_adjacent_to(shrinkseg, direction)
-                if adjacent_seg is not None and adjacent_seg.length()==0:
-                    raise Adjacent0LenPotentialError("moving boundary at "\
-                            "{} by {} creates multiple 0-length segments "\
-                            "at {}".format(shrinkseg_boundary, dist,
-                                shrinkseg_other_end))
-
-            # save old values in case we need to back out
-            # (e.g. trying to make length of 0-speed seg nonzero)
-            lseg_orig_end = intersecting[0].get_end()
-            rseg_orig_start = intersecting[1].get_start()
-
-            # do the actual work
-            try:
-                intersecting[0].set_end(lseg_orig_end+dist)
-                intersecting[1].set_start(rseg_orig_start+dist)
-            except Non0LengthOf0SpeedSegPotentialError as e:
-                # undo what might have been done
-                intersecting[0].set_end(lseg_orig_end)
-                # technically don't need next line but included for symmetry
-                intersecting[1].set_start(rseg_orig_start)
-                raise e
-
-            # invariant
-            if intersecting[0].get_end() != intersecting[1].get_start():
-                raise RuntimeError("Track seg {} end {} != seg {} start {}"\
-                        .format(intersecting[0].get_index(),
-                            intersecting[0].get_end(),
-                            intersecting[1].get_index(),
-                            intersecting[1].get_start()))
-
 
     def _shrink_seg_expand_other(self, shrinkseg, intersecting, dist):
         if len(intersecting) != 2:
@@ -560,6 +524,40 @@ class EditableTrack(Track):
                 raise ValueError("moving boundary at {} by {} moves beyond"\
                         "segment start {}".format(shrinkseg_boundary, dist,
                             shrinkseg_other_end))
+
+        # check if this might make shrunken seg 0-length
+        if shrinkseg_new_boundary == shrinkseg_other_end:
+            # make sure resulting 0-length seg not next to another 0-length
+            adjacent_seg = self._seg_adjacent_to(shrinkseg, direction)
+            if adjacent_seg is not None and adjacent_seg.length()==0:
+                raise Adjacent0LenPotentialError("moving boundary at "\
+                        "{} by {} creates multiple 0-length segments "\
+                        "at {}".format(shrinkseg_boundary, dist,
+                            shrinkseg_other_end))
+
+        # save old values in case we need to back out
+        # (e.g. trying to make length of 0-speed seg nonzero)
+        lseg_orig_end = intersecting[0].get_end()
+        rseg_orig_start = intersecting[1].get_start()
+
+        # do the actual work
+        try:
+            intersecting[0].set_end(lseg_orig_end+dist)
+            intersecting[1].set_start(rseg_orig_start+dist)
+        except Non0LengthOf0SpeedSegPotentialError as e:
+            # undo what might have been done
+            intersecting[0].set_end(lseg_orig_end)
+            # technically don't need next line but included for symmetry
+            intersecting[1].set_start(rseg_orig_start)
+            raise e
+
+        # invariant
+        if intersecting[0].get_end() != intersecting[1].get_start():
+            raise RuntimeError("Track seg {} end {} != seg {} start {}"\
+                    .format(intersecting[0].get_index(),
+                        intersecting[0].get_end(),
+                        intersecting[1].get_index(),
+                        intersecting[1].get_start()))
 
         
     def _seg_adjacent_to(self, seg, direction):
