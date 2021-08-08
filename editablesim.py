@@ -848,6 +848,11 @@ class TestEditableTrack(unittest.TestCase):
             self.shorttrack.shift_boundary(Pos('10.1', "mi").to_sm(), 
                     Pos('-0.1', "mi").to_sm())
 
+        # try to shift in the middle of a seg (should throw)
+        with self.assertRaises(ValueError):
+            self.shorttrack.shift_boundary(Pos('12', "mi").to_sm(),
+                    Pos('0.3', "mi").to_sm())
+
         # shift 10.3 mi boundary to 9.8 (should throw)
         pass
 
