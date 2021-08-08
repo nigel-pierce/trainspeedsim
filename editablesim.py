@@ -448,11 +448,11 @@ class EditableTrack(Track):
         elif dist > 0 and intersecting[1].length() == 0:
             # intersecting[1] (0-length) expands rightward while intersecting[0]
             # does not change
-            raise NotImplementedError
+            self._expand_one_seg(intersecting[1], dist)
         elif dist < 0 and intersecting[0].length() == 0:
             # intersecting[0] (0-length) expands leftward while intersecting[1]
             # does not change
-            raise NotImplementedError
+            self._expand_one_seg(intersecting[0], dist)
         elif dist == 0:
             return
         else:
@@ -521,7 +521,17 @@ class EditableTrack(Track):
                         intersecting[1].get_index(),
                         intersecting[1].get_start()))
 
-        
+    def _expand_one_seg(self, seg, dist):
+        if dist > 0:
+            boundary_shifter = seg.set_end
+            orig_boundary = seg.get_end()
+        elif dist < 0:
+            boundary_shifter = seg.set_start
+            orig_boundary = seg.get_start()
+
+        # might raise Non0LengthOf0SpeedSegPotentialError
+        boundary_shifter(orig_boundary + dist)
+
     def _seg_adjacent_to(self, seg, direction):
         """returns track seg next to seg in + or - direction or None if no
         such seg exists"""
