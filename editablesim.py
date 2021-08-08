@@ -390,7 +390,12 @@ class EditableTrack(Track):
         elif len(intersecting) == 1:
             # either in the middle of a segment/not on boundary, or at one
             # end of a non-0-length segment at start or end of track
-            raise RuntimeError("{} not on track segment boundary".format(mp))
+            if mp != intersecting[0].get_start() \
+                    or mp != intersecting[0].get_end():
+                raise ValueError("{} not on track segment boundary".format(mp))
+            else:
+                #TODO
+                raise NotImplementedError
 
         # NOW to the mean & potatoes
         # I mean meat
