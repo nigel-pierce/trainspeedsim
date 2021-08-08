@@ -373,6 +373,8 @@ class EditableTrack(Track):
         if len(self._track) == 0:
             raise SituationError("no track segments exist")
         if len(self._track) == 1:
+            # TODO wait this isn't an error ofc you can move boundaries
+            # of just one seg
             raise SituationError("only 1 track segment exists (need >= 2)")
         if (mp < self._track[0].get_start()):
             raise ValueError("{} outside bounds of track (< start)".format(mp))
@@ -386,6 +388,8 @@ class EditableTrack(Track):
             raise RuntimeError("{} doesn't intersect with any track segment..."\
                     " Previous checks should have stopped this".format(mp))
         elif len(intersecting) == 1:
+            # either in the middle of a segment/not on boundary, or at one
+            # end of a non-0-length segment at start or end of track
             raise RuntimeError("{} not on track segment boundary".format(mp))
 
         # NOW to the mean & potatoes
