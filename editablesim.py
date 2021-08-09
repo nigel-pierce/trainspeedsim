@@ -393,7 +393,7 @@ class EditableTrack(Track):
             # either in the middle of a segment/not on boundary, or at one
             # end of a non-0-length segment at start or end of track
             if mp != intersecting[0].get_start() \
-                    or mp != intersecting[0].get_end():
+                    and mp != intersecting[0].get_end():
                 raise ValueError("{} not on track segment boundary".format(mp))
             else:
                 #TODO
