@@ -9,8 +9,10 @@ from convunits import Pos, Speed, system_to_unit
 class SituationError(RuntimeError):
     pass
 
-# For when trying to move/shift boundary of 0-length seg
 class AmbiguousBoundaryError(SituationError):
+    """ For when trying to move/shift boundary of 0-length seg (probably 
+    useless since a single 0-length seg boundary can be moved under certain
+    circumstances, and adjacent 0-length segs disallowed)"""
     pass
 
 class Adjacent0LenExistsError(RuntimeError):
