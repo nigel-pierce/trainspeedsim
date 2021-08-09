@@ -882,6 +882,13 @@ class TestEditableTrack(unittest.TestCase):
         self.assertEqual(self.shorttrack._track[1].get_start(),
                 Pos('10.1', "mi").to_sm())
 
+        # move its boundary back to 10.1 mi
+        self.assertEqual(self.shorttrack._track[0].get_start(),
+                Pos('10', "mi").to_sm())
+        self.shorttrack.shift_boundary(Pos('10', 'mi').to_sm(),
+                Pos('0.1', 'mi').to_sm())
+        self.assertEqual(self.shorttrack._track[0].length(), 0)
+
 if __name__ == "__main__":
     seg = EditableTrackSeg(3, Pos('0', "mi").to_smaller_unit(), \
             Pos('0', "mi").to_smaller_unit(), Speed('0', 
