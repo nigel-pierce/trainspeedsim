@@ -386,6 +386,8 @@ class EditableTrack(Track):
         intersecting = self._intersecting_segs(mp)
 
         # more checks
+        # and NOW to the mean & potatoes
+        # I mean meat
         if (len(intersecting) == 0):
             raise RuntimeError("{} doesn't intersect with any track segment..."\
                     " Previous checks should have stopped this".format(mp))
@@ -397,11 +399,7 @@ class EditableTrack(Track):
                 raise ValueError("{} not on track segment boundary".format(mp))
             else:
                 self._shift_1_boundary(intersecting[0], mp, dist)
-
-        # NOW to the mean & potatoes
-        # I mean meat
-
-        if len(intersecting) == 2:
+        elif len(intersecting) == 2:
             # either on boundary between 2 non-zero-length segments
             # or on boundary between zero-length seg and non-zero, at start
             # or end of track.
