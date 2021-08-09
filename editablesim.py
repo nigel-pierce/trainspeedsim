@@ -856,7 +856,16 @@ class TestEditableTrack(unittest.TestCase):
                     Pos('0.3', "mi").to_sm())
 
         # shift 10.3 mi boundary to 9.8 (should throw)
-        pass
+        with self.assertRaises(ValueError):
+            self.shorttrack.shift_boundary(Pos('10.3', 'mi').to_sm(),
+                    Pos('-0.5', 'mi').to_sm())
+
+        # shift 10.3 mi boundary to 11.4 (should throw)
+        with self.assertRaises(ValueError):
+            self.shorttrack.shift_boundary(Pos('10.3', 'mi').to_sm(),
+                    Pos('1.1', 'mi').to_sm())
+
+        # TODO other tests (move boundary for 0-len >0-speed seg, others)
 
 if __name__ == "__main__":
     seg = EditableTrackSeg(3, Pos('0', "mi").to_smaller_unit(), \
