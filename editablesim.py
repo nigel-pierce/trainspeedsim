@@ -396,8 +396,7 @@ class EditableTrack(Track):
                     and mp != intersecting[0].get_end():
                 raise ValueError("{} not on track segment boundary".format(mp))
             else:
-                #TODO
-                raise NotImplementedError
+                self._shift_1_boundary(intersecting[0], mp, dist)
 
         # NOW to the mean & potatoes
         # I mean meat
@@ -533,6 +532,41 @@ class EditableTrack(Track):
 
         # might raise Non0LengthOf0SpeedSegPotentialError
         boundary_shifter(orig_boundary + dist)
+
+    def _shift_1_boundary(self, seg, mp, dist):
+        """shifts boundary of seg at mp; ONLY CALL THIS IF NO ADJACENT SEG
+        SHOULD BE AFFECTED"""
+        if not (mp == seg.get_start() or mp == seg.get_end()):
+            # maybe don't need this b/c shift_boundary() checks this
+            # but better safe than sorry
+            raise ValueError("{} not on track segment boundary".format(mp))
+        if mp == seg.get_start():
+            boundary_setter = seg.set_start
+        elif mp == seg.get_end():
+            boundary_setter = seg.set_end
+
+        boundary_setter(mp + dist)
+
+        # check if this made seg 0-length
+        if seg.length() == 0:
+            # make sure resulting 0-length seg not next to another 0-length
+            adjacent_seg = self._seg_adjacent_to(seg, '+')
+            if adjacent_seg is not None and adjacent_seg.length()==0:
+                # undo problematic shift
+                boundary_setter(mp)
+                raise Adjacent0LenPotentialError("moving boundary at "\
+                        "{} by {} creates multiple 0-length segments "\
+                        "at {}".format(shrinkseg_boundary, dist,
+                            shrinkseg_other_end))
+            adjacent_seg = self._seg_adjacent_to(seg, '-')
+            if adjacent_seg is not None and adjacent_seg.length()==0:
+                # undo problematic shift
+                boundary_setter(mp)
+                raise Adjacent0LenPotentialError("moving boundary at "\
+                        "{} by {} creates multiple 0-length segments "\
+                        "at {}".format(shrinkseg_boundary, dist,
+                            shrinkseg_other_end))
+
 
     def _seg_adjacent_to(self, seg, direction):
         """returns track seg next to seg in + or - direction or None if no
