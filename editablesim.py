@@ -865,7 +865,22 @@ class TestEditableTrack(unittest.TestCase):
             self.shorttrack.shift_boundary(Pos('10.3', 'mi').to_sm(),
                     Pos('1.1', 'mi').to_sm())
 
-        # TODO other tests (move boundary for 0-len >0-speed seg, others)
+        # move boundary for 0-len >0-speed seg
+        # (I'll have to make one first)
+        self.assertEqual(self.shorttrack._track[0].get_speed(),
+                Speed('0', 'mi/h').to_sm())
+        self.shorttrack._track[0].set_speed(Speed('10', 'mi/h').to_sm())
+        # really I don't need the following line b/c set_speed() already tested
+        self.assertEqual(self.shorttrack._track[0].get_speed(),
+                Speed('10', 'mi/h').to_sm())
+        self.shorttrack.shift_boundary(Pos('10.1', 'mi').to_sm(),
+                Pos('-0.1', "mi").to_sm())
+        self.assertEqual(self.shorttrack._track[0].get_start(),
+                Pos('10', "mi").to_sm())
+        self.assertEqual(self.shorttrack._track[0].get_end(),
+                Pos('10.1', "mi").to_sm())
+        self.assertEqual(self.shorttrack._track[1].get_start(),
+                Pos('10.1', "mi").to_sm())
 
 if __name__ == "__main__":
     seg = EditableTrackSeg(3, Pos('0', "mi").to_smaller_unit(), \
