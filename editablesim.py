@@ -914,10 +914,48 @@ class TestEditableTrack(unittest.TestCase):
         self.assertEqual(self.shorttrack._track[1].get_start(),
                 Pos('10.1', "mi").to_sm())
 
-        # move its boundary back to 10.1 mi
-        self.assertEqual(self.shorttrack._track[0].get_start(),
-                Pos('10', "mi").to_sm())
+        # shift first seg start a bit more to the left
+        # (should test _shift_1_boundary())
         self.shorttrack.shift_boundary(Pos('10', 'mi').to_sm(),
+                Pos('-0.3', 'mi').to_sm())
+        self.assertEqual(self.shorttrack._track[0].get_start(),
+                Pos('9.7', 'mi').to_sm())
+        self.assertEqual(self.shorttrack._track[0].get_end(),
+                Pos('10.1', 'mi').to_sm())
+        self.assertEqual(self.shorttrack._track[1].get_start(),
+                Pos('10.1', 'mi').to_sm())
+
+        # shift first seg start right 0.2 mi to 9.9 mi
+        # (should test _shift_1_boundary() in other direction)
+        self.shorttrack.shift_boundary(Pos('9.7', 'mi').to_sm(),
+                Pos('0.2', 'mi').to_sm())
+        self.assertEqual(self.shorttrack._track[0].get_start(),
+                Pos('9.9', 'mi').to_sm())
+        self.assertEqual(self.shorttrack._track[0].get_end(),
+                Pos('10.1', 'mi').to_sm())
+        self.assertEqual(self.shorttrack._track[1].get_start(),
+                Pos('10.1', 'mi').to_sm())
+
+        # move its end boundary left to 10.0 mi
+        # (should test _shift_2_boundary())
+        self.assertEqual(self.shorttrack._track[0].get_end(),
+                Pos('10.1', 'mi').to_sm())
+        self.assertEqual(self.shorttrack._track[1].get_start(),
+                Pos('10.1', 'mi').to_sm())
+        self.shorttrack.shift_boundary(Pos('10.1', 'mi').to_sm(),
+                Pos('-0.1', 'mi').to_sm())
+        self.assertEqual(self.shorttrack._track[0].get_start(),
+                Pos('9.9', 'mi').to_sm())
+        self.assertEqual(self.shorttrack._track[0].get_end(),
+                Pos('10', 'mi').to_sm())
+        self.assertEqual(self.shorttrack._track[1].get_start(),
+                Pos('10', 'mi').to_sm())
+
+        # move its start boundary to 10.0 mi
+        # (should test _shift_1_boundary())
+        self.assertEqual(self.shorttrack._track[0].get_start(),
+                Pos('9.9', "mi").to_sm())
+        self.shorttrack.shift_boundary(Pos('9.9', 'mi').to_sm(),
                 Pos('0.1', 'mi').to_sm())
         self.assertEqual(self.shorttrack._track[0].length(), 0)
 
