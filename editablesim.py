@@ -256,7 +256,8 @@ class EditableTrack(Track):
         else:
             # throw if trying to append 0-len seg to another 0-len seg
             if self._track[-1].length() == 0 and length == 0:
-                raise ValueError("0-length segments cannot be adjacent")
+                raise Adjacent0LenPotentialError("0-length segments cannot be"\
+                        " adjacent")
             index = self._track[-1].get_index() + 1
             start = self._track[-1].get_end()
             end = start + length
@@ -697,7 +698,7 @@ class TestEditableTrack(unittest.TestCase):
 
 
         # append another 0-len seg (should throw)
-        with self.assertRaises(ValueError):
+        with self.assertRaises(Adjacent0LenPotentialError):
             self.buildtrack.append_seg(Speed('10', "mi/h").to_smaller_unit(),
                     Pos('0', "mi").to_smaller_unit())
 
