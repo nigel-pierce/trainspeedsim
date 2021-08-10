@@ -921,6 +921,10 @@ class TestEditableTrack(unittest.TestCase):
                 Pos('0.1', 'mi').to_sm())
         self.assertEqual(self.shorttrack._track[0].length(), 0)
 
+        print("Short track after a bit of boundary shifting:")
+        print(self.shorttrack)
+        print("------")
+
 if __name__ == "__main__":
     seg = EditableTrackSeg(3, Pos('0', "mi").to_smaller_unit(), \
             Pos('0', "mi").to_smaller_unit(), Speed('0', 
