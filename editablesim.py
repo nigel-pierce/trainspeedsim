@@ -961,8 +961,13 @@ class TestEditableTrack(unittest.TestCase):
 
         # TODO test making sure shifting creating 0-length seg doesn't occur
         # adjacently to 0-length seg
-
-
+        # by shifting boundary at mp 11.3 to 11.8 and seeing what happens
+        # should raise error
+        self.assertEqual(self.shorttrack._track[3].get_start(),
+                Pos('11.3', 'mi').to_sm())
+        with self.assertRaises(Adjacent0LenPotentialError):
+            self.shorttrack.shift_boundary(Pos('11.3', 'mi').to_sm(),
+                    Pos('0.5', 'mi').to_sm())
 
         print("Short track after a bit of boundary shifting:")
         print(self.shorttrack)
