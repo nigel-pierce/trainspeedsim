@@ -960,7 +960,7 @@ class TestEditableTrack(unittest.TestCase):
                 Pos('0.1', 'mi').to_sm())
         self.assertEqual(self.shorttrack._track[0].length(), 0)
 
-        # TODO test making sure shifting creating 0-length seg doesn't occur
+        # test making sure shifting creating 0-length seg doesn't occur
         # adjacently to 0-length seg
         # by shifting boundary at mp 11.3 to 11.8 and seeing what happens
         # should raise error
