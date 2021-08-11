@@ -970,6 +970,84 @@ class TestEditableTrack(unittest.TestCase):
             self.shorttrack.shift_boundary(Pos('11.3', 'mi').to_sm(),
                     Pos('0.5', 'mi').to_sm())
 
+        # test shift 12.5 boundary while it's 0-speed/0-length
+        # should raise
+        with self.assertRaises(Non0LengthOf0SpeedSegPotentialError):
+            self.shorttrack.shift_boundary(Pos('12.5', 'mi').to_sm(),
+                    Pos('0.5', 'mi').to_sm())
+
+        # raise its speed so we CAN do that
+        self.shorttrack._track[-1].set_speed(Speed('30', 'mi/h').to_sm())
+        # I need to make an EditableTrack-level method to change speed TODO
+
+        # Shift end of track (should test _shift_2_boundary())
+        self.shorttrack.shift_boundary(Pos('12.5', 'mi').to_sm(),
+                    Pos('0.5', 'mi').to_sm())
+        self.assertEqual(self.shorttrack._track[-2].get_end(),
+                Pos('12.5', 'mi').to_sm())
+        self.assertEqual(self.shorttrack._track[-1].get_start(),
+                Pos('12.5', 'mi').to_sm())
+        self.assertEqual(self.shorttrack._track[-1].get_end(),
+                Pos('13', 'mi').to_sm())
+
+        # shift it a bit more (should test _shift_1_boundary())
+        self.shorttrack.shift_boundary(Pos('13', 'mi').to_sm(),
+                Pos('0.3', 'mi').to_sm())
+        self.assertEqual(self.shorttrack._track[-1].get_start(),
+                Pos('12.5', 'mi').to_sm())
+        self.assertEqual(self.shorttrack._track[-1].get_end(),
+                Pos('13.3', 'mi').to_sm())
+
+        # shift it a bit back (should test _shift_1_boundary() other direction)
+        self.shorttrack.shift_boundary(Pos('13.3', 'mi').to_sm(),
+                Pos('-0.2', 'mi').to_sm())
+        self.assertEqual(self.shorttrack._track[-1].get_end(),
+                Pos('13.1', 'mi').to_sm())
+
+        # shift it too far back (should test _shift_1_boundary() to raise
+        # ValueError or something)
+        with self.assertRaises(ValueError):
+            self.shorttrack.shift_boundary(Pos('13.1', 'mi').to_sm(),
+                    Pos('-0.7', 'mi').to_sm())
+        self.assertEqual(self.shorttrack._track[-2].get_end(),
+                Pos('12.5', 'mi').to_sm())
+        self.assertEqual(self.shorttrack._track[-1].get_start(),
+                Pos('12.5', 'mi').to_sm())
+        self.assertEqual(self.shorttrack._track[-1].get_end(),
+                Pos('13.1', 'mi').to_sm())
+
+        # shift boundary at 12.5 forward too far/past end of last seg, should
+        # raise ValueError I think
+        with self.assertRaises(ValueError):
+            self.shorttrack.shift_boundary(Pos('12.5', 'mi').to_sm(),
+                    Pos('0.8', 'mi').to_sm())
+        self.assertEqual(self.shorttrack._track[-2].get_end(),
+                Pos('12.5', 'mi').to_sm())
+        self.assertEqual(self.shorttrack._track[-1].get_start(),
+                Pos('12.5', 'mi').to_sm())
+        self.assertEqual(self.shorttrack._track[-1].get_end(),
+                Pos('13.1', 'mi').to_sm())
+
+        # shift boundary at 12.5 to 13.1
+        self.shorttrack.shift_boundary(Pos('12.5', 'mi').to_sm(),
+                Pos('0.6', 'mi').to_sm())
+        self.assertEqual(self.shorttrack._track[-2].get_end(),
+                Pos('13.1', 'mi').to_sm())
+        self.assertEqual(self.shorttrack._track[-1].get_start(),
+                Pos('13.1', 'mi').to_sm())
+        self.assertEqual(self.shorttrack._track[-1].get_end(),
+                Pos('13.1', 'mi').to_sm())
+
+        # shift 13.1 mi 0-len seg start left (should test _shift_2_boundary())
+        self.shorttrack.shift_boundary(Pos('13.1', 'mi').to_sm(),
+                Pos('-0.2', 'mi').to_sm())
+        self.assertEqual(self.shorttrack._track[-2].get_end(),
+                Pos('12.9', 'mi').to_sm())
+        self.assertEqual(self.shorttrack._track[-1].get_start(),
+                Pos('12.9', 'mi').to_sm())
+        self.assertEqual(self.shorttrack._track[-1].get_end(),
+                Pos('13.1', 'mi').to_sm())
+
         print("Short track after a bit of boundary shifting:")
         print(self.shorttrack)
         print("------")
