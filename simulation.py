@@ -96,10 +96,13 @@ class Track:
 
     def _load_maxspeeds(self, filename, units):
         assert units in ["imperial", "metric"]
-        import csv
-        raw_maxspeeds = [maxspeed for maxspeed in map (self.RawMaxSpeed._make, csv.reader(open(filename, "r"), delimiter='	'))]
-        # Don't do quoting=csv.QUOTE_NONNUMERIC b/c numbers need to be 
-        # strings to be converted to Decimals to be preserved exactly
+        with open(filename, "r") as maxspeeds_file:
+            import csv
+            raw_maxspeeds = [maxspeed for maxspeed in map (\
+                    self.RawMaxSpeed._make, csv.reader(maxspeeds_file,
+                        delimiter='	'))]
+            # Don't do quoting=csv.QUOTE_NONNUMERIC b/c numbers need to be 
+            # strings to be converted to Decimals to be preserved exactly
         
         if units == "imperial":
             pos_unit = "mi"
