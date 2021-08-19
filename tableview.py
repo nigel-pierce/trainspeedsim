@@ -19,6 +19,7 @@ class ViewFrame(tk.Frame):
 
         # pretend/mockup boundary spinboxes
         self.make_boundary_entries()
+        self.make_limit_entries()
 
     def make_boundary_entries(self):
         self.boundary_entries = []
@@ -31,6 +32,15 @@ class ViewFrame(tk.Frame):
             sbox.insert(0, b)
             sbox.grid(column=0, row=i*2+1)
 
+    def make_limit_entries(self):
+        self.limit_entries = []
+        temp_limits = [0, 20, 40, 35, 0, 50, 0]
+
+        for i, l in enumerate(temp_limits):
+            self.limit_entries.append(ttk.Spinbox(self, from_=0, to=1000))
+            sbox = self.limit_entries[-1]
+            sbox.insert(0, l)
+            sbox.grid(column=1, row=i*2+2)
 
 if __name__ == "__main__":
     root = tk.Tk()
