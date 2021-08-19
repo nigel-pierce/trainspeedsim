@@ -11,12 +11,6 @@ class ViewFrame(tk.Frame):
         self.master = master
         self.pack()
         
-        # temporary widgets
-        self.templabel = ttk.Label(self)
-        self.templabel["text"] = "TableView eventually"
-        #self.templabel.pack()
-        self.templabel.grid(row=0, column=0)
-
         # column headers
         self.boundhead = ttk.Label(self)
         self.boundhead["text"] = "MP Boundary"
