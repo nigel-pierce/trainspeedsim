@@ -15,3 +15,7 @@ class ViewFrame(tk.Frame):
         self.templabel["text"] = "TableView eventually"
         self.templabel.pack()
 
+if __name__ == "__main__":
+    root = tk.Tk()
+    windo = ViewFrame(root)
+    windo.mainloop()
