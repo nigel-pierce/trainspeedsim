@@ -14,7 +14,8 @@ class ViewFrame(tk.Frame):
         # temporary widgets
         self.templabel = ttk.Label(self)
         self.templabel["text"] = "TableView eventually"
-        self.templabel.pack()
+        #self.templabel.pack()
+        self.templabel.grid(row=0, column=0)
 
         # pretend/mockup boundary spinboxes
         self.make_boundary_entries()
@@ -28,7 +29,7 @@ class ViewFrame(tk.Frame):
             self.boundary_entries.append(ttk.Spinbox(self, increment=0.1))
             sbox = self.boundary_entries[-1]
             sbox.insert(0, b)
-            sbox.grid(column=0, row=i*2)
+            sbox.grid(column=0, row=i*2+1)
 
 
 if __name__ == "__main__":
