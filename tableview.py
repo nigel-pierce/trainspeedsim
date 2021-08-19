@@ -1,6 +1,7 @@
 #! /usr/bin/python3
 
 import tkinter as tk
+import tkinter.ttk as ttk
 
 class ViewFrame(tk.Frame):
     """the widget and elements and stuff"""
@@ -11,9 +12,11 @@ class ViewFrame(tk.Frame):
         self.pack()
         
         # temporary widgets
-        self.templabel = tk.Label(self)
+        self.templabel = ttk.Label(self)
         self.templabel["text"] = "TableView eventually"
         self.templabel.pack()
+
+
 
 if __name__ == "__main__":
     root = tk.Tk()
