@@ -77,4 +77,10 @@ if __name__ == "__main__":
         '12.5', '12.5']
     temp_ps = [PosSpeed(b, 1) for b in temp_boundaries]
     tableview.update([], temp_ps)
+
+    # update again to see if spinbox/entry re-use works (all 8 entries)
+    temp_boundrs2 = ['90', '90', '92.4', '94.3', '96.2', '96.5', '96.7', '97']
+    temp_ps2 = [PosSpeed(b, 1) for b in temp_boundrs2]
+    tableview.update([], temp_ps2)
+
     windo.mainloop()
