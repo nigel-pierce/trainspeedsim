@@ -139,4 +139,10 @@ if __name__ == "__main__":
     temp_ps3 = [PosSpeed(b, 1) for b in temp_boundrs3]
     tableview.update([], temp_ps3)
 
+    # use temp_boundaries along with speed limits from short_maxspeeds.csv
+    temp_limits = ['0', '20', '40', '35', '0', '50', '50', '0']
+    temp_ps4 = [PosSpeed(b, l) for b, l in zip_longest(temp_boundaries,
+        temp_limits)]
+    tableview.update([], temp_ps4)
+
     windo.mainloop()
