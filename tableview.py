@@ -40,15 +40,25 @@ class ViewFrame(tk.Frame):
         for i, (b, e) in boundaries_and_entries:
             print(i, b, e)
             if e is None:
+                # more PosSpeed things than entries, so make new entries
                 self.boundary_entries.append(ttk.Spinbox(self, from_=0,
                     to=10000, increment=0.1))
                 sbox = self.boundary_entries[-1]
                 sbox.insert(0, b)
                 sbox.grid(column=0, row=i*2+1)
+            elif b is None:
+                # update provides us with fewer PosSpeed things than before
+                # so leave loop and then delete the extra entries/spinboxes
+                break
             else:
+                # re-use entry
                 sbox = self.boundary_entries[i]
                 sbox.delete(0, len(sbox.get()))
                 sbox.insert(0, b)
+        if len(boundaries) < len(self.boundary_entries):
+            num_boundaries = len(boundaries)
+            num_entries = len(self.boundary_entries)
+            del self.boundary_entries[num_boundaries:num_entries]
 
     def make_limit_entries(self, limits):
         temp_limits = [0, 20, 40, 35, 0, 50, 0]
