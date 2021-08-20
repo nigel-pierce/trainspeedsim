@@ -55,9 +55,13 @@ class ViewFrame(tk.Frame):
                 sbox = self.boundary_entries[i]
                 sbox.delete(0, len(sbox.get()))
                 sbox.insert(0, b)
+
         if len(boundaries) < len(self.boundary_entries):
+            # excess spinbox widgets; destroy unneeded ones
             num_boundaries = len(boundaries)
             num_entries = len(self.boundary_entries)
+            for i in range(num_boundaries, num_entries):
+                self.boundary_entries[i].destroy()
             del self.boundary_entries[num_boundaries:num_entries]
 
     def make_limit_entries(self, limits):
