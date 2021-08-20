@@ -4,6 +4,10 @@ from multidict import MultiDict
 from convunits import Pos, Speed, Accel
 import copy
 
+# used in sim and interface with View etc.
+from collections import namedtuple
+PosSpeed = namedtuple("PosSpeed", ["pos", "speed"])
+
 
 class TrackSeg:
     def __init__(self, index, start, end, speed):
@@ -360,9 +364,6 @@ class Config:
                 "  -r|--resolution: integral value (default: 528 f or 100 m)"
 
 class Simulation:
-    from collections import namedtuple
-    PosSpeed = namedtuple("PosSpeed", ["pos", "speed"])
-
     def __init__(self, filename, accel, resolution, units):
         assert accel > 0
         assert resolution > 0 and resolution % 1 == 0 # more generic than is int
