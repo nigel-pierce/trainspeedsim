@@ -100,11 +100,15 @@ class ViewFrame(tk.Frame):
     def make_limit_entries(self, limits):
         temp_limits = [0, 20, 40, 35, 0, 50, 0]
 
+        self.make_or_reuse_entries(limits, self.limit_entries, 1, 2, 0,
+                1000, 1)
+        '''
         for i, l in enumerate(limits):
             self.limit_entries.append(ttk.Spinbox(self, from_=0, to=1000))
             sbox = self.limit_entries[-1]
             sbox.insert(0, l)
             sbox.grid(column=1, row=i*2+2)
+        '''
 
 class TableView:
     def __init__(self, controller, frame):
