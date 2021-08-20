@@ -83,4 +83,9 @@ if __name__ == "__main__":
     temp_ps2 = [PosSpeed(b, 1) for b in temp_boundrs2]
     tableview.update([], temp_ps2)
 
+    # again, but provide only 3 dudes (not sure what will happen)
+    temp_boundrs3 = ['100', '100', '104']
+    temp_ps3 = [PosSpeed(b, 1) for b in temp_boundrs3]
+    tableview.update([], temp_ps3)
+
     windo.mainloop()
