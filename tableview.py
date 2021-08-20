@@ -32,6 +32,9 @@ class ViewFrame(tk.Frame):
 
     def make_boundary_entries(self, boundaries):
 
+        self.make_or_reuse_entries(boundaries, self.boundary_entries, 0, 1, 
+                0, 10000, 0.1)
+        '''
         boundaries_and_entries = enumerate(zip_longest(boundaries,
             self.boundary_entries))
 
@@ -63,6 +66,36 @@ class ViewFrame(tk.Frame):
             for i in range(num_boundaries, num_entries):
                 self.boundary_entries[i].destroy()
             del self.boundary_entries[num_boundaries:num_entries]
+        '''
+
+    def make_or_reuse_entries(self, things, entries, col, row_offset, fromm, 
+            too, inc):
+        things_and_entries = zip_longest(things, entries)
+        for i, (t, e) in enumerate(things_and_entries):
+            if e is None:
+                # more PosSpeed things than entries, so make new entries
+                entries.append(ttk.Spinbox(self, from_=fromm,
+                    to=too, increment=inc))
+                sbox = entries[-1]
+                sbox.insert(0, t)
+                sbox.grid(column=col, row=i*2+row_offset)
+            elif t is None:
+                # update provides us with fewer PosSpeed things than before
+                # so leave loop and then delete the extra entries/spinboxes
+                break
+            else:
+                # re-use entry
+                sbox = entries[i]
+                sbox.delete(0, len(sbox.get()))
+                sbox.insert(0, t)
+        if len(things) < len(entries):
+            # excess spinbox widgets; destroy unneeded ones
+            num_things = len(things)
+            num_entries = len(entries)
+            for i in range(num_things, num_entries):
+                entries[i].destroy()
+            del entries[num_things:num_entries]
+
 
     def make_limit_entries(self, limits):
         temp_limits = [0, 20, 40, 35, 0, 50, 0]
