@@ -4,6 +4,7 @@ import tkinter as tk
 import tkinter.ttk as ttk
 from itertools import zip_longest
 from simulation import PosSpeed
+from editablesim import EditableTrack
 
 class ViewFrame(tk.Frame):
     """the widget and elements and stuff"""
@@ -119,6 +120,17 @@ class TableView:
         self.frame.make_boundary_entries([ps.pos for ps in speed_limits])
         self.frame.make_limit_entries([ps.speed for ps in speed_limits])
         # do best_speeds later
+
+class TempTableController:
+    '''Quick & dirty controller that owns model (EditableTrack) and view.
+    It's exploratory.'''
+    def __init__(self, units_, frame):
+        self._model = EditableTrack(units=units_)
+        self._view = TableView(self, frame)
+        self._update_view()
+        
+    def _update_view(self):
+        self._view.update([], self._model.get_limits())
 
 if __name__ == "__main__":
     root = tk.Tk()
