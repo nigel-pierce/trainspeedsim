@@ -244,6 +244,20 @@ class EditableTrack(Track):
     def __str__(self):
         return Track.__str__(self) + "\nEditable"
 
+    def get_limits(self):
+        '''Returns track speed limits as PosSpeeds whose pos represents 
+        boundary and speed represents speed limit between that boundary and 
+        next PosSpeed's boundary. Final PosSpeed is end of track, so has
+        speed None.'''
+        speed_limits = []
+        for seg in self._track:
+            speed_limits.append(PosSpeed(seg.get_start().to_bg().val(), 
+                seg.get_speed().to_bg().val()))
+            if (seg is speed_limits[-1]):
+                # append very end of track
+                speed_limits.append(PosSpeed(seg.get_end().to_bg().val(), None))
+        return speed_limits
+
     def append_seg(self, speed, length):
         # no need to validate, EditableTrackSeg takes care of that
         pos_unit = system_to_unit(self._units, "pos", "big")
