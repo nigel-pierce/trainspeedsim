@@ -131,6 +131,7 @@ class TempTableController:
         
     def _update_view(self):
         self._view.update([], self._model.get_limits())
+        print(self._model.get_limits())
 
 if __name__ == "__main__":
     root = tk.Tk()
