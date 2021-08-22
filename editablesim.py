@@ -250,10 +250,10 @@ class EditableTrack(Track):
         next PosSpeed's boundary. Final PosSpeed is end of track, so has
         speed None.'''
         speed_limits = []
-        for i, seg in enumerate(self._track):
+        for seg in self._track:
             speed_limits.append(PosSpeed(seg.get_start().to_bg().val(), 
                 seg.get_speed().to_bg().val()))
-            if (i == len(speed_limits)-1):
+            if (seg is self._track[-1]):
                 # append very end of track
                 speed_limits.append(PosSpeed(seg.get_end().to_bg().val(), None))
         return speed_limits
