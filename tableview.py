@@ -124,8 +124,8 @@ class TableView:
 class TempTableController:
     '''Quick & dirty controller that owns model (EditableTrack) and view.
     It's exploratory.'''
-    def __init__(self, units_, frame):
-        self._model = EditableTrack(units=units_)
+    def __init__(self, filename, units_, frame):
+        self._model = EditableTrack(filename, units=units_)
         self._view = TableView(self, frame)
         self._update_view()
         
@@ -161,6 +161,6 @@ if __name__ == "__main__":
 
     root2 = tk.Tk()
     windou = ViewFrame(root2)
-    controller = TempTableController("imperial", windou)
+    controller = TempTableController("short_maxspeeds.csv", "imperial", windou)
 
     windou.mainloop()

@@ -1,6 +1,6 @@
 #! /usr/bin/python3
 
-from simulation import Simulation, Track, TrackSeg
+from simulation import Simulation, Track, TrackSeg, PosSpeed
 from convunits import Pos, Speed, system_to_unit
 
 # For when an edit operation is impossible due to the circumstances and 
