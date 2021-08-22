@@ -78,7 +78,7 @@ class ViewFrame(tk.Frame):
                 entries.append(ttk.Spinbox(self, from_=fromm,
                     to=too, increment=inc))
                 sbox = entries[-1]
-                sbox.insert(0, t)
+                sbox.insert(0, str(t))
                 sbox.grid(column=col, row=i*2+row_offset)
             elif t is None:
                 # update provides us with fewer PosSpeed things than before
