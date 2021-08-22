@@ -158,3 +158,9 @@ if __name__ == "__main__":
     tableview.update([], temp_ps4)
 
     windo.mainloop()
+
+    root2 = tk.Tk()
+    windou = ViewFrame(root2)
+    controller = TempTableController("imperial", windou)
+
+    windou.mainloop()
