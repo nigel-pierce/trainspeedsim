@@ -78,12 +78,11 @@ class ViewFrame(tk.Frame):
         for i, (t, e) in enumerate(things_and_entries):
             if e is None:
                 # more PosSpeed things than entries, so make new entries
-                entries.append(ttk.Spinbox(self, from_=fromm,
-                    to=too, increment=inc))
+                entries.append(ValidatableSpinbox(self.master, str(t), fromm,
+                    too, inc))
                 sbox = entries[-1]
-                sbox.insert(0, str(t))
-                sbox.grid(column=col, row=i*2+row_offset)
-                sbox["command"] = self.print_args
+                sbox.spinbox.grid(column=col, row=i*2+row_offset)
+                #sbox
             elif t is None:
                 # update provides us with fewer PosSpeed things than before
                 # so leave loop and then delete the extra entries/spinboxes
@@ -91,8 +90,7 @@ class ViewFrame(tk.Frame):
             else:
                 # re-use entry
                 sbox = entries[i]
-                sbox.delete(0, len(sbox.get()))
-                sbox.insert(0, t)
+                sbox.replace_val(str(t))
         if len(things) < len(entries):
             # excess spinbox widgets; destroy unneeded ones
             num_things = len(things)
@@ -118,6 +116,36 @@ class ViewFrame(tk.Frame):
 class ValidatableSpinbox:
     '''Stores "old" value alongside Spinbox and validates new values,
     calls controller to do that and commit change if valid'''
+
+    def __init__(self, controller_command, parent_frame, init_val, fromm, too,
+            inc):
+        # method of controller that this spinbox calls when modified
+        self._controller_command = controller_command
+        # spinbox is public
+        self.spinbox = ttk.Spinbox(parent_frame, from_=fromm,
+                    to=too, increment=inc)
+        # event-ish handler for arrows pressed
+        self.spinbox["command"] = self._try_commit
+        # TODO assign focus, key enter event handlers
+        self._value = init_val
+
+    def replace_val(self, new_val):
+        '''New val had better be valid, because this doesn't check'''
+        self._value = new_val
+
+    def _try_commit(self):
+        '''User has modified value in spinbox, try to commit the change
+        or if invalid revert displayed value and display error message'''
+        new_val = self.spinbox.get()
+
+        try:
+            self._controller_command(self._value, new_val-self._value)
+            self._value = new_val
+        except ValueError as e:
+            print(e.args)
+            spinbox.delete(0, len(spinbox.get()))
+            spinbox.insert(0, self._value)
+
     pass
 
 class TableView:
