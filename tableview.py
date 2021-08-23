@@ -115,6 +115,11 @@ class ViewFrame(tk.Frame):
             sbox.grid(column=1, row=i*2+2)
         '''
 
+class ValidatableSpinbox:
+    '''Stores "old" value alongside Spinbox and validates new values,
+    calls controller to do that and commit change if valid'''
+    pass
+
 class TableView:
     def __init__(self, controller, frame):
         self.controller = controller
