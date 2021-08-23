@@ -69,6 +69,9 @@ class ViewFrame(tk.Frame):
             del self.boundary_entries[num_boundaries:num_entries]
         '''
 
+    def print_args(*args, **kwargs):
+        print(args, kwargs)
+
     def make_or_reuse_entries(self, things, entries, col, row_offset, fromm, 
             too, inc):
         things_and_entries = zip_longest(things, entries)
@@ -80,6 +83,7 @@ class ViewFrame(tk.Frame):
                 sbox = entries[-1]
                 sbox.insert(0, str(t))
                 sbox.grid(column=col, row=i*2+row_offset)
+                sbox["command"] = self.print_args
             elif t is None:
                 # update provides us with fewer PosSpeed things than before
                 # so leave loop and then delete the extra entries/spinboxes
