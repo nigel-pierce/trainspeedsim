@@ -179,7 +179,11 @@ class TempTableController:
         print(self._model.get_limits())
 
     def shift_boundary(self, mp, dist):
-        self._model.shift_boundary(mp, dist)
+        '''model uses feet, so have to convert mp and dist (unitless, but in 
+        miles) to Pos with miles '''
+        from convunits import Pos, Speed
+        self._model.shift_boundary(Pos(mp, 'mi').to_sm(), 
+                Pos(dist, 'mi').to_sm())
 
 if __name__ == "__main__":
     '''root = tk.Tk()
