@@ -152,7 +152,7 @@ class ValidatableSpinbox:
 
         try:
             self._controller_command(self._value, new_val-self._value)
-            self._value = new_val
+            #self._value = new_val
         except (ValueError, Non0LengthOf0SpeedSegPotentialError, Adjacent0LenPotentialError) as e:
             print(e.args)
             self.replace_val(self._value)
