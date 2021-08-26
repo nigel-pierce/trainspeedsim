@@ -19,11 +19,11 @@ class ViewFrame(tk.Frame):
         #self.pack()
         
         # column headers
-        self.boundhead = ttk.Label(self.master)
+        self.boundhead = ttk.Label(self)
         self.boundhead["text"] = "MP Boundary"
         self.boundhead.grid(row=0, column=0) # hopefully packs with other label
         print("boundary header:  {}, its text: {}".format(repr(self.boundhead), self.boundhead["text"]))
-        self.limithead = ttk.Label(self.master)
+        self.limithead = ttk.Label(self)
         self.limithead["text"] = "Speed Limit"
         self.limithead.grid(row=0, column=1)
         print("speed limit header:  {}, its text: {}".format(repr(self.limithead), self.limithead["text"]))
@@ -85,7 +85,7 @@ class ViewFrame(tk.Frame):
         for i, (t, e) in enumerate(things_and_entries):
             if e is None:
                 # more PosSpeed things than entries, so make new entries
-                entries.append(ValidatableSpinbox(self.master, t, fromm,
+                entries.append(ValidatableSpinbox(self, t, fromm,
                     too, inc, controller_command))
                 sbox = entries[-1]
                 sbox.spinbox.grid(column=col, row=i*2+row_offset)
@@ -166,6 +166,7 @@ class TableView:
     def __init__(self, controller, frame):
         self.controller = controller
         self.frame = ViewFrame(frame, self.controller)
+        self.frame.pack()
 
     def update(self, best_speeds, speed_limits):
         self.frame.make_boundary_entries([ps.pos for ps in speed_limits])
