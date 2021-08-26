@@ -438,7 +438,7 @@ class EditableTrack(Track):
                     == 0 and intersecting[2].length() > 0):
                 raise RuntimeError("3 segs intersected by "+str(mp)+" but not"\
                         " following non0-length,0-length,non0-length pattern")
-            raise NotImplementedError
+            raise NotImplementedError(str(intersecting))
         else:
             # somehow we have multiple adjacent 0-length segments
             raise Adjacent0LenExistsError("Multiple adjacent 0-length segs at "\
