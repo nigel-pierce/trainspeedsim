@@ -22,10 +22,13 @@ class ViewFrame(tk.Frame):
         self.boundhead = ttk.Label(self)
         self.boundhead["text"] = "MP Boundary"
         self.boundhead.grid(row=0, column=0) # hopefully packs with other label
+        print("boundary header:  {}, its text: {}".format(repr(self.boundhead), self.boundhead["text"]))
         self.limithead = ttk.Label(self)
         self.limithead["text"] = "Speed Limit"
         self.limithead.grid(row=0, column=1)
+        print("speed limit header:  {}, its text: {}".format(repr(self.limithead), self.limithead["text"]))
 
+        
         # pretend/mockup boundary spinboxes
         #self.make_boundary_entries()
         #self.make_limit_entries()
