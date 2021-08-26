@@ -12,7 +12,7 @@ class ViewFrame(tk.Frame):
     def __init__(self, master):
         super().__init__(master)
         self.master = master
-        self.pack()
+        #self.pack()
         
         # column headers
         self.boundhead = ttk.Label(self)
@@ -79,7 +79,7 @@ class ViewFrame(tk.Frame):
             if e is None:
                 # more PosSpeed things than entries, so make new entries
                 entries.append(ValidatableSpinbox(self.master, str(t), fromm,
-                    too, inc))
+                    too, inc, lambda: 0)) # TODO real command method
                 sbox = entries[-1]
                 sbox.spinbox.grid(column=col, row=i*2+row_offset)
                 #sbox
@@ -117,13 +117,14 @@ class ValidatableSpinbox:
     '''Stores "old" value alongside Spinbox and validates new values,
     calls controller to do that and commit change if valid'''
 
-    def __init__(self, controller_command, parent_frame, init_val, fromm, too,
-            inc):
+    def __init__(self, parent_frame, init_val, fromm, too,
+            inc, controller_command):
         # method of controller that this spinbox calls when modified
         self._controller_command = controller_command
         # spinbox is public
         self.spinbox = ttk.Spinbox(parent_frame, from_=fromm,
                     to=too, increment=inc)
+        self.replace_val(init_val)
         # event-ish handler for arrows pressed
         self.spinbox["command"] = self._try_commit
         # TODO assign focus, key enter event handlers
@@ -132,6 +133,11 @@ class ValidatableSpinbox:
     def replace_val(self, new_val):
         '''New val had better be valid, because this doesn't check'''
         self._value = new_val
+        self.spinbox.delete(0, len(self.spinbox.get()))
+        self.spinbox.insert(0, self._value)
+
+    def destroy(self):
+        self.spinbox.destroy()
 
     def _try_commit(self):
         '''User has modified value in spinbox, try to commit the change
@@ -143,15 +149,14 @@ class ValidatableSpinbox:
             self._value = new_val
         except ValueError as e:
             print(e.args)
-            spinbox.delete(0, len(spinbox.get()))
-            spinbox.insert(0, self._value)
+            self.replace_val(self._value)
 
     pass
 
 class TableView:
     def __init__(self, controller, frame):
         self.controller = controller
-        self.frame = frame
+        self.frame = ViewFrame(frame)
 
     def update(self, best_speeds, speed_limits):
         self.frame.make_boundary_entries([ps.pos for ps in speed_limits])
@@ -161,9 +166,9 @@ class TableView:
 class TempTableController:
     '''Quick & dirty controller that owns model (EditableTrack) and view.
     It's exploratory.'''
-    def __init__(self, filename, units_, frame):
+    def __init__(self, filename, units_, parent_frame):
         self._model = EditableTrack(filename, units=units_)
-        self._view = TableView(self, frame)
+        self._view = TableView(self, parent_frame)
         self._update_view()
         
     def _update_view(self):
@@ -198,7 +203,6 @@ if __name__ == "__main__":
     windo.mainloop()
 
     root2 = tk.Tk()
-    windou = ViewFrame(root2)
-    controller = TempTableController("short_maxspeeds.csv", "imperial", windou)
+    controller = TempTableController("short_maxspeeds.csv", "imperial", root2)
 
-    windou.mainloop()
+    root2.mainloop()
