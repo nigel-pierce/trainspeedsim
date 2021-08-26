@@ -185,9 +185,12 @@ class TempTableController:
         '''model uses feet, so have to convert mp and dist (unitless, but in 
         miles) to Pos with miles '''
         from convunits import Pos, Speed
-        self._model.shift_boundary(Pos(mp, 'mi').to_sm(), 
+        try:
+            self._model.shift_boundary(Pos(mp, 'mi').to_sm(), 
                 Pos(dist, 'mi').to_sm())
-        self._update_view()
+        finally:
+            print("about to _update_view()")
+            self._update_view()
 
 if __name__ == "__main__":
     '''root = tk.Tk()
