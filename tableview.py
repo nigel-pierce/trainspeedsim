@@ -187,6 +187,7 @@ class TempTableController:
         from convunits import Pos, Speed
         self._model.shift_boundary(Pos(mp, 'mi').to_sm(), 
                 Pos(dist, 'mi').to_sm())
+        self._update_view()
 
 if __name__ == "__main__":
     '''root = tk.Tk()
