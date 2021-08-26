@@ -5,6 +5,9 @@ import tkinter.ttk as ttk
 from itertools import zip_longest
 from simulation import PosSpeed
 from editablesim import EditableTrack
+from editablesim import SituationError, AmbiguousBoundaryError, \
+    Adjacent0LenExistsError, Adjacent0LenPotentialError, \
+    Non0LengthOf0SpeedSegPotentialError
 
 class ViewFrame(tk.Frame):
     """the widget and elements and stuff"""
@@ -150,7 +153,7 @@ class ValidatableSpinbox:
         try:
             self._controller_command(self._value, new_val-self._value)
             self._value = new_val
-        except ValueError as e:
+        except (ValueError, Non0LengthOf0SpeedSegPotentialError, Adjacent0LenPotentialError) as e:
             print(e.args)
             self.replace_val(self._value)
 
