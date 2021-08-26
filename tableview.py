@@ -78,7 +78,7 @@ class ViewFrame(tk.Frame):
         for i, (t, e) in enumerate(things_and_entries):
             if e is None:
                 # more PosSpeed things than entries, so make new entries
-                entries.append(ValidatableSpinbox(self.master, str(t), fromm,
+                entries.append(ValidatableSpinbox(self.master, t, fromm,
                     too, inc, lambda: 0)) # TODO real command method
                 sbox = entries[-1]
                 sbox.spinbox.grid(column=col, row=i*2+row_offset)
@@ -90,7 +90,7 @@ class ViewFrame(tk.Frame):
             else:
                 # re-use entry
                 sbox = entries[i]
-                sbox.replace_val(str(t))
+                sbox.replace_val(t)
         if len(things) < len(entries):
             # excess spinbox widgets; destroy unneeded ones
             num_things = len(things)
@@ -142,7 +142,8 @@ class ValidatableSpinbox:
     def _try_commit(self):
         '''User has modified value in spinbox, try to commit the change
         or if invalid revert displayed value and display error message'''
-        new_val = self.spinbox.get()
+        from decimal import Decimal
+        new_val = Decimal(self.spinbox.get())
 
         try:
             self._controller_command(self._value, new_val-self._value)
