@@ -9,9 +9,10 @@ from editablesim import EditableTrack
 class ViewFrame(tk.Frame):
     """the widget and elements and stuff"""
 
-    def __init__(self, master):
+    def __init__(self, master, controller):
         super().__init__(master)
         self.master = master
+        self._controller = controller
         #self.pack()
         
         # column headers
@@ -34,7 +35,7 @@ class ViewFrame(tk.Frame):
     def make_boundary_entries(self, boundaries):
 
         self.make_or_reuse_entries(boundaries, self.boundary_entries, 0, 1, 
-                0, 10000, 0.1)
+                0, 10000, 0.1, self._controller.shift_boundary)
         '''
         boundaries_and_entries = enumerate(zip_longest(boundaries,
             self.boundary_entries))
@@ -73,13 +74,13 @@ class ViewFrame(tk.Frame):
         print(args, kwargs)
 
     def make_or_reuse_entries(self, things, entries, col, row_offset, fromm, 
-            too, inc):
+            too, inc, controller_command):
         things_and_entries = zip_longest(things, entries)
         for i, (t, e) in enumerate(things_and_entries):
             if e is None:
                 # more PosSpeed things than entries, so make new entries
                 entries.append(ValidatableSpinbox(self.master, t, fromm,
-                    too, inc, lambda: 0)) # TODO real command method
+                    too, inc, controller_command))
                 sbox = entries[-1]
                 sbox.spinbox.grid(column=col, row=i*2+row_offset)
                 #sbox
@@ -104,7 +105,8 @@ class ViewFrame(tk.Frame):
         temp_limits = [0, 20, 40, 35, 0, 50, 0]
 
         self.make_or_reuse_entries(limits[:-1], self.limit_entries, 1, 2, 0,
-                1000, 1)
+                1000, 1, lambda x, y: None) # TODO make the model and controller
+                                            # shift_speed_limit() method
         '''
         for i, l in enumerate(limits):
             self.limit_entries.append(ttk.Spinbox(self, from_=0, to=1000))
@@ -157,7 +159,7 @@ class ValidatableSpinbox:
 class TableView:
     def __init__(self, controller, frame):
         self.controller = controller
-        self.frame = ViewFrame(frame)
+        self.frame = ViewFrame(frame, self.controller)
 
     def update(self, best_speeds, speed_limits):
         self.frame.make_boundary_entries([ps.pos for ps in speed_limits])
@@ -176,8 +178,11 @@ class TempTableController:
         self._view.update([], self._model.get_limits())
         print(self._model.get_limits())
 
+    def shift_boundary(self, mp, dist):
+        self._model.shift_boundary(mp, dist)
+
 if __name__ == "__main__":
-    root = tk.Tk()
+    '''root = tk.Tk()
     windo = ViewFrame(root)
     tableview = TableView(None, windo)
     temp_boundaries = ['10.1', '10.1', '10.5', '11.3', '11.8', '11.8',
@@ -201,7 +206,7 @@ if __name__ == "__main__":
         temp_limits)]
     tableview.update([], temp_ps4)
 
-    windo.mainloop()
+    windo.mainloop()'''
 
     root2 = tk.Tk()
     controller = TempTableController("short_maxspeeds.csv", "imperial", root2)
