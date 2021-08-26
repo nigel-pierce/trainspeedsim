@@ -179,7 +179,7 @@ class TempTableController:
         
     def _update_view(self):
         self._view.update([], self._model.get_limits())
-        print(self._model.get_limits())
+        print(self._model)
 
     def shift_boundary(self, mp, dist):
         '''model uses feet, so have to convert mp and dist (unitless, but in 
