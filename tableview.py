@@ -163,9 +163,9 @@ class ValidatableSpinbox:
     pass
 
 class TableView:
-    def __init__(self, controller, frame):
+    def __init__(self, controller, parent_frame):
         self.controller = controller
-        self.frame = ViewFrame(frame, self.controller)
+        self.frame = ViewFrame(parent_frame, self.controller)
         self.frame.pack()
 
     def update(self, best_speeds, speed_limits):
