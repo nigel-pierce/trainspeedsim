@@ -8,6 +8,7 @@ class Observer:
 
     def notify(observable, *args, **kwargs):
         '''Override with subclass's implementation'''
+        return NotImplementedError
         pass
 
 class Observable:
@@ -22,3 +23,15 @@ class Observable:
         for o in self._observers:
             o.notify(self, *args, **kwargs)
 
+    def common_notify(func):
+        '''decorator to notify observers after running method'''
+        def return_f(*args, **kwargs):
+            r = func(*args, **kwargs)
+            notify_args = common_args(r)
+            self.notify_observers(*notify_args)
+            return r
+        return return_f
+
+    def common_args(self, a):
+        '''Override this to return what you want to send to observers'''
+        raise NotImplementedError
