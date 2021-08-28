@@ -2,6 +2,7 @@
 
 from simulation import Simulation, Track, TrackSeg, PosSpeed
 from convunits import Pos, Speed, system_to_unit
+from observer import Observable
 
 # For when an edit operation is impossible due to the circumstances and 
 # there's no valid value (so it's not ValueError)
@@ -223,7 +224,7 @@ class TestEditableTrackSegMethods(unittest.TestCase):
                     Pos('9.9', "mi").to_smaller_unit())
 
 
-class EditableTrack(Track):
+class EditableTrack(Track, Observable):
     def __init__(self, filename=None, units=None):
         if filename is None:
             # start a track from scratch
@@ -235,6 +236,7 @@ class EditableTrack(Track):
             # Make it editable
             self._editableify()
             self._units = units
+        Observable.__init__(self)
 
     def _editableify(self):
         for i in range(0, len(self._track)):
