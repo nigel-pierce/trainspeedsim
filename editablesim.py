@@ -244,7 +244,7 @@ class EditableTrack(Track, Observable):
             try:
                 retval = func(*args, **kwargs)
                 self.notify_observers("ChangeSuccess")
-            except e:
+            except Exception as e:
                 self.notify_observers("ChangeFail", e)
             # TODO not sure how to distinguish runs of func() as to change
             # or no change (methods currently return nothing)
