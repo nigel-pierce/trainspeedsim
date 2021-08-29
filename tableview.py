@@ -260,7 +260,8 @@ if __name__ == "__main__":
 
     windo.mainloop()'''
 
+    model = EditableTrack("short_maxspeeds.csv", "imperial") 
     root2 = tk.Tk()
-    controller = TempTableController("short_maxspeeds.csv", "imperial", root2)
+    controller = TableController(model, root2)
 
     root2.mainloop()
