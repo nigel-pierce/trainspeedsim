@@ -8,8 +8,7 @@ class Observer:
 
     def notify(observable, *args, **kwargs):
         '''Override with subclass's implementation'''
-        return NotImplementedError
-        pass
+        raise NotImplementedError
 
 class Observable:
     '''register observers with this'''
