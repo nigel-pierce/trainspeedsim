@@ -179,6 +179,9 @@ class TableController(Observer):
         self._model = model
         self._view = TableView(self, parent_frame)
         self._update_view()
+        # do this last since modifying (registering with) model shouldn't
+        # happen until all else has been successful
+        Observer.__init__(self, self._model)
 
     def notify(self, observable, message, arg=None):
         if message not in ("ChangeSuccess", "ChangeFail", "NoChange"):
