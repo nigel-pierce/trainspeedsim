@@ -272,6 +272,7 @@ class EditableTrack(Track, Observable):
                 speed_limits.append(PosSpeed(seg.get_end().to_bg().val(), None))
         return speed_limits
 
+    @_common_notify
     def append_seg(self, speed, length):
         # no need to validate, EditableTrackSeg takes care of that
         pos_unit = system_to_unit(self._units, "pos", "big")
@@ -297,6 +298,7 @@ class EditableTrack(Track, Observable):
     # and updates subsequent segs' indexes accordingly
     # Throws if mp lies on boundary of track segment (i.e. mp == seg.get_start()
     # or mp == seg.get_end() for some segment seg)
+    @_common_notify
     def split_seg(self, mp):
         # throw if there's no track
         if len(self._track) == 0:
@@ -338,6 +340,7 @@ class EditableTrack(Track, Observable):
     # segments.
     # Also the newly-joined seg will have the LOWEST index of the merged segs
     # and all subsequent segs' indices will be decremented appropriately
+    @_common_notify
     def join_segs(self, mp):
         if len(self._track) == 0:
             raise SituationError("no track segments exist")
@@ -400,6 +403,7 @@ class EditableTrack(Track, Observable):
     # * any shift on 0-speed seg: NOT OK
     # * shift to left shifts start only
     # * shift to right shifts end only
+    @_common_notify
     def shift_boundary(self, mp, dist):
         if len(self._track) == 0:
             raise SituationError("no track segments exist")
