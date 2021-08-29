@@ -248,6 +248,7 @@ class EditableTrack(Track, Observable):
                 self.notify_observers("ChangeFail", e)
             # TODO not sure how to distinguish runs of func() as to change
             # or no change (methods currently return nothing)
+        return return_f
 
     def _editableify(self):
         for i in range(0, len(self._track)):
