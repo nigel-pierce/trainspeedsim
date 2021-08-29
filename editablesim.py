@@ -241,6 +241,7 @@ class EditableTrack(Track, Observable):
     # need to override Observable's _common_notify() b/c additional requirements
     def _common_notify(func):
         def return_f(*args, **kwargs):
+            self = args[0] # that should do it if func is always a method
             try:
                 retval = func(*args, **kwargs)
                 self.notify_observers("ChangeSuccess")
