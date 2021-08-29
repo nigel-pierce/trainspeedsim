@@ -1348,18 +1348,18 @@
     </dia:object>
     <dia:object type="UML - Association" version="2" id="O4">
       <dia:attribute name="obj_pos">
-        <dia:point val="26.985,19.7"/>
+        <dia:point val="21.21,19.7"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="26.235,18.95;33.05,23.3"/>
+        <dia:rectangle val="20.46,18.95;33.05,23.3"/>
       </dia:attribute>
       <dia:attribute name="meta">
         <dia:composite type="dict"/>
       </dia:attribute>
       <dia:attribute name="orth_points">
-        <dia:point val="26.985,19.7"/>
-        <dia:point val="29,19.7"/>
-        <dia:point val="29,21.7"/>
+        <dia:point val="21.21,19.7"/>
+        <dia:point val="26,19.7"/>
+        <dia:point val="26,21.7"/>
         <dia:point val="33,21.7"/>
       </dia:attribute>
       <dia:attribute name="orth_orient">
@@ -1431,16 +1431,16 @@
         <dia:point val="33,20.9"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="26.535,18.45;33.05,21.5"/>
+        <dia:rectangle val="20.76,18.45;33.05,21.5"/>
       </dia:attribute>
       <dia:attribute name="meta">
         <dia:composite type="dict"/>
       </dia:attribute>
       <dia:attribute name="orth_points">
         <dia:point val="33,20.9"/>
-        <dia:point val="30.1925,20.9"/>
-        <dia:point val="30.1925,18.9"/>
-        <dia:point val="26.985,18.9"/>
+        <dia:point val="27.305,20.9"/>
+        <dia:point val="27.305,18.9"/>
+        <dia:point val="21.21,18.9"/>
       </dia:attribute>
       <dia:attribute name="orth_orient">
         <dia:enum val="0"/>
@@ -1564,16 +1564,16 @@
         <dia:point val="33,8.5"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="26.535,8.45;33.05,18.15"/>
+        <dia:rectangle val="20.76,8.45;33.05,18.15"/>
       </dia:attribute>
       <dia:attribute name="meta">
         <dia:composite type="dict"/>
       </dia:attribute>
       <dia:attribute name="orth_points">
         <dia:point val="33,8.5"/>
-        <dia:point val="30.1925,8.5"/>
-        <dia:point val="30.1925,17.7"/>
-        <dia:point val="26.985,17.7"/>
+        <dia:point val="27.305,8.5"/>
+        <dia:point val="27.305,17.7"/>
+        <dia:point val="21.21,17.7"/>
       </dia:attribute>
       <dia:attribute name="orth_orient">
         <dia:enum val="0"/>
@@ -1861,16 +1861,16 @@
         <dia:point val="12.795,10.7003"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="11.945,10.6503;15.0425,16.9996"/>
+        <dia:rectangle val="11.945,10.6503;13.645,16.9996"/>
       </dia:attribute>
       <dia:attribute name="meta">
         <dia:composite type="dict"/>
       </dia:attribute>
       <dia:attribute name="orth_points">
         <dia:point val="12.795,10.7003"/>
-        <dia:point val="12.795,14.2249"/>
-        <dia:point val="14.9925,14.2249"/>
-        <dia:point val="14.9925,16.9496"/>
+        <dia:point val="12.795,14.225"/>
+        <dia:point val="12.105,14.225"/>
+        <dia:point val="12.105,16.9496"/>
       </dia:attribute>
       <dia:attribute name="orth_orient">
         <dia:enum val="1"/>
@@ -2830,16 +2830,16 @@
         <dia:point val="3,17"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="2.95,16.95;27.035,23.65"/>
+        <dia:rectangle val="2.95,16.95;21.26,22.85"/>
       </dia:attribute>
       <dia:attribute name="elem_corner">
         <dia:point val="3,17"/>
       </dia:attribute>
       <dia:attribute name="elem_width">
-        <dia:real val="23.984999999999999"/>
+        <dia:real val="18.210000000000001"/>
       </dia:attribute>
       <dia:attribute name="elem_height">
-        <dia:real val="6.6000000000000005"/>
+        <dia:real val="5.8000000000000007"/>
       </dia:attribute>
       <dia:attribute name="name">
         <dia:string>#TableController#</dia:string>
@@ -3093,10 +3093,10 @@
             </dia:composite>
             <dia:composite type="umlparameter">
               <dia:attribute name="name">
-                <dia:string>#best_speeds#</dia:string>
+                <dia:string>#message#</dia:string>
               </dia:attribute>
               <dia:attribute name="type">
-                <dia:string>#[PosSpeed]#</dia:string>
+                <dia:string>#str#</dia:string>
               </dia:attribute>
               <dia:attribute name="value">
                 <dia:string>##</dia:string>
@@ -3110,13 +3110,13 @@
             </dia:composite>
             <dia:composite type="umlparameter">
               <dia:attribute name="name">
-                <dia:string>#speed_limits#</dia:string>
+                <dia:string>#arg#</dia:string>
               </dia:attribute>
               <dia:attribute name="type">
-                <dia:string>#[PosSpeed]#</dia:string>
+                <dia:string>##</dia:string>
               </dia:attribute>
               <dia:attribute name="value">
-                <dia:string>##</dia:string>
+                <dia:string>#None#</dia:string>
               </dia:attribute>
               <dia:attribute name="comment">
                 <dia:string>##</dia:string>
@@ -3155,42 +3155,7 @@
           <dia:attribute name="class_scope">
             <dia:boolean val="false"/>
           </dia:attribute>
-          <dia:attribute name="parameters">
-            <dia:composite type="umlparameter">
-              <dia:attribute name="name">
-                <dia:string>#best_speeds#</dia:string>
-              </dia:attribute>
-              <dia:attribute name="type">
-                <dia:string>#[PosSpeed]#</dia:string>
-              </dia:attribute>
-              <dia:attribute name="value">
-                <dia:string>##</dia:string>
-              </dia:attribute>
-              <dia:attribute name="comment">
-                <dia:string>##</dia:string>
-              </dia:attribute>
-              <dia:attribute name="kind">
-                <dia:enum val="0"/>
-              </dia:attribute>
-            </dia:composite>
-            <dia:composite type="umlparameter">
-              <dia:attribute name="name">
-                <dia:string>#speed_limits#</dia:string>
-              </dia:attribute>
-              <dia:attribute name="type">
-                <dia:string>#[PosSpeed]#</dia:string>
-              </dia:attribute>
-              <dia:attribute name="value">
-                <dia:string>##</dia:string>
-              </dia:attribute>
-              <dia:attribute name="comment">
-                <dia:string>##</dia:string>
-              </dia:attribute>
-              <dia:attribute name="kind">
-                <dia:enum val="0"/>
-              </dia:attribute>
-            </dia:composite>
-          </dia:attribute>
+          <dia:attribute name="parameters"/>
         </dia:composite>
       </dia:attribute>
       <dia:attribute name="template">
