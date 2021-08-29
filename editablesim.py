@@ -238,6 +238,17 @@ class EditableTrack(Track, Observable):
             self._units = units
         Observable.__init__(self)
 
+    # need to override Observable's _common_notify() b/c additional requirements
+    def _common_notify(func):
+        def return_f(*args, **kwargs):
+            try:
+                retval = func(*args, **kwargs)
+                self.notify_observers("ChangeSuccess")
+            except e:
+                self.notify_observers("ChangeFail", e)
+            # TODO not sure how to distinguish runs of func() as to change
+            # or no change (methods currently return nothing)
+
     def _common_args(self, a):
         # best_speeds will be implemented later TODO
         return ([], self.get_limits())
