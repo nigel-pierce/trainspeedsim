@@ -249,10 +249,6 @@ class EditableTrack(Track, Observable):
             # TODO not sure how to distinguish runs of func() as to change
             # or no change (methods currently return nothing)
 
-    def _common_args(self, a):
-        # best_speeds will be implemented later TODO
-        return ([], self.get_limits())
-
     def _editableify(self):
         for i in range(0, len(self._track)):
             editable_seg = EditableTrackSeg.editableify(self._track[i])
