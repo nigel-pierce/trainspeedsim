@@ -206,6 +206,13 @@ class TableController(Observer):
             raise ValueError("{} is not the model ({})".format(observable,
                 self._model))
 
+    def shift_boundary(self, mp, dist):
+        '''No need for exception checking because errors are notified back
+        to controller'''
+        from convunits import Pos, Speed
+        self._model.shift_boundary(Pos(mp, 'mi').to_sm(), 
+                Pos(dist, 'mi').to_sm())
+
     def _update_view(self):
         self._view.update([], self._model.get_limits())
 
