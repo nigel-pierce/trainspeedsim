@@ -238,6 +238,10 @@ class EditableTrack(Track, Observable):
             self._units = units
         Observable.__init__(self)
 
+    def common_args(self, a):
+        # best_speeds will be implemented later TODO
+        return ([], self.get_limits())
+
     def _editableify(self):
         for i in range(0, len(self._track)):
             editable_seg = EditableTrackSeg.editableify(self._track[i])
