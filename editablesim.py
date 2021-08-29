@@ -238,7 +238,7 @@ class EditableTrack(Track, Observable):
             self._units = units
         Observable.__init__(self)
 
-    def common_args(self, a):
+    def _common_args(self, a):
         # best_speeds will be implemented later TODO
         return ([], self.get_limits())
 

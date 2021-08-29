@@ -22,7 +22,7 @@ class Observable:
         for o in self._observers:
             o.notify(self, *args, **kwargs)
 
-    def common_notify(func):
+    def _common_notify(func):
         '''decorator to notify observers after running method'''
         def return_f(*args, **kwargs):
             r = func(*args, **kwargs)
@@ -31,6 +31,6 @@ class Observable:
             return r
         return return_f
 
-    def common_args(self, a):
+    def _common_args(self, a):
         '''Override this to return what you want to send to observers'''
         raise NotImplementedError
