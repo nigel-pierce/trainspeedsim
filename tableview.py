@@ -180,7 +180,7 @@ class TableController(Observer):
         self._view = TableView(self, parent_frame)
         self._update_view()
 
-    def notify(self, observable, message, arg):
+    def notify(self, observable, message, arg=None):
         if message not in ("ChangeSuccess", "ChangeFail", "NoChange"):
             raise ValueError("Message "+str(message)+" is not known")
 
