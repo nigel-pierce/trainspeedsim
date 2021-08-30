@@ -364,6 +364,13 @@ class EditableTrack(Track):
         print("track with segments joined at", mp.to_bigger_unit(),":", self)
         pass
 
+    def shift_speed_limit(self, mp, diff):
+        '''increases or decreases speed limit of track seg intersected by mp 
+        by diff. If multiple segments are intersected by mp, raises error,
+        UNLESS a zero-length segment is intersected, in which case that seg's
+        speed is changed'''
+        pass
+
     # Shifts a boundary of a track seg and of its neighbor if applicable
     # Affects at most 2 track segs
     # Throws if requested shift would cross another boundary
