@@ -1052,6 +1052,18 @@ class TestEditableTrack(unittest.TestCase):
         print(self.shorttrack)
         print("------")
 
+    def test_shift_speed_limit(self):
+        # short track
+        # raise speed on 0-speed 0-len seg at 10.1
+        self.shorttrack.shift_speed_limit(Pos('10.1', 'mi').to_sm(),
+                Speed('1.0', 'mi/h').to_sm())
+        self.assertEqual(self.shorttrack._track[0].get_speed(),
+                Speed('1.0', 'mi/h').to_sm())
+
+        with self.assertRaises(NegativeSpeedPotentialError):
+            self.shorttrack.shift_speed_limit(Pos('10.1', 'mi').to_sm(),
+                    Speed('-10', 'mi/h').to_sm())
+
 if __name__ == "__main__":
     seg = EditableTrackSeg(3, Pos('0', "mi").to_smaller_unit(), \
             Pos('0', "mi").to_smaller_unit(), Speed('0', 
