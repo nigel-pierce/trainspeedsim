@@ -15,6 +15,10 @@ class AmbiguousBoundaryError(SituationError):
     circumstances, and adjacent 0-length segs disallowed)"""
     pass
 
+class AmbiguousSegmentError(SituationError):
+    """Like AmbiguousBoundaryError, but when requested mp on boundary when it 
+    should intersect only one seg"""
+
 class Adjacent0LenExistsError(RuntimeError):
     """Two or more 0-length track segments already share the same start/end
     (indicates programming error)"""
@@ -391,8 +395,8 @@ class EditableTrack(Track):
                     seg = s
                     break
             if seg is None:
-                raise AmbiguousBoundaryError(str(mp)+" ambiguously intersects "\
-                        + intersecting)
+                raise AmbiguousSegmentError(str(mp)+" ambiguously intersects "\
+                        + str(intersecting))
         elif len(intersecting) > 3:
             # must be multiple adjacent 0-length segments (illegal)
             raise Adjacent0LenExistsError("multiple 0-length segments at "+\
@@ -1139,6 +1143,11 @@ class TestEditableTrack(unittest.TestCase):
         print("AAAAAAAAAAAAAAAAAAAAAAAAAA")
         print(self.shorttrack)
         print("AAAAAAAAAAAAAAAAAAAAAAAAAA")
+
+        # Try to shift speed at 10.5 mi, should raise
+        with self.assertRaises(AmbiguousSegmentError):
+            self.shorttrack.shift_speed_limit(Pos('10.5', 'mi').to_sm(),
+                    Speed('5', 'mi/h').to_sm())
 
 if __name__ == "__main__":
     seg = EditableTrackSeg(3, Pos('0', "mi").to_smaller_unit(), \
