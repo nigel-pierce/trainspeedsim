@@ -29,6 +29,10 @@ class Non0LengthOf0SpeedSegPotentialError(SituationError):
     """Operation would cause a 0-speed track segment to have non-0 length"""
     pass
 
+class NegativeSpeedPotentialError(RuntimeError):
+    """Operation would result in a track segment with negative speed"""
+    pass
+
 class EditableTrackSeg(TrackSeg):
     def __init__(self, index, start, end, speed):
         TrackSeg.__init__(self, index, start, end, speed)
