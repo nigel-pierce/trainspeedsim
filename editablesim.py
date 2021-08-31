@@ -16,6 +16,10 @@ class AmbiguousBoundaryError(SituationError):
     circumstances, and adjacent 0-length segs disallowed)"""
     pass
 
+class AmbiguousSegmentError(SituationError):
+    """Like AmbiguousBoundaryError, but when requested mp on boundary when it 
+    should intersect only one seg"""
+
 class Adjacent0LenExistsError(RuntimeError):
     """Two or more 0-length track segments already share the same start/end
     (indicates programming error)"""
@@ -28,6 +32,10 @@ class Adjacent0LenPotentialError(SituationError):
 
 class Non0LengthOf0SpeedSegPotentialError(SituationError):
     """Operation would cause a 0-speed track segment to have non-0 length"""
+    pass
+
+class NegativeSpeedPotentialError(RuntimeError):
+    """Operation would result in a track segment with negative speed"""
     pass
 
 class EditableTrackSeg(TrackSeg):
@@ -398,6 +406,54 @@ class EditableTrack(Track, Observable):
 
         print("track with segments joined at", mp.to_bigger_unit(),":", self)
         pass
+
+    def shift_speed_limit(self, mp, speed_diff):
+        '''increases or decreases speed limit of track seg intersected by mp 
+        by speed_diff. If multiple segments are intersected by mp, raises error,
+        UNLESS a zero-length segment is intersected, in which case that seg's
+        speed is changed'''
+        
+        # _intersecting_segs() should check for invalid mp
+        intersecting = self._intersecting_segs(mp)
+
+        seg = None
+        if len(intersecting) == 0:
+            # should've been detected by _intersecting_segs()
+            raise ValueError(str(mp)+" does not intersect any track segments")
+        elif len(intersecting) == 1:
+            # we're good
+            seg = intersecting[0]
+        elif len(intersecting) > 1 and len(intersecting) <= 3:
+            # only one should be 0-len, if any
+            for s in intersecting:
+                if s.length() == 0:
+                    seg = s
+                    break
+            if seg is None:
+                raise AmbiguousSegmentError(str(mp)+" ambiguously intersects "\
+                        + str(intersecting))
+        elif len(intersecting) > 3:
+            # must be multiple adjacent 0-length segments (illegal)
+            raise Adjacent0LenExistsError("multiple 0-length segments at "+\
+                    str(mp)+": "+intersecting)
+        else:
+            # how did we get here?
+            raise RuntimeError("programming error")
+
+        # seg now cannot be None
+        # famous last words
+
+        new_speed = seg.get_speed() + speed_diff
+        
+        if new_speed < 0:
+            raise NegativeSpeedPotentialError("changing speed at "+str(mp)+\
+                    " by "+str(speed_diff)+" results in negative speed")
+        elif new_speed == 0 and seg.length() > 0:
+            raise Non0LengthOf0SpeedSegPotentialError("Length of seg {} > 0, "\
+                    "so speed cannot be 0".format(seg))
+        else:
+            # we're good
+            seg.set_speed(new_speed)
 
     # Shifts a boundary of a track seg and of its neighbor if applicable
     # Affects at most 2 track segs
@@ -1096,6 +1152,109 @@ class TestEditableTrack(unittest.TestCase):
         print("Short track after a bit of boundary shifting:")
         print(self.shorttrack)
         print("------")
+
+    def test_shift_speed_limit(self):
+        # short track
+        # raise speed on 0-speed 0-len seg at 10.1
+        mp = Pos('10.1', 'mi').to_sm()
+        mph1 = Speed('1.0', 'mi/h').to_sm()
+        self.shorttrack.shift_speed_limit(mp, mph1)
+        self.assertEqual(self.shorttrack._track[0].get_speed(),
+                Speed('1.0', 'mi/h').to_sm())
+
+        with self.assertRaises(NegativeSpeedPotentialError):
+            self.shorttrack.shift_speed_limit(Pos('10.1', 'mi').to_sm(),
+                    Speed('-10', 'mi/h').to_sm())
+
+        # now that first seg's speed > 0, should be able to shift boundary
+        self.shorttrack.shift_boundary(Pos('10.1', 'mi').to_sm(),
+                Pos('-2.0', 'mi').to_sm())
+        self.assertEqual(self.shorttrack._track[0].get_start(),
+                Pos('8.1', 'mi').to_sm())
+
+        # increase its speed to 10 mph
+        self.shorttrack.shift_speed_limit(Pos('10.0', 'mi').to_sm(),
+                Speed('9', 'mi/h').to_sm())
+        self.assertEqual(self.shorttrack._track[0].get_speed(),
+                Speed('10', 'mi/h').to_sm())
+
+        # set first seg's speed to 0 mph (should raise error)
+        with self.assertRaises(Non0LengthOf0SpeedSegPotentialError):
+            self.shorttrack.shift_speed_limit(Pos('10.0', 'mi').to_sm(),
+                    Speed('-10', 'mi/h').to_sm())
+        self.assertEqual(self.shorttrack._track[0].get_speed(),
+                Speed('10', 'mi/h').to_sm())
+        
+        print("AAAAAAAAAAAAAAAAAAAAAAAAAA")
+        print(self.shorttrack)
+        print("AAAAAAAAAAAAAAAAAAAAAAAAAA")
+
+        # Try to shift speed at 10.5 mi, should raise
+        with self.assertRaises(AmbiguousSegmentError):
+            self.shorttrack.shift_speed_limit(Pos('10.5', 'mi').to_sm(),
+                    Speed('5', 'mi/h').to_sm())
+
+        # shift speed of 0-length at 12.5 mi
+        self.assertEqual(self.shorttrack._track[-1].get_speed(),
+                Speed('0', 'mi/h').to_sm())
+        self.shorttrack.shift_speed_limit(Pos('12.5', 'mi').to_sm(),
+                Speed('30', 'mi/h').to_sm())
+        self.assertEqual(self.shorttrack._track[-1].get_speed(),
+                Speed('30', 'mi/h').to_sm())
+
+        # shift speed of 0-length at 11.8 mi (intersects with 11.3-11.8 and
+        # 11.8-12.5 segments)
+        self.assertEqual(self.shorttrack._track[4].get_speed(),
+                Speed('0', 'mi/h').to_sm())
+        self.shorttrack.shift_speed_limit(Pos('11.8', 'mi').to_sm(),
+                Speed('15', 'mi/h').to_sm())
+        self.assertEqual(self.shorttrack._track[4].get_speed(),
+                Speed('15', 'mi/h').to_sm())
+
+        # shift its start -0.2 mi
+        self.assertEqual(self.shorttrack._track[4].get_start(),
+                Pos('11.8', 'mi').to_sm())
+        self.shorttrack.shift_boundary(Pos('11.8', 'mi').to_sm(),
+                Pos('-0.2', 'mi').to_sm())
+        self.assertEqual(self.shorttrack._track[4].get_start(),
+                Pos('11.6', 'mi').to_sm())
+        self.assertEqual(self.shorttrack._track[4].get_end(),
+                Pos('11.8', 'mi').to_sm())
+
+        # lower its speed by 5 mph
+        self.assertEqual(self.shorttrack._track[4].get_speed(),
+                Speed('15', 'mi/h').to_sm())
+        self.shorttrack.shift_speed_limit(Pos('11.7', 'mi').to_sm(),
+                Speed('-5', 'mi/h').to_sm())
+        self.assertEqual(self.shorttrack._track[4].get_speed(),
+                Speed('10', 'mi/h').to_sm())
+
+        # lower speed by another 10 mph (should raise error)
+        self.assertEqual(self.shorttrack._track[4].get_speed(),
+                Speed('10', 'mi/h').to_sm())
+        with self.assertRaises(Non0LengthOf0SpeedSegPotentialError):
+            self.shorttrack.shift_speed_limit(Pos('11.7', 'mi').to_sm(),
+                    Speed('-10', 'mi/h').to_sm())
+        self.assertEqual(self.shorttrack._track[4].get_speed(),
+                Speed('10', 'mi/h').to_sm())
+
+        # shift its start +0.2 mi (so it's 0-length again)
+        self.assertEqual(self.shorttrack._track[4].get_start(),
+                Pos('11.6', 'mi').to_sm())
+        self.shorttrack.shift_boundary(Pos('11.6', 'mi').to_sm(),
+                Pos('0.2', 'mi').to_sm())
+        self.assertEqual(self.shorttrack._track[4].get_start(),
+                Pos('11.8', 'mi').to_sm())
+        self.assertEqual(self.shorttrack._track[4].get_end(),
+                Pos('11.8', 'mi').to_sm())
+
+        # lower its speed to 0 again
+        self.assertEqual(self.shorttrack._track[4].get_speed(),
+                Speed('10', 'mi/h').to_sm())
+        self.shorttrack.shift_speed_limit(Pos('11.8', 'mi').to_sm(),
+                Speed('-10', 'mi/h').to_sm())
+        self.assertEqual(self.shorttrack._track[4].get_speed(),
+                Speed('0', 'mi/h').to_sm())
 
 if __name__ == "__main__":
     seg = EditableTrackSeg(3, Pos('0', "mi").to_smaller_unit(), \

@@ -114,17 +114,17 @@ class HasUnit: # virtual/interface-ish
     @preservecontext
     def __add__(self, other):
         to_math = self._compare_to(other)
-        return Pos(self._val + to_math, self._unit)
+        return type(self)(self._val + to_math, self._unit)
 
     @preservecontext
     def __sub__(self, other):
         to_math = self._compare_to(other)
-        return Pos(self._val - to_math, self._unit)
+        return type(self)(self._val - to_math, self._unit)
 
     @preservecontext
     def __mod__(self, other):
         to_math = self._compare_to(other)
-        return Pos(self._val % to_math, self._unit)
+        return type(self)(self._val % to_math, self._unit)
 
     # formatting just defers to float
     @preservecontext
@@ -243,7 +243,9 @@ class Pos(ConvertibleUnit):
     }
 
     def __init__(self, val, unit):
-        assert unit in self._conv
+        if unit not in self._conv:
+            raise ValueError("{} not in valid units {}"\
+                    .format(unit, self._conv))
         ConvertibleUnit.__init__(self, val, unit)
 
 class Speed(ConvertibleUnit):
