@@ -1117,6 +1117,25 @@ class TestEditableTrack(unittest.TestCase):
             self.shorttrack.shift_speed_limit(Pos('10.1', 'mi').to_sm(),
                     Speed('-10', 'mi/h').to_sm())
 
+        # now that first seg's speed > 0, should be able to shift boundary
+        self.shorttrack.shift_boundary(Pos('10.1', 'mi').to_sm(),
+                Pos('-2.0', 'mi').to_sm())
+        self.assertEqual(self.shorttrack._track[0].get_start(),
+                Pos('8.1', 'mi').to_sm())
+
+        # increase its speed to 10 mph
+        self.shorttrack.shift_speed_limit(Pos('10.0', 'mi').to_sm(),
+                Speed('9', 'mi/h').to_sm())
+        self.assertEqual(self.shorttrack._track[0].get_speed(),
+                Speed('10', 'mi/h').to_sm())
+
+        # set first seg's speed to 0 mph (should raise error)
+        with self.assertRaises(Non0LengthOf0SpeedSegPotentialError):
+            self.shorttrack.shift_speed_limit(Pos('10.0', 'mi').to_sm(),
+                    Speed('-10', 'mi/h').to_sm())
+        self.assertEqual(self.shorttrack._track[0].get_speed(),
+                Speed('10', 'mi/h').to_sm())
+
 if __name__ == "__main__":
     seg = EditableTrackSeg(3, Pos('0', "mi").to_smaller_unit(), \
             Pos('0', "mi").to_smaller_unit(), Speed('0', 
