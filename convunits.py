@@ -243,7 +243,9 @@ class Pos(ConvertibleUnit):
     }
 
     def __init__(self, val, unit):
-        assert unit in self._conv
+        if unit not in self._conv:
+            raise ValueError("{} not in valid units {}"\
+                    .format(unit, self._conv))
         ConvertibleUnit.__init__(self, val, unit)
 
 class Speed(ConvertibleUnit):
