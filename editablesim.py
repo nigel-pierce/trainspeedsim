@@ -1149,6 +1149,14 @@ class TestEditableTrack(unittest.TestCase):
             self.shorttrack.shift_speed_limit(Pos('10.5', 'mi').to_sm(),
                     Speed('5', 'mi/h').to_sm())
 
+        # shift speed of 0-length at 12.5 mi
+        self.assertEqual(self.shorttrack._track[-1].get_speed(),
+                Speed('0', 'mi/h').to_sm())
+        self.shorttrack.shift_speed_limit(Pos('12.5', 'mi').to_sm(),
+                Speed('30', 'mi/h').to_sm())
+        self.assertEqual(self.shorttrack._track[-1].get_speed(),
+                Speed('30', 'mi/h').to_sm())
+
 if __name__ == "__main__":
     seg = EditableTrackSeg(3, Pos('0', "mi").to_smaller_unit(), \
             Pos('0', "mi").to_smaller_unit(), Speed('0', 
