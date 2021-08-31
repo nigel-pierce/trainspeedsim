@@ -124,7 +124,9 @@ class ViewFrame(tk.Frame):
 
 class ValidatableSpinbox:
     '''Stores "old" value alongside Spinbox and validates new values,
-    calls controller to do that and commit change if valid'''
+    calls controller to do that and commit change if valid. THIS IS NOW AN
+    ABSTRACT CLASS, due to differences between boundary and speed limit 
+    spinbox value storange needs'''
 
     def __init__(self, parent_frame, init_val, fromm, too,
             inc, controller_command):
