@@ -1135,6 +1135,10 @@ class TestEditableTrack(unittest.TestCase):
                     Speed('-10', 'mi/h').to_sm())
         self.assertEqual(self.shorttrack._track[0].get_speed(),
                 Speed('10', 'mi/h').to_sm())
+        
+        print("AAAAAAAAAAAAAAAAAAAAAAAAAA")
+        print(self.shorttrack)
+        print("AAAAAAAAAAAAAAAAAAAAAAAAAA")
 
 if __name__ == "__main__":
     seg = EditableTrackSeg(3, Pos('0', "mi").to_smaller_unit(), \
