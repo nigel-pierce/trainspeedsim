@@ -364,12 +364,53 @@ class EditableTrack(Track):
         print("track with segments joined at", mp.to_bigger_unit(),":", self)
         pass
 
-    def shift_speed_limit(self, mp, diff):
+    def shift_speed_limit(self, mp, speed_diff):
         '''increases or decreases speed limit of track seg intersected by mp 
-        by diff. If multiple segments are intersected by mp, raises error,
+        by speed_diff. If multiple segments are intersected by mp, raises error,
         UNLESS a zero-length segment is intersected, in which case that seg's
         speed is changed'''
-        pass
+        
+        # _intersecting_segs() should check for invalid mp
+        intersecting = self._intersecting_segs(mp)
+
+        seg = None
+        if len(intersecting) == 0:
+            # should've been detected by _intersecting_segs()
+            raise ValueError(str(mp)+" does not intersect any track segments")
+        elif len(intersecting) == 1:
+            # we're good
+            seg = intersecting[0]
+        elif len(intersecting) > 1 and len(intersecting) <= 3:
+            # only one should be 0-len, if any
+            for s in intersecting:
+                if s.length() == 0:
+                    seg = s
+                    break
+            if seg is None:
+                raise AmbiguousBoundaryError(str(mp)+" ambiguously intersects "\
+                        + intersecting)
+        elif len(intersecting) > 3:
+            # must be multiple adjacent 0-length segments (illegal)
+            raise Adjacent0LenExistsError("multiple 0-length segments at "+\
+                    str(mp)+": "+intersecting)
+        else:
+            # how did we get here?
+            raise RuntimeError("programming error")
+
+        # seg now cannot be None
+        # famous last words
+
+        new_speed = seg.get_speed() + speed_diff
+        
+        if new_speed < 0:
+            raise NegativeSpeedPotentialError("changing speed at "+str(mp)+\
+                    " by "+str(speed_diff)+" results in negative speed")
+        elif new_speed == 0 and seg.length() > 0:
+            raise Non0LengthOf0SpeedSegPotentialError("Length of seg {} > 0, "\
+                    "so speed cannot be 0".format(seg))
+        else:
+            # we're good
+            seg.set_speed(new_speed)
 
     # Shifts a boundary of a track seg and of its neighbor if applicable
     # Affects at most 2 track segs
