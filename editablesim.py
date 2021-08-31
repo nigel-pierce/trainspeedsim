@@ -1157,6 +1157,60 @@ class TestEditableTrack(unittest.TestCase):
         self.assertEqual(self.shorttrack._track[-1].get_speed(),
                 Speed('30', 'mi/h').to_sm())
 
+        # shift speed of 0-length at 11.8 mi (intersects with 11.3-11.8 and
+        # 11.8-12.5 segments)
+        self.assertEqual(self.shorttrack._track[4].get_speed(),
+                Speed('0', 'mi/h').to_sm())
+        self.shorttrack.shift_speed_limit(Pos('11.8', 'mi').to_sm(),
+                Speed('15', 'mi/h').to_sm())
+        self.assertEqual(self.shorttrack._track[4].get_speed(),
+                Speed('15', 'mi/h').to_sm())
+
+        # shift its start -0.2 mi
+        self.assertEqual(self.shorttrack._track[4].get_start(),
+                Pos('11.8', 'mi').to_sm())
+        self.shorttrack.shift_boundary(Pos('11.8', 'mi').to_sm(),
+                Pos('-0.2', 'mi').to_sm())
+        self.assertEqual(self.shorttrack._track[4].get_start(),
+                Pos('11.6', 'mi').to_sm())
+        self.assertEqual(self.shorttrack._track[4].get_end(),
+                Pos('11.8', 'mi').to_sm())
+
+        # lower its speed by 5 mph
+        self.assertEqual(self.shorttrack._track[4].get_speed(),
+                Speed('15', 'mi/h').to_sm())
+        self.shorttrack.shift_speed_limit(Pos('11.7', 'mi').to_sm(),
+                Speed('-5', 'mi/h').to_sm())
+        self.assertEqual(self.shorttrack._track[4].get_speed(),
+                Speed('10', 'mi/h').to_sm())
+
+        # lower speed by another 10 mph (should raise error)
+        self.assertEqual(self.shorttrack._track[4].get_speed(),
+                Speed('10', 'mi/h').to_sm())
+        with self.assertRaises(Non0LengthOf0SpeedSegPotentialError):
+            self.shorttrack.shift_speed_limit(Pos('11.7', 'mi').to_sm(),
+                    Speed('-10', 'mi/h').to_sm())
+        self.assertEqual(self.shorttrack._track[4].get_speed(),
+                Speed('10', 'mi/h').to_sm())
+
+        # shift its start +0.2 mi (so it's 0-length again)
+        self.assertEqual(self.shorttrack._track[4].get_start(),
+                Pos('11.6', 'mi').to_sm())
+        self.shorttrack.shift_boundary(Pos('11.6', 'mi').to_sm(),
+                Pos('0.2', 'mi').to_sm())
+        self.assertEqual(self.shorttrack._track[4].get_start(),
+                Pos('11.8', 'mi').to_sm())
+        self.assertEqual(self.shorttrack._track[4].get_end(),
+                Pos('11.8', 'mi').to_sm())
+
+        # lower its speed to 0 again
+        self.assertEqual(self.shorttrack._track[4].get_speed(),
+                Speed('10', 'mi/h').to_sm())
+        self.shorttrack.shift_speed_limit(Pos('11.8', 'mi').to_sm(),
+                Speed('-10', 'mi/h').to_sm())
+        self.assertEqual(self.shorttrack._track[4].get_speed(),
+                Speed('0', 'mi/h').to_sm())
+
 if __name__ == "__main__":
     seg = EditableTrackSeg(3, Pos('0', "mi").to_smaller_unit(), \
             Pos('0', "mi").to_smaller_unit(), Speed('0', 
