@@ -165,6 +165,14 @@ class ValidatableSpinbox:
 
     pass
 
+class BoundarySpinbox(ValidatableSpinbox):
+    '''Validatable spinbox that acts a lot like base ValidatableSpinbox'''
+    pass
+
+class SpeedLimitSpinbox(ValidatableSpinbox):
+    '''Stores speed limit of seg, as well as start and end'''
+    pass
+
 class TableView:
     def __init__(self, controller, parent_frame):
         self.controller = controller
