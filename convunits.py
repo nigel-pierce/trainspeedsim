@@ -114,17 +114,17 @@ class HasUnit: # virtual/interface-ish
     @preservecontext
     def __add__(self, other):
         to_math = self._compare_to(other)
-        return Pos(self._val + to_math, self._unit)
+        return type(self)(self._val + to_math, self._unit)
 
     @preservecontext
     def __sub__(self, other):
         to_math = self._compare_to(other)
-        return Pos(self._val - to_math, self._unit)
+        return type(self)(self._val - to_math, self._unit)
 
     @preservecontext
     def __mod__(self, other):
         to_math = self._compare_to(other)
-        return Pos(self._val % to_math, self._unit)
+        return type(self)(self._val % to_math, self._unit)
 
     # formatting just defers to float
     @preservecontext
