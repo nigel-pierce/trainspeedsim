@@ -407,6 +407,7 @@ class EditableTrack(Track, Observable):
         print("track with segments joined at", mp.to_bigger_unit(),":", self)
         pass
 
+    @_common_notify
     def shift_speed_limit(self, mp, speed_diff):
         '''increases or decreases speed limit of track seg intersected by mp 
         by speed_diff. If multiple segments are intersected by mp, raises error,
