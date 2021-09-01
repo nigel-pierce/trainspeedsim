@@ -155,7 +155,7 @@ class ValidatableSpinbox:
         raise NotImplementedError
 
     def replace_spinbox_val(self, val):
-        print("spinbox val to be set to "+str(val))
+        #print("spinbox val to be set to "+str(val))
         self.spinbox.delete(0, len(self.spinbox.get()))
         self.spinbox.insert(0, val)
 
@@ -212,7 +212,7 @@ class SpeedLimitSpinbox(ValidatableSpinbox):
     def replace_val(self, new_val):
         '''new_val expected to be tuple of form (speed, (start, end))'''
         self._value = new_val
-        print("new_val and self._value are "+str(self._value))
+        #print("new_val and self._value are "+str(self._value))
         self.replace_spinbox_val(str(self._value[0]))
 
     def _try_commit(self):
@@ -223,7 +223,7 @@ class SpeedLimitSpinbox(ValidatableSpinbox):
         old_speed = self._value[0]
         # midpoint of segment
         mp = (self._value[1][0] + self._value[1][1]) / 2
-        print("******* mp is "+str(mp)+" *********")
+        #print("******* mp is "+str(mp)+" *********")
         
         self._try_try(mp, new_speed-old_speed)
 
@@ -281,7 +281,7 @@ class TableController(Observer):
                 Pos(dist, 'mi').to_sm())
 
     def shift_speed_limit(self, mp, speed_diff):
-        print("speed at mp {} to be changed by {}".format(mp, speed_diff))
+        #print("speed at mp {} to be changed by {}".format(mp, speed_diff))
         from convunits import Pos, Speed
         self._model.shift_speed_limit(Pos(mp, 'mi').to_sm(),
                 Speed(speed_diff, 'mi/h').to_sm())
