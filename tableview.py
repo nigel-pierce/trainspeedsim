@@ -211,9 +211,9 @@ class SpeedLimitSpinbox(ValidatableSpinbox):
 
     def replace_val(self, new_val):
         '''new_val expected to be tuple of form (speed, (start, end))'''
-        self._val = new_val
-        print("new_val and self._val are "+str(self._val))
-        self.replace_spinbox_val(str(self._val[0]))
+        self._value = new_val
+        print("new_val and self._value are "+str(self._value))
+        self.replace_spinbox_val(str(self._value[0]))
 
     def _try_commit(self):
         '''User has modified value in spinbox, try to commit the change
@@ -281,6 +281,7 @@ class TableController(Observer):
                 Pos(dist, 'mi').to_sm())
 
     def shift_speed_limit(self, mp, speed_diff):
+        print("speed at mp {} to be changed by {}".format(mp, speed_diff))
         from convunits import Pos, Speed
         self._model.shift_speed_limit(Pos(mp, 'mi').to_sm(),
                 Speed(speed_diff, 'mi/h').to_sm())
