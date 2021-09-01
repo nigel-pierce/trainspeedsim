@@ -220,6 +220,8 @@ class SpeedLimitSpinbox(ValidatableSpinbox):
         or if invalid revert displayed value and display error message'''
         from decimal import Decimal
         new_speed = Decimal(self.spinbox.get())
+        print("speed incremented, spinbox's new value is:", self.spinbox.get(),
+                ", as Decimal:", repr(new_speed))
         old_speed = self._value[0]
         # midpoint of segment
         mp = (self._value[1][0] + self._value[1][1]) / 2
