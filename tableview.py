@@ -119,7 +119,8 @@ class ViewFrame(tk.Frame):
             prev_b = b
             prev_s = s
         self.make_or_reuse_entries(speed_limits_with_startends,
-            self.limit_entries, SpeedLimitSpinbox, 1, 2, lambda x, y: None)
+            self.limit_entries, SpeedLimitSpinbox, 1, 2,
+            self._controller.shift_speed_limit)
             # TODO make the model and controller shift_speed_limit() method
         '''
         for i, l in enumerate(limits):
@@ -276,6 +277,11 @@ class TableController(Observer):
         self._model.shift_boundary(Pos(mp, 'mi').to_sm(), 
                 Pos(dist, 'mi').to_sm())
 
+    def shift_speed_limit(self, mp, speed_diff):
+        from convunits import Pos, Speed
+        self._model.shift_speed_limit(Pos(mp, 'mi').to_sm(),
+                Speed(speed_diff, 'mi/h').to_sm())
+
     def _update_view(self):
         self._view.update([], self._model.get_limits())
 
@@ -302,6 +308,7 @@ class TempTableController:
         finally:
             print("about to _update_view()")
             self._update_view()
+
 
 if __name__ == "__main__":
     '''root = tk.Tk()
