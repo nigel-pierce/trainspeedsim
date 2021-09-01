@@ -7,7 +7,8 @@ from simulation import PosSpeed
 from editablesim import EditableTrack
 from editablesim import SituationError, AmbiguousBoundaryError, \
     Adjacent0LenExistsError, Adjacent0LenPotentialError, \
-    Non0LengthOf0SpeedSegPotentialError
+    Non0LengthOf0SpeedSegPotentialError, AmbiguousSegmentError, \
+    NegativeSpeedPotentialError
 from observer import Observer
 
 class ViewFrame(tk.Frame):
@@ -41,8 +42,8 @@ class ViewFrame(tk.Frame):
 
     def make_boundary_entries(self, boundaries):
 
-        self.make_or_reuse_entries(boundaries, self.boundary_entries, 0, 1, 
-                0, 10000, 0.1, self._controller.shift_boundary)
+        self.make_or_reuse_entries(boundaries, self.boundary_entries, 
+                BoundarySpinbox, 0, 1, self._controller.shift_boundary)
         '''
         boundaries_and_entries = enumerate(zip_longest(boundaries,
             self.boundary_entries))
@@ -80,14 +81,12 @@ class ViewFrame(tk.Frame):
     def print_args(*args, **kwargs):
         print(args, kwargs)
 
-    def make_or_reuse_entries(self, things, entries, col, row_offset, fromm, 
-            too, inc, controller_command):
+    def make_or_reuse_entries(self, things, entries, entry_type, col, row_offset, controller_command):
         things_and_entries = zip_longest(things, entries)
         for i, (t, e) in enumerate(things_and_entries):
             if e is None:
                 # more PosSpeed things than entries, so make new entries
-                entries.append(ValidatableSpinbox(self, t, fromm,
-                    too, inc, controller_command))
+                entries.append(entry_type(self, t, controller_command))
                 sbox = entries[-1]
                 sbox.spinbox.grid(column=col, row=i*2+row_offset)
                 #sbox
@@ -108,12 +107,20 @@ class ViewFrame(tk.Frame):
             del entries[num_things:num_entries]
 
 
-    def make_limit_entries(self, limits):
+    def make_limit_entries(self, limits, boundaries):
         temp_limits = [0, 20, 40, 35, 0, 50, 0]
 
-        self.make_or_reuse_entries(limits[:-1], self.limit_entries, 1, 2, 0,
-                1000, 1, lambda x, y: None) # TODO make the model and controller
-                                            # shift_speed_limit() method
+        speed_limits_with_startends = []
+        prev_b = None
+        prev_s = None
+        for s, b in zip_longest(limits, boundaries):
+            if prev_b is not None and prev_s is not None:
+                speed_limits_with_startends.append((prev_s, (prev_b, b)))
+            prev_b = b
+            prev_s = s
+        self.make_or_reuse_entries(speed_limits_with_startends,
+            self.limit_entries, SpeedLimitSpinbox, 1, 2, lambda x, y: None)
+            # TODO make the model and controller shift_speed_limit() method
         '''
         for i, l in enumerate(limits):
             self.limit_entries.append(ttk.Spinbox(self, from_=0, to=1000))
@@ -129,7 +136,7 @@ class ValidatableSpinbox:
     spinbox value storange needs'''
 
     def __init__(self, parent_frame, init_val, fromm, too,
-            inc, controller_command):
+            inc, controller_command, exceptions):
         # method of controller that this spinbox calls when modified
         self._controller_command = controller_command
         # spinbox is public
@@ -140,12 +147,15 @@ class ValidatableSpinbox:
         self.spinbox["command"] = self._try_commit
         # TODO assign focus, key enter event handlers
         self._value = init_val
+        self._acceptably_exceptable_errors = exceptions
 
     def replace_val(self, new_val):
         '''New val had better be valid, because this doesn't check'''
-        self._value = new_val
+        raise NotImplementedError
+
+    def replace_spinbox_val(self, val):
         self.spinbox.delete(0, len(self.spinbox.get()))
-        self.spinbox.insert(0, self._value)
+        self.spinbox.insert(0, val)
 
     def destroy(self):
         self.spinbox.destroy()
@@ -153,13 +163,13 @@ class ValidatableSpinbox:
     def _try_commit(self):
         '''User has modified value in spinbox, try to commit the change
         or if invalid revert displayed value and display error message'''
-        from decimal import Decimal
-        new_val = Decimal(self.spinbox.get())
+        raise NotImplementedError
 
+    def _try_try(self, *args):
+        '''Common to all ValidatableSpinboxes. Called from _try_commit()'''
         try:
-            self._controller_command(self._value, new_val-self._value)
-            #self._value = new_val
-        except (ValueError, Non0LengthOf0SpeedSegPotentialError, Adjacent0LenPotentialError) as e:
+            self._controller_command(*args)
+        except self._acceptably_exceptable_errors as e:
             print(e.args)
             self.replace_val(self._value)
 
@@ -167,11 +177,53 @@ class ValidatableSpinbox:
 
 class BoundarySpinbox(ValidatableSpinbox):
     '''Validatable spinbox that acts a lot like base ValidatableSpinbox'''
-    pass
+    def __init__(self, parent_frame, init_val, controller_command):
+        exceptions = (ValueError, Non0LengthOf0SpeedSegPotentialError, 
+                Adjacent0LenPotentialError)
+        super().__init__(parent_frame, init_val, 0, 10000, 0.1, 
+                controller_command, exceptions)
+
+    def replace_val(self, new_val):
+        '''New val had better be valid, because this doesn't check'''
+        self._value = new_val
+        self.replace_spinbox_val(self._value)
+
+    def _try_commit(self):
+        '''User has modified value in spinbox, try to commit the change
+        or if invalid revert displayed value and display error message'''
+        from decimal import Decimal
+        new_val = Decimal(self.spinbox.get())
+
+        self._try_try(self._value, new_val-self._value)
+
 
 class SpeedLimitSpinbox(ValidatableSpinbox):
-    '''Stores speed limit of seg, as well as start and end'''
-    pass
+    '''Stores speed limit of seg, as well as start and end. init_val is a 
+    tuple of (speed, (start, end)), as is param of replace_val()'''
+    def __init__(self, parent_frame, init_val, controller_command):
+        exceptions = (ValueError, AmbiguousSegmentError,
+                NegativeSpeedPotentialError,
+                Non0LengthOf0SpeedSegPotentialError)
+        super().__init__(parent_frame, init_val, 0, 1000, 1, controller_command,
+                exceptions)
+
+    def replace_val(self, new_val):
+        '''new_val expected to be tuple of form (speed, (start, end))'''
+        self._val = new_val
+        self.replace_spinbox_val(str(self._val[0]))
+
+    def _try_commit(self):
+        '''User has modified value in spinbox, try to commit the change
+        or if invalid revert displayed value and display error message'''
+        from decimal import Decimal
+        new_speed = Decimal(self.spinbox.get())
+        old_speed = self._value[0]
+        # midpoint of segment
+        mp = (self._value[1][0] + self._value[1][1]) / 2
+        
+        self._try_try(mp, new_speed-old_speed)
+
+    
 
 class TableView:
     def __init__(self, controller, parent_frame):
@@ -181,7 +233,8 @@ class TableView:
 
     def update(self, best_speeds, speed_limits):
         self.frame.make_boundary_entries([ps.pos for ps in speed_limits])
-        self.frame.make_limit_entries([ps.speed for ps in speed_limits])
+        self.frame.make_limit_entries([ps.speed for ps in speed_limits], 
+                [ps.pos for ps in speed_limits])
         # do best_speeds later
 
 class TableController(Observer):
