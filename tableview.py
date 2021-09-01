@@ -155,6 +155,7 @@ class ValidatableSpinbox:
         raise NotImplementedError
 
     def replace_spinbox_val(self, val):
+        print("spinbox val to be set to "+str(val))
         self.spinbox.delete(0, len(self.spinbox.get()))
         self.spinbox.insert(0, val)
 
