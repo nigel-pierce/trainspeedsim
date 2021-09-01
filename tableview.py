@@ -211,6 +211,7 @@ class SpeedLimitSpinbox(ValidatableSpinbox):
     def replace_val(self, new_val):
         '''new_val expected to be tuple of form (speed, (start, end))'''
         self._val = new_val
+        print("new_val and self._val are "+str(self._val))
         self.replace_spinbox_val(str(self._val[0]))
 
     def _try_commit(self):
@@ -221,6 +222,7 @@ class SpeedLimitSpinbox(ValidatableSpinbox):
         old_speed = self._value[0]
         # midpoint of segment
         mp = (self._value[1][0] + self._value[1][1]) / 2
+        print("******* mp is "+str(mp)+" *********")
         
         self._try_try(mp, new_speed-old_speed)
 
