@@ -101,6 +101,9 @@ class HasUnit: # virtual/interface-ish
 
         print("_compare_to() going to return {}, which is a {}".format(\
                 to_compare, type(to_compare)))
+        if type(to_compare) is Decimal:
+            raise RuntimeError("{} shouldn't be a Decimal, but it is".format(\
+                    to_compare))
         return to_compare
 
     @preservecontext
