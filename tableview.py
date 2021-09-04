@@ -263,7 +263,7 @@ class TableController(Observer):
                 self._update_view()
             elif message == "ChangeFail":
                 # arg should be an exception
-                print("Error: "+str(arg.args))
+                print("Error: "+type(arg).__name__+str(arg.args))
                 # update view anyway (easiest way to set correct view)
                 self._update_view()
             elif message == "NoChange":
