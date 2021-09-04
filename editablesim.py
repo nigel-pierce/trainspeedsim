@@ -256,6 +256,7 @@ class EditableTrack(Track, Observable):
             except Exception as e:
                 if len(self._observers) > 0:
                     self.notify_observers("ChangeFail", e)
+                    raise e
                 else:
                     raise e
             # TODO not sure how to distinguish runs of func() as to change
