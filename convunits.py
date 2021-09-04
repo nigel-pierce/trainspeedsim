@@ -88,6 +88,7 @@ class HasUnit: # virtual/interface-ish
     # comparison methods compatible with both HasUnits and numbers
 
     def _compare_to(self, other):
+        print("Incoming {} is a {}".format(other, type(other)))
         if isinstance(other, HasUnit):
             assert self._unit == other._unit
             to_compare = other._val
