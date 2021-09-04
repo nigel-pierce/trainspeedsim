@@ -99,6 +99,8 @@ class HasUnit: # virtual/interface-ish
             raise TypeError("incomparable types "+str(type(self))+", " \
                     +str(type(other)))
 
+        print("_compare_to() going to return {}, which is a {}".format(\
+                to_compare, type(to_compare)))
         return to_compare
 
     @preservecontext
