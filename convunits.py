@@ -91,7 +91,7 @@ class HasUnit: # virtual/interface-ish
         if isinstance(other, HasUnit):
             assert self._unit == other._unit
             to_compare = other._val
-        elif isinstance(other, (int, float, Decimal)):
+        elif isinstance(other, (int, float, Decimal, Fraction)):
             to_compare = other
         else:
             raise TypeError("incomparable types "+str(type(self))+", " \
