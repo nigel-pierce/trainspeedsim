@@ -3,6 +3,13 @@ from fractions import Fraction
 from decimal import Decimal
 import decimal
 
+def decimal_from_fraction(frac):
+    '''Utility function to convert a Fraction into a Decimal, losslessly or 
+    as-close-to
+    Idea from Martijn Pieters https://stackoverflow.com/questions/40468697/\
+    best-way-to-convert-fractions-fraction-to-decimal-decimal'''
+    return Decimal(frac.numerator) / frac.denominator
+
 # TODO add accel
 def system_to_unit(units, unit_type, size):
     systems = ("imperial", "metric")
@@ -63,7 +70,10 @@ class HasUnit: # virtual/interface-ish
 
     @preservecontext
     def __str__(self):
-        return str(self._val)+" "+self._unit
+        if isinstance(self._val, Fraction):
+            return str(decimal_from_fraction(self._val))+" "+self._unit
+        else:
+            return str(self._val)+" "+self._unit
 
     def __repr__(self):
         #return str(self)
