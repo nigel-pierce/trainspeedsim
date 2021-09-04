@@ -91,6 +91,9 @@ class HasUnit: # virtual/interface-ish
         print("Incoming {} is a {}".format(other, type(other)))
         if isinstance(other, HasUnit):
             assert self._unit == other._unit
+            if not isinstance(other._val, (int, Fraction)):
+                raise RuntimeError("other._val is a {} (should be one of int "\
+                        "or Fraction)".format(type(other._val).__name__))
             to_compare = other._val
         elif isinstance(other, Decimal):
             to_compare = Fraction(other).limit_denominator()
