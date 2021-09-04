@@ -366,12 +366,13 @@ if __name__ == "__main__":
     
     s = "Pos('0.1', 'f')"+"+Pos('0.1', 'f')"*8
     dpoint1_9times = eval(s)
-    print("Now let's try with Decimal (with Pos('0.1', 'f') etc.):",
-            dpoint1_9times)
+    print("Now let's try with ~~Decimal~~ *Fraction* (with Pos('0.1', 'f') "\
+            "etc.):", dpoint1_9times)
     
     print("See? Drop-in replacement.")
 
-    print("Convert decimalized 0.9 f to m:", dpoint1_9times.convert_to('m'))
+    print("Convert ~~decimal~~fractionized 0.9 f to m:", 
+            dpoint1_9times.convert_to('m'))
 
     dsum1 = dpoint1_9times+Pos('0.1', 'f')
     print("'0.9' f + '0.1' f:",dsum1)
