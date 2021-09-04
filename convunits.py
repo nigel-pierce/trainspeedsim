@@ -126,6 +126,7 @@ class HasUnit: # virtual/interface-ish
     @preservecontext
     def __add__(self, other):
         to_math = self._compare_to(other)
+        print("self._val: {}, to_math: {}".format(self._val, to_math))
         return type(self)(self._val + to_math, self._unit)
 
     @preservecontext
