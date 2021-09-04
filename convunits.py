@@ -80,7 +80,7 @@ class HasUnit: # virtual/interface-ish
         return "{}({}, '{}')".format(type(self).__name__, self._val, self._unit)
 
     def val(self):
-        return self._val
+        return decimal_from_fraction(self._val)
     
     def unit(self):
         return self._unit
