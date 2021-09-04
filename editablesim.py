@@ -1,7 +1,8 @@
 #! /usr/bin/python3
 
-from simulation import Simulation, Track, TrackSeg
+from simulation import Simulation, Track, TrackSeg, PosSpeed
 from convunits import Pos, Speed, system_to_unit
+from observer import Observable
 
 # For when an edit operation is impossible due to the circumstances and 
 # there's no valid value (so it's not ValueError)
@@ -231,7 +232,7 @@ class TestEditableTrackSegMethods(unittest.TestCase):
                     Pos('9.9', "mi").to_smaller_unit())
 
 
-class EditableTrack(Track):
+class EditableTrack(Track, Observable):
     def __init__(self, filename=None, units=None):
         if filename is None:
             # start a track from scratch
@@ -243,6 +244,24 @@ class EditableTrack(Track):
             # Make it editable
             self._editableify()
             self._units = units
+        Observable.__init__(self)
+
+    # need to override Observable's _common_notify() b/c additional requirements
+    def _common_notify(func):
+        def return_f(*args, **kwargs):
+            self = args[0] # that should do it if func is always a method
+            try:
+                retval = func(*args, **kwargs)
+                self.notify_observers("ChangeSuccess")
+            except Exception as e:
+                if len(self._observers) > 0:
+                    self.notify_observers("ChangeFail", e)
+                    raise e
+                else:
+                    raise e
+            # TODO not sure how to distinguish runs of func() as to change
+            # or no change (methods currently return nothing)
+        return return_f
 
     def _editableify(self):
         for i in range(0, len(self._track)):
@@ -252,6 +271,21 @@ class EditableTrack(Track):
     def __str__(self):
         return Track.__str__(self) + "\nEditable"
 
+    def get_limits(self):
+        '''Returns track speed limits as PosSpeeds whose pos represents 
+        boundary and speed represents speed limit between that boundary and 
+        next PosSpeed's boundary. Final PosSpeed is end of track, so has
+        speed None.'''
+        speed_limits = []
+        for seg in self._track:
+            speed_limits.append(PosSpeed(seg.get_start().to_bg().val(), 
+                seg.get_speed().to_bg().val()))
+            if (seg is self._track[-1]):
+                # append very end of track
+                speed_limits.append(PosSpeed(seg.get_end().to_bg().val(), None))
+        return speed_limits
+
+    @_common_notify
     def append_seg(self, speed, length):
         # no need to validate, EditableTrackSeg takes care of that
         pos_unit = system_to_unit(self._units, "pos", "big")
@@ -277,6 +311,7 @@ class EditableTrack(Track):
     # and updates subsequent segs' indexes accordingly
     # Throws if mp lies on boundary of track segment (i.e. mp == seg.get_start()
     # or mp == seg.get_end() for some segment seg)
+    @_common_notify
     def split_seg(self, mp):
         # throw if there's no track
         if len(self._track) == 0:
@@ -318,6 +353,7 @@ class EditableTrack(Track):
     # segments.
     # Also the newly-joined seg will have the LOWEST index of the merged segs
     # and all subsequent segs' indices will be decremented appropriately
+    @_common_notify
     def join_segs(self, mp):
         if len(self._track) == 0:
             raise SituationError("no track segments exist")
@@ -372,6 +408,7 @@ class EditableTrack(Track):
         print("track with segments joined at", mp.to_bigger_unit(),":", self)
         pass
 
+    @_common_notify
     def shift_speed_limit(self, mp, speed_diff):
         '''increases or decreases speed limit of track seg intersected by mp 
         by speed_diff. If multiple segments are intersected by mp, raises error,
@@ -428,6 +465,7 @@ class EditableTrack(Track):
     # * any shift on 0-speed seg: NOT OK
     # * shift to left shifts start only
     # * shift to right shifts end only
+    @_common_notify
     def shift_boundary(self, mp, dist):
         if len(self._track) == 0:
             raise SituationError("no track segments exist")
@@ -436,9 +474,11 @@ class EditableTrack(Track):
             # of just one seg
             raise SituationError("only 1 track segment exists (need >= 2)")
         if (mp < self._track[0].get_start()):
-            raise ValueError("{} outside bounds of track (< start)".format(mp))
+            raise ValueError("{} outside bounds of track (< start {})".format(\
+                    mp, self._track[0].get_start()))
         if (mp > self._track[-1].get_end()):
-            raise ValueError("{} outside track bounds (> end)".format(mp))
+            raise ValueError("{} outside track bounds (> end {})".format(\
+                    mp, self._track[-1].get_end()))
 
         intersecting = self._intersecting_segs(mp)
 
@@ -478,7 +518,14 @@ class EditableTrack(Track):
                     == 0 and intersecting[2].length() > 0):
                 raise RuntimeError("3 segs intersected by "+str(mp)+" but not"\
                         " following non0-length,0-length,non0-length pattern")
-            raise NotImplementedError
+            #raise NotImplementedError(str(intersecting))
+            print(intersecting)
+            # since it follows non-0-length, 0-length, non-0-length pattern,
+            # it can be reduced to shifting [0:2] or [1:3]
+            if dist < 0:
+                self._shift_2_boundary(intersecting[0:2], dist)
+            elif dist > 0:
+                self._shift_2_boundary(intersecting[1:3], dist)
         else:
             # somehow we have multiple adjacent 0-length segments
             raise Adjacent0LenExistsError("Multiple adjacent 0-length segs at "\

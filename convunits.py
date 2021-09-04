@@ -3,6 +3,13 @@ from fractions import Fraction
 from decimal import Decimal
 import decimal
 
+def decimal_from_fraction(frac):
+    '''Utility function to convert a Fraction into a Decimal, losslessly or 
+    as-close-to
+    Idea from Martijn Pieters https://stackoverflow.com/questions/40468697/\
+    best-way-to-convert-fractions-fraction-to-decimal-decimal'''
+    return Decimal(frac.numerator) / frac.denominator
+
 # TODO add accel
 def system_to_unit(units, unit_type, size):
     systems = ("imperial", "metric")
@@ -55,22 +62,25 @@ class HasUnit: # virtual/interface-ish
         return preserver
 
     def __init__(self, val, unit):
-        if isinstance(val, str):
-            self._val = Decimal(val)
+        if isinstance(val, (str, Decimal)):
+            self._val = Fraction(val)
         else:
             self._val = val
         self._unit = unit
 
     @preservecontext
     def __str__(self):
-        return str(self._val)+" "+self._unit
+        if isinstance(self._val, Fraction):
+            return str(decimal_from_fraction(self._val))+" "+self._unit
+        else:
+            return str(self._val)+" "+self._unit
 
     def __repr__(self):
         #return str(self)
         return "{}({}, '{}')".format(type(self).__name__, self._val, self._unit)
 
     def val(self):
-        return self._val
+        return decimal_from_fraction(self._val)
     
     def unit(self):
         return self._unit
@@ -78,15 +88,26 @@ class HasUnit: # virtual/interface-ish
     # comparison methods compatible with both HasUnits and numbers
 
     def _compare_to(self, other):
+        print("Incoming {} is a {}".format(other, type(other)))
         if isinstance(other, HasUnit):
             assert self._unit == other._unit
+            if not isinstance(other._val, (int, Fraction)):
+                raise RuntimeError("other._val is a {} (should be one of int "\
+                        "or Fraction)".format(type(other._val).__name__))
             to_compare = other._val
-        elif isinstance(other, (int, float, Decimal)):
+        elif isinstance(other, Decimal):
+            to_compare = Fraction(other).limit_denominator()
+        elif isinstance(other, (int, float, Fraction)):
             to_compare = other
         else:
             raise TypeError("incomparable types "+str(type(self))+", " \
                     +str(type(other)))
 
+        print("_compare_to() going to return {}, which is a {}".format(\
+                to_compare, type(to_compare)))
+        if type(to_compare) is Decimal:
+            raise RuntimeError("{} shouldn't be a Decimal, but it is".format(\
+                    to_compare))
         return to_compare
 
     @preservecontext
@@ -114,6 +135,7 @@ class HasUnit: # virtual/interface-ish
     @preservecontext
     def __add__(self, other):
         to_math = self._compare_to(other)
+        print("self._val: {}, to_math: {}".format(self._val, to_math))
         return type(self)(self._val + to_math, self._unit)
 
     @preservecontext
@@ -366,12 +388,13 @@ if __name__ == "__main__":
     
     s = "Pos('0.1', 'f')"+"+Pos('0.1', 'f')"*8
     dpoint1_9times = eval(s)
-    print("Now let's try with Decimal (with Pos('0.1', 'f') etc.):",
-            dpoint1_9times)
+    print("Now let's try with ~~Decimal~~ *Fraction* (with Pos('0.1', 'f') "\
+            "etc.):", dpoint1_9times)
     
     print("See? Drop-in replacement.")
 
-    print("Convert decimalized 0.9 f to m:", dpoint1_9times.convert_to('m'))
+    print("Convert ~~decimal~~fractionized 0.9 f to m:", 
+            dpoint1_9times.convert_to('m'))
 
     dsum1 = dpoint1_9times+Pos('0.1', 'f')
     print("'0.9' f + '0.1' f:",dsum1)
