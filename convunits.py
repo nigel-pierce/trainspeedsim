@@ -56,7 +56,7 @@ class HasUnit: # virtual/interface-ish
 
     def __init__(self, val, unit):
         if isinstance(val, str):
-            self._val = Decimal(val)
+            self._val = Fraction(val)
         else:
             self._val = val
         self._unit = unit
