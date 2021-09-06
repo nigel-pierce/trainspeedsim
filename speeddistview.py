@@ -20,12 +20,36 @@ class SpeedDistViewFrame(tk.Frame):
         self._canvas = tk.Canvas(self, bg="white", width=400, height=300)
         self._canvas.pack(expand=True, fill=tk.BOTH)
 
+        # graph to pixel scaling
+        self._x_scale = 10
+        self._y_scale = 1
+
+        # margin of graph, in canvas pixels
+        self._x_margin = 32 # from left
+        self._y_margin = 32 # from bottom
+
         # axes of graph
-        self._canvas.create_line((0, 200, 400, 200), fill="#999")
-        self._canvas.create_line((0, 200, 0, 100), fill="#999")
+        # (0, 200, 400, 200)
+        self._canvas.create_line(self.graph_seg_to_canvas(0, 0, 30, 0), 
+                fill="#999")
+        # (0, 200, 0, 100)
+        self._canvas.create_line(self.graph_seg_to_canvas(0, 0, 0, 100), 
+                fill="#999")
 
         self._segboundaries = []
         self._speedlimitsegs = []
+
+    def graph_seg_to_canvas(self, x1, y1, x2, y2):
+        '''Converts both points on graph to tuple of canvas points for the 
+        purpose of lines'''
+        return (*self.graph_pt_to_canvas(x1, y1), 
+                *self.graph_pt_to_canvas(x2, y2))
+
+    def graph_pt_to_canvas(self, x, y):
+        '''Converts point on graph (origin in lower left) to point on canvas
+        (origin in upper left) and scales etc.'''
+        return (x*self._x_scale+self._x_margin, 
+                300-self._y_margin-y*self._y_scale)
 
     def make_limit_lines(self, speed_limits):
         '''For now just draw some lines--Oh cool the canvas is kind of smart'''
@@ -34,8 +58,10 @@ class SpeedDistViewFrame(tk.Frame):
         print("num of speed limit segs: {}".format(len(speed_limits)))
         for i, ps in enumerate(speed_limits):
             if prev_ps is not None:
-                coords = (prev_ps.pos*10, 
-                    200-prev_ps.speed, ps.pos*10, 200-prev_ps.speed)
+                #coords = (prev_ps.pos*10, 
+                 #   200-prev_ps.speed, ps.pos*10, 200-prev_ps.speed)
+                coords = self.graph_seg_to_canvas(prev_ps.pos, prev_ps.speed,
+                        ps.pos, prev_ps.speed)
                 print("coords of line:",coords)
                 line_id = self._canvas.create_line(coords, fill=colors[i%2])
                 self._speedlimitsegs.append(line_id)
