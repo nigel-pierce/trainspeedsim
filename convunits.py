@@ -88,7 +88,7 @@ class HasUnit: # virtual/interface-ish
     # comparison methods compatible with both HasUnits and numbers
 
     def _compare_to(self, other):
-        print("Incoming {} is a {}".format(other, type(other)))
+        #print("Incoming {} is a {}".format(other, type(other)))
         if isinstance(other, HasUnit):
             assert self._unit == other._unit
             if not isinstance(other._val, (int, Fraction)):
@@ -103,8 +103,8 @@ class HasUnit: # virtual/interface-ish
             raise TypeError("incomparable types "+str(type(self))+", " \
                     +str(type(other)))
 
-        print("_compare_to() going to return {}, which is a {}".format(\
-                to_compare, type(to_compare)))
+        #print("_compare_to() going to return {}, which is a {}".format(\
+                #to_compare, type(to_compare)))
         if type(to_compare) is Decimal:
             raise RuntimeError("{} shouldn't be a Decimal, but it is".format(\
                     to_compare))
@@ -135,7 +135,7 @@ class HasUnit: # virtual/interface-ish
     @preservecontext
     def __add__(self, other):
         to_math = self._compare_to(other)
-        print("self._val: {}, to_math: {}".format(self._val, to_math))
+        #print("self._val: {}, to_math: {}".format(self._val, to_math))
         return type(self)(self._val + to_math, self._unit)
 
     @preservecontext
