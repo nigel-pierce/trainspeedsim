@@ -20,6 +20,10 @@ class SpeedDistViewFrame(tk.Frame):
         self._canvas = tk.Canvas(self, bg="white", width=400, height=300)
         self._canvas.pack(expand=True, fill=tk.BOTH)
 
+        # axes of graph
+        self._canvas.create_line((0, 200, 400, 200), fill="#999")
+        self._canvas.create_line((0, 200, 0, 100), fill="#999")
+
         self._segboundaries = []
         self._speedlimitsegs = []
 
