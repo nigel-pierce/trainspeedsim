@@ -35,8 +35,7 @@ class SpeedDistViewFrame(tk.Frame):
                 print("coords of line:",coords)
                 line_id = self._canvas.create_line(coords, fill=colors[i%2])
                 self._speedlimitsegs.append(line_id)
-            else:
-                prev_ps = ps
+            prev_ps = ps
         print("ids of lines created:", self._speedlimitsegs)
 
 class SpeedDistView:
