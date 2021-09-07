@@ -4,7 +4,7 @@ import tkinter as tk
 import tkinter.ttk as ttk
 from simulation import PosSpeed
 from editablesim import EditableTrack
-from observer import Observer
+from controller import Controller
 
 class SpeedDistViewFrame(tk.Frame):
     '''Frame containing the canvas and whatever I decide to use for the
@@ -81,6 +81,16 @@ class SpeedDistView:
         #self._viewframe.make_boundary_lines(speed_limits)
         self._viewframe.make_limit_lines(speed_limits)
         
+class SpeedDistController(Controller):
+    '''Controller for interaction between SpeedDistView and sim model'''
+
+    def __init__(self, model, parent_frame):
+        self._view = SpeedDistView(self, parent_frame)
+        super().__init__(model)
+
+    def _update_view(self):
+        self._view.update([], self._model.get_limits())
+
 if __name__=="__main__":
     model = EditableTrack("short_maxspeeds.csv", "imperial")
     root = tk.Tk()
@@ -89,3 +99,8 @@ if __name__=="__main__":
     view.update([], [PosSpeed(0, 0), PosSpeed(0, 20), PosSpeed(0.9, 30), PosSpeed(1.5, 15), PosSpeed(1.8, 45), PosSpeed(4.2, 30), PosSpeed(5.1, 15), PosSpeed(5.3, 0), PosSpeed(5.3, None)])
 
     root.mainloop()
+
+    root2 = tk.Tk()
+    controller = SpeedDistController(model, root2)
+
+    root2.mainloop()
