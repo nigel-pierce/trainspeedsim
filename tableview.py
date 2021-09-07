@@ -246,6 +246,10 @@ class TableView:
 
 #class TableController(Observer):
 class TableController(Controller):
+    def __init__(self, model, parent_frame):
+        self._view = TableView(self, parent_frame)
+        super().__init__(model)
+
     '''def __init__(self, model, parent_frame):
         self._model = model
         self._view = TableView(self, parent_frame)
@@ -350,6 +354,6 @@ if __name__ == "__main__":
 
     model = EditableTrack("short_maxspeeds.csv", "imperial") 
     root2 = tk.Tk()
-    controller = TableController(model, TableView, root2)
+    controller = TableController(model, root2)
 
     root2.mainloop()

@@ -6,9 +6,11 @@ class Controller(Observer):
     '''The superclass of all Controllers for the train sim. You'll need to 
     add your own view-controller interface things'''
 
-    def __init__(self, model, view_class, parent_frame):
+    def __init__(self, model):
         self._model = model
-        self._view = view_class(self, parent_frame)
+        #self._view = None #view_class(self, parent_frame)
+        # concrete subclasses expected to define self._view, then call
+        # this constructor
         self._update_view()
         # do this last since modifying (registering with) model shouldn't
         # happen until all else has been successful
