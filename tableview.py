@@ -9,7 +9,7 @@ from editablesim import SituationError, AmbiguousBoundaryError, \
     Adjacent0LenExistsError, Adjacent0LenPotentialError, \
     Non0LengthOf0SpeedSegPotentialError, AmbiguousSegmentError, \
     NegativeSpeedPotentialError
-from observer import Observer
+from controller import Controller
 
 class ViewFrame(tk.Frame):
     """the widget and elements and stuff"""
@@ -244,15 +244,18 @@ class TableView:
                 [ps.pos for ps in speed_limits])
         # do best_speeds later
 
-class TableController(Observer):
-    def __init__(self, model, parent_frame):
+#class TableController(Observer):
+class TableController(Controller):
+    '''def __init__(self, model, parent_frame):
         self._model = model
         self._view = TableView(self, parent_frame)
         self._update_view()
         # do this last since modifying (registering with) model shouldn't
         # happen until all else has been successful
         Observer.__init__(self, self._model)
+        '''
 
+    '''
     def notify(self, observable, message, arg=None):
         if message not in ("ChangeSuccess", "ChangeFail", "NoChange"):
             raise ValueError("Message "+str(message)+" is not known")
@@ -275,6 +278,7 @@ class TableController(Observer):
         else:
             raise ValueError("{} is not the model ({})".format(observable,
                 self._model))
+                '''
 
     def shift_boundary(self, mp, dist):
         '''No need for exception checking because errors are notified back
@@ -346,6 +350,6 @@ if __name__ == "__main__":
 
     model = EditableTrack("short_maxspeeds.csv", "imperial") 
     root2 = tk.Tk()
-    controller = TableController(model, root2)
+    controller = TableController(model, TableView, root2)
 
     root2.mainloop()

@@ -12,7 +12,7 @@ class Controller(Observer):
         self._update_view()
         # do this last since modifying (registering with) model shouldn't
         # happen until all else has been successful
-        super().__init__(self, self._model)
+        super().__init__(self._model)
 
     def notify(self, observable, message, arg=None):
         if message not in ("ChangeSuccess", "ChangeFail", "NoChange"):
@@ -22,7 +22,7 @@ class Controller(Observer):
             if message == "ChangeSuccess":
                 print("Change success")
                 self._update_view()
-            elif message = "ChangeFail":
+            elif message == "ChangeFail":
                 # arg should be an exception
                 print("Error: "+type(arg).__name__+str(arg.args))
                 # update view anyway (easiest way to set correct view)
