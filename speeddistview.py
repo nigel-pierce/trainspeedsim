@@ -74,7 +74,7 @@ class SpeedDistView:
 
     def __init__(self, controller, parent_frame):
         self._controller = controller
-        self._viewframe = SpeedDistViewFrame(root, self._controller)
+        self._viewframe = SpeedDistViewFrame(parent_frame, self._controller)
         self._viewframe.pack()
 
     def update(self, best_speeds, speed_limits):
