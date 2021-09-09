@@ -61,8 +61,7 @@ class SpeedDistViewFrame(tk.Frame):
     def make_boundary_lines(self, speed_limits):
         '''yeah, so the vertical lines'''
         self.make_or_reuse_lines(speed_limits[:-1], self._segboundaries,
-                lambda prev_ps, ps: (prev_ps.pos, prev_ps.speed, prev_ps.pos,
-                    ps.speed))
+                lambda prev_ps, ps: (ps.pos, prev_ps.speed, ps.pos, ps.speed))
 
     def make_or_reuse_lines(self, things, lines, coord_func):
         '''things is the list of PosSpeeds, lines is the list of line IDs,
