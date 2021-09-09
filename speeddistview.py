@@ -58,6 +58,12 @@ class SpeedDistViewFrame(tk.Frame):
                 lambda prev_ps, ps: (prev_ps.pos, prev_ps.speed, ps.pos, 
                     prev_ps.speed))
 
+    def make_boundary_lines(self, speed_limits):
+        '''yeah, so the vertical lines'''
+        self.make_or_reuse_lines(speed_limits[:-1], self._segboundaries,
+                lambda prev_ps, ps: (prev_ps.pos, prev_ps.speed, prev_ps.pos,
+                    ps.speed))
+
     def make_or_reuse_lines(self, things, lines, coord_func):
         '''things is the list of PosSpeeds, lines is the list of line IDs,
         coord_func takes prev and current PosSpeeds and returns a 4-tuple
@@ -102,7 +108,7 @@ class SpeedDistView:
         self._viewframe.pack()
 
     def update(self, best_speeds, speed_limits):
-        #self._viewframe.make_boundary_lines(speed_limits)
+        self._viewframe.make_boundary_lines(speed_limits)
         self._viewframe.make_limit_lines(speed_limits)
         
 class SpeedDistController(Controller):
