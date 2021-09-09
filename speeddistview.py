@@ -2,6 +2,7 @@
 
 import tkinter as tk
 import tkinter.ttk as ttk
+from itertools import zip_longest
 from simulation import PosSpeed
 from editablesim import EditableTrack
 from controller import Controller
@@ -53,6 +54,10 @@ class SpeedDistViewFrame(tk.Frame):
 
     def make_limit_lines(self, speed_limits):
         '''For now just draw some lines--Oh cool the canvas is kind of smart'''
+        self.make_or_reuse_lines(speed_limits, self._speedlimitsegs, 
+                lambda prev_ps, ps: (prev_ps.pos, prev_ps.speed, ps.pos, 
+                    prev_ps.speed))
+        """
         prev_ps = None
         colors = ['red', 'blue']
         print("num of speed limit segs: {}".format(len(speed_limits)))
@@ -67,6 +72,7 @@ class SpeedDistViewFrame(tk.Frame):
                 self._speedlimitsegs.append(line_id)
             prev_ps = ps
         print("ids of lines created:", self._speedlimitsegs)
+        """
 
     def make_or_reuse_lines(self, things, lines, coord_func):
         '''things is the list of PosSpeeds, lines is the list of line IDs,
