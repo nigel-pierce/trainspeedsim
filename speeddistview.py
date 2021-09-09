@@ -68,6 +68,40 @@ class SpeedDistViewFrame(tk.Frame):
             prev_ps = ps
         print("ids of lines created:", self._speedlimitsegs)
 
+    def make_or_reuse_lines(self, things, lines, coord_func):
+        '''things is the list of PosSpeeds, lines is the list of line IDs,
+        coord_func takes prev and current PosSpeeds and returns a 4-tuple
+        in graph coordinates to represent the line'''
+        things_and_lines = zip_longest(things, lines)
+        prev_ps = None
+        for i, (ps, l) in enumerate(things_and_lines):
+            if prev_ps is not None:
+                if l is None:
+                    # more speed limit segs than lines, so make new lines
+                    gcoords = coord_func(prev_ps, ps)
+                    ccoords = self.graph_seg_to_canvas(*gcoords)
+                    line_id = self._canvas.create_line(ccoords, fill='black')
+                    lines.append(line_id)
+                elif ps is None:
+                    # provided with fewer PosSpeeds/segs than lines that already
+                    # exist, so exit loop and delete extra lines
+                    break
+                else:
+                    # re-use line
+                    line_id = self._speedlimitsegs[i]
+                    gcoords = coord_func(prev_ps, ps)
+                    ccoords = self.graph_pt_to_canvas(*gcoords)
+                    self._canvas.coords(line_id, ccoords)
+            prev_ps = ps
+        if len(things) < len(lines):
+            num_things = len(things)
+            num_lines = len(lines)
+            # I'm not sure if this next part is off-by-one TODO
+            for i in range(num_things, num_lines):
+                lines[i].delete()
+            del lines[num_things:num_lines]
+
+
 class SpeedDistView:
     '''The View, which controller updates, and which owns the frame containing
     the canvas on which the lines are to be drawn'''
