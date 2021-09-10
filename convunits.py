@@ -1,18 +1,90 @@
 
 from fractions import Fraction
+from decimal import Decimal
+import decimal
+import copy
+
+def decimal_from_fraction(frac):
+    '''Utility function to convert a Fraction into a Decimal, losslessly or 
+    as-close-to
+    Idea from Martijn Pieters https://stackoverflow.com/questions/40468697/\
+    best-way-to-convert-fractions-fraction-to-decimal-decimal'''
+    return Decimal(frac.numerator) / frac.denominator
+
+# TODO add accel
+def system_to_unit(units, unit_type, size):
+    systems = ("imperial", "metric")
+    types = ("pos", "speed")
+    sizes = ("big", "small")
+
+    # validate
+    if units not in systems:
+        raise ValueError("units '"+units+"' must be in systems "+systems)
+    if unit_type not in types:
+        raise ValueError("unit type '"+unit_type+"' must be one of "+types)
+    if size not in sizes:
+        raise ValueError("size '"+size+"' must be one of "+sizes)
+
+    #everything = {
+            #systems[0]: {
+            #types[0]: {
+            #sizes[0]: 
+
+    sys_to_unit = {
+            "imperial": {
+                "pos": {
+                    "big": "mi",
+                    "small": "f" },
+                "speed": {
+                    "big":  "mi/h",
+                    "small":"f/s" } },
+            "metric": {
+                "pos": {
+                    "big":   "km",
+                    "small": "m" },
+                "speed": {
+                    "big":   "km/h",
+                    "small": "m/s" } }
+            }
+    
+    return sys_to_unit[units][unit_type][size]
 
 class HasUnit: # virtual/interface-ish
     # Subclasses will define the values, and units
 
+    # decorator b/c needs its own decimal context
+    def preservecontext(f):
+        def preserver(*args, **kwargs):
+            oldcontext = decimal.getcontext()
+            decimal.setcontext(decimal.ExtendedContext)
+            result = f(*args, **kwargs)
+            decimal.setcontext(oldcontext)
+            return result
+        return preserver
+
     def __init__(self, val, unit):
-        self._val = val
+        if isinstance(val, (str, Decimal)):
+            self._val = Fraction(val)
+        else:
+            self._val = val
         self._unit = unit
 
+    @preservecontext
     def __str__(self):
-        return str(self._val)+" "+self._unit
+        if isinstance(self._val, Fraction):
+            return str(decimal_from_fraction(self._val))+" "+self._unit
+        else:
+            return str(self._val)+" "+self._unit
+
+    def __repr__(self):
+        #return str(self)
+        return "{}({}, '{}')".format(type(self).__name__, self._val, self._unit)
 
     def val(self):
-        return self._val
+        if isinstance(self._val, Fraction):
+            return decimal_from_fraction(self._val)
+        else:
+            return copy.deepcopy(self._val)
     
     def unit(self):
         return self._unit
@@ -20,46 +92,68 @@ class HasUnit: # virtual/interface-ish
     # comparison methods compatible with both HasUnits and numbers
 
     def _compare_to(self, other):
+        #print("Incoming {} is a {}".format(other, type(other)))
         if isinstance(other, HasUnit):
             assert self._unit == other._unit
+            if not isinstance(other._val, (int, Fraction)):
+                raise RuntimeError("other._val is a {} (should be one of int "\
+                        "or Fraction)".format(type(other._val).__name__))
             to_compare = other._val
-        elif isinstance(other, (int, float)):
+        elif isinstance(other, Decimal):
+            to_compare = Fraction(other).limit_denominator()
+        elif isinstance(other, (int, float, Fraction)):
             to_compare = other
         else:
-            raise TypeError("incomparable types")
+            raise TypeError("incomparable types "+str(type(self))+", " \
+                    +str(type(other)))
 
+        #print("_compare_to() going to return {}, which is a {}".format(\
+                #to_compare, type(to_compare)))
+        if type(to_compare) is Decimal:
+            raise RuntimeError("{} shouldn't be a Decimal, but it is".format(\
+                    to_compare))
         return to_compare
 
+    @preservecontext
     def __eq__(self, other):
         return self._val == self._compare_to(other)
 
+    @preservecontext
     def __lt__(self, other):
         return self._val < self._compare_to(other)
 
+    @preservecontext
     def __le__(self, other):
         to_compare = self._compare_to(other)
         return self < to_compare or self == to_compare
 
+    @preservecontext
     def __gt__(self, other):
         return not self <= other
 
+    @preservecontext
     def __ge__(self, other):
         return not self < other
         
     # maths
+    @preservecontext
     def __add__(self, other):
         to_math = self._compare_to(other)
-        return Pos(self._val + to_math, self._unit)
+        #print("self._val: {}, to_math: {}".format(self._val, to_math))
+        return type(self)(self._val + to_math, self._unit)
 
+    @preservecontext
     def __sub__(self, other):
         to_math = self._compare_to(other)
-        return Pos(self._val - to_math, self._unit)
+        return type(self)(self._val - to_math, self._unit)
 
+    @preservecontext
     def __mod__(self, other):
         to_math = self._compare_to(other)
-        return Pos(self._val % to_math, self._unit)
+        return type(self)(self._val % to_math, self._unit)
 
     # formatting just defers to float
+    @preservecontext
     def __format__(self, format_spec):
         return format(self._val, format_spec) + " " + self._unit
 
@@ -77,7 +171,15 @@ class ConvertibleUnit(HasUnit):
         assert self._unit in self._smaller, "cannot smallify" # keys are the big units
         return self.convert_to(self._smaller[self._unit])
 
+    # These next two make my life easier
+    def to_bg(self):
+        return self.to_bigger_unit()
 
+    def to_sm(self):
+        return self.to_smaller_unit()
+
+
+    @HasUnit.preservecontext
     def convert_to(self, unit):
         # find path from self._unit to unit
         # the graph is stored as a dict where each key is a node and value is a 
@@ -132,6 +234,7 @@ class ConvertibleUnit(HasUnit):
 
         return finalpath
 
+    @HasUnit.preservecontext
     def _conv_calc(self, finalpath):
         result = self._val
         unit_from = finalpath[0]
@@ -146,10 +249,10 @@ class Pos(ConvertibleUnit):
     # conversions
     # should be sufficient to convert between any of these in any direction
     _conv = {"f":  {"mi": Fraction(1,5280),  \
-                   "m":  Fraction(0.3048),  \
+                   "m":  Fraction('0.3048'),  \
                    "in": Fraction(12)     }, # just to spice things up\
             "mi": {"f":  Fraction(5280)   },\
-            "m":  {"f":  Fraction(3.2808399), \
+            "m":  {"f":  Fraction(3.2808399), # TODO make it 1/0.3048
                     "cm": Fraction(100),    \
                     "km": Fraction(1, 1000) },  \
             "in": {"f":  Fraction(1, 12) }, \
@@ -166,7 +269,9 @@ class Pos(ConvertibleUnit):
     }
 
     def __init__(self, val, unit):
-        assert unit in self._conv
+        if unit not in self._conv:
+            raise ValueError("{} not in valid units {}"\
+                    .format(unit, self._conv))
         ConvertibleUnit.__init__(self, val, unit)
 
 class Speed(ConvertibleUnit):
@@ -263,3 +368,39 @@ if __name__ == "__main__":
         print(invalid_acc)
     except ValueError as e:
         print(repr(e))
+
+    dfoot = Pos('1', 'f')
+    print(dfoot)
+
+    d1pt1foot = Pos('1.1', 'f')
+    print(d1pt1foot)
+
+    print("...compared to float-based...")
+    f1pt1foot = Pos(1.1, 'f')
+    print(repr(f1pt1foot))
+    print("OK I cheated in HasUnit by rounding val on repr/str, let's access _val directly")
+    print(f1pt1foot._val)
+    print("I swear this  shouldn't be working, let's try some math")
+    print("2.2 f = 1.1 f + 1.1 f:", Pos(1.1, 'f')+Pos(1.1,'f'))
+    print("WHY ISN'T THIS WORKING BY NOT WORKING")
+
+    s = "Pos(0.1, 'f')"+"+Pos(0.1, 'f')"*8
+    point1_9times = eval(s)
+    print("Let's try 0.9 f as 0.1 f + itself 9 times (so effectively 9*0.1):", 
+        point1_9times)
+    print("AH-HA There it is!")
+    
+    s = "Pos('0.1', 'f')"+"+Pos('0.1', 'f')"*8
+    dpoint1_9times = eval(s)
+    print("Now let's try with ~~Decimal~~ *Fraction* (with Pos('0.1', 'f') "\
+            "etc.):", dpoint1_9times)
+    
+    print("See? Drop-in replacement.")
+
+    print("Convert ~~decimal~~fractionized 0.9 f to m:", 
+            dpoint1_9times.convert_to('m'))
+
+    dsum1 = dpoint1_9times+Pos('0.1', 'f')
+    print("'0.9' f + '0.1' f:",dsum1)
+    print("that, to m:", dsum1.convert_to('m'))
+    
