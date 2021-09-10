@@ -2,6 +2,7 @@
 from fractions import Fraction
 from decimal import Decimal
 import decimal
+import copy
 
 def decimal_from_fraction(frac):
     '''Utility function to convert a Fraction into a Decimal, losslessly or 
@@ -80,7 +81,10 @@ class HasUnit: # virtual/interface-ish
         return "{}({}, '{}')".format(type(self).__name__, self._val, self._unit)
 
     def val(self):
-        return decimal_from_fraction(self._val)
+        if isinstance(self._val, Fraction):
+            return decimal_from_fraction(self._val)
+        else:
+            return copy.deepcopy(self._val)
     
     def unit(self):
         return self._unit
