@@ -387,7 +387,7 @@ class Simulation:
         lastps = None
         for paired in zip(fwd_best_speeds, reversed(rev_best_speeds)):
             assert paired[0].pos == paired[1].pos
-            ps = self.PosSpeed(paired[0].pos, min(paired[0].speed, \
+            ps = PosSpeed(paired[0].pos, min(paired[0].speed, \
                 paired[1].speed))
             if (lastps is None or (ps.pos != lastps.pos or ps.speed != lastps.speed)):
                 self._best_speeds.append(ps)
@@ -410,7 +410,7 @@ class Simulation:
         while not self._train.at_end_of_track():
             self._train.travel_seg()
             if not self._train.at_end_of_track(): # prevents repeating last seg
-                best.append(self.PosSpeed(self._train.get_pos(), \
+                best.append(PosSpeed(self._train.get_pos(), \
                     self._train.get_speed()))
         return best
         
