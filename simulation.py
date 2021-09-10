@@ -218,7 +218,10 @@ class Train:
         assert v_target >= 0 and v_i >= 0
         assert d >= 0
         assert acc > 0
-        nacc = acc
+        v_target = float(v_target)
+        nacc = float(acc)
+        v_i = float(v_i)
+        d = float(d)
         from math import sqrt
         t = ( -v_i + sqrt(v_i**2 - 4.0 * 0.5 * nacc * -d) ) / (2.0*0.5*nacc)
         v_f = nacc * t + v_i
@@ -230,8 +233,8 @@ class Train:
         # accelerate() over one resolution of distance? I didn't think 
         # this far ahead.
         segspeed = self._seg.get_speed()
-        acc_speed = Speed(self._accelerate(segspeed.val(), self._acceleration.val(), \
-            self._speed.val(), self._resolution.val()), self._speed.unit())
+        acc_speed = Speed(str(self._accelerate(segspeed.val(), self._acceleration.val(), \
+            self._speed.val(), self._resolution.val())), self._speed.unit())
         self._speed = min(segspeed, acc_speed)
             
 
