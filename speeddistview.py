@@ -74,6 +74,9 @@ class SpeedDistViewFrame(tk.Frame):
         things_and_lines = zip_longest(things, lines)
         prev_ps = None
         for i, (ps, l) in enumerate(things_and_lines):
+            if i == len(things)-1:
+                # there's SUPPOSED to be one fewer line than PosSpeed
+                break
             if prev_ps is not None:
                 if l is None:
                     print(str(i)+"; l is None")
