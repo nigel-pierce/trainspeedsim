@@ -69,6 +69,7 @@ class SpeedDistViewFrame(tk.Frame):
         '''things is the list of PosSpeeds, lines is the list of line IDs,
         coord_func takes prev and current PosSpeeds and returns a 4-tuple
         in graph coordinates to represent the line'''
+        print("line ids: {}".format(lines))
         print("len(things): {}; len(lines): {}".format(len(things), len(lines)))
         things_and_lines = zip_longest(things, lines)
         prev_ps = None
