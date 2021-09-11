@@ -83,7 +83,7 @@ class SpeedDistViewFrame(tk.Frame):
                     break
                 else:
                     # re-use line
-                    line_id = lines[i]
+                    line_id = lines[i-1] # b/c i >= 1 by the time we get here
                     gcoords = coord_func(prev_ps, ps)
                     ccoords = self.graph_seg_to_canvas(*gcoords)
                     self._canvas.coords(line_id, ccoords)
