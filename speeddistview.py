@@ -37,6 +37,14 @@ class SpeedDistViewFrame(tk.Frame):
         self._canvas.create_line(self.graph_seg_to_canvas(0, 0, 0, 100), 
                 fill="#999")
 
+        # tics on axes
+        for i in range(0, 30):
+            ccoords = self.graph_seg_to_canvas(i, 0, i, -5)
+            self._canvas.create_line(ccoords, fill="#999")
+        for i in range(0, 60):
+            ccoords = self.graph_seg_to_canvas(0, i, -1, i)
+            self._canvas.create_line(ccoords, fill="#999")
+
         self._segboundaries = []
         self._speedlimitsegs = []
 
