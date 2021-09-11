@@ -218,7 +218,10 @@ class Train:
         assert v_target >= 0 and v_i >= 0
         assert d >= 0
         assert acc > 0
-        nacc = acc
+        v_target = float(v_target)
+        nacc = float(acc)
+        v_i = float(v_i)
+        d = float(d)
         from math import sqrt
         t = ( -v_i + sqrt(v_i**2 - 4.0 * 0.5 * nacc * -d) ) / (2.0*0.5*nacc)
         v_f = nacc * t + v_i
@@ -230,8 +233,8 @@ class Train:
         # accelerate() over one resolution of distance? I didn't think 
         # this far ahead.
         segspeed = self._seg.get_speed()
-        acc_speed = Speed(self._accelerate(segspeed.val(), self._acceleration.val(), \
-            self._speed.val(), self._resolution.val()), self._speed.unit())
+        acc_speed = Speed(str(self._accelerate(segspeed.val(), self._acceleration.val(), \
+            self._speed.val(), self._resolution.val())), self._speed.unit())
         self._speed = min(segspeed, acc_speed)
             
 
@@ -387,7 +390,7 @@ class Simulation:
         lastps = None
         for paired in zip(fwd_best_speeds, reversed(rev_best_speeds)):
             assert paired[0].pos == paired[1].pos
-            ps = self.PosSpeed(paired[0].pos, min(paired[0].speed, \
+            ps = PosSpeed(paired[0].pos, min(paired[0].speed, \
                 paired[1].speed))
             if (lastps is None or (ps.pos != lastps.pos or ps.speed != lastps.speed)):
                 self._best_speeds.append(ps)
@@ -410,7 +413,7 @@ class Simulation:
         while not self._train.at_end_of_track():
             self._train.travel_seg()
             if not self._train.at_end_of_track(): # prevents repeating last seg
-                best.append(self.PosSpeed(self._train.get_pos(), \
+                best.append(PosSpeed(self._train.get_pos(), \
                     self._train.get_speed()))
         return best
         

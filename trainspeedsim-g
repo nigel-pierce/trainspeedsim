@@ -1,0 +1,38 @@
+#! /usr/bin/python3
+
+import tkinter as tk
+from editablesim import EditableTrack
+from speeddistview import SpeedDistController
+from tableview import TableController
+
+class Application(tk.Tk):
+    def __init__(self):
+        super().__init__()
+        self._model = EditableTrack("short_maxspeeds.csv", "imperial")
+
+        self._speedframe = tk.Frame(master=self)
+        self._speedframe.grid(row=0, column=0)
+        self._tableframe = tk.Frame(master=self)
+        self._tableframe.grid(row=0, column=1)
+
+        self._speed_dist_controller = SpeedDistController(self._model,\
+                self._speedframe)
+        self._table_controller = TableController(self._model,\
+                self._tableframe)
+
+    def create_widgets(self):
+        self.hi_there = tk.Button(self)
+        self.hi_there["text"] = "Hello World\n(click me)"
+        self.hi_there["command"] = self.say_hi
+        self.hi_there.pack(side="top")
+
+        self.quit = tk.Button(self, text="QUIT", fg="red", 
+                command=self.master.destroy)
+        self.quit.pack(side="bottom")
+
+    def say_hi(self):
+        print("hi there, everyone!")
+            
+if __name__ == "__main__":
+    app = Application()
+    app.mainloop()
