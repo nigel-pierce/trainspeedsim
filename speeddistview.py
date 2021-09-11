@@ -29,26 +29,28 @@ class SpeedDistViewFrame(tk.Frame):
         self._x_margin = 32 # from left
         self._y_margin = 32 # from bottom
 
+        gridcolor = "#999"
+
         # axes of graph
         # (0, 200, 400, 200)
         self._canvas.create_line(self.graph_seg_to_canvas(0, 0, 30, 0), 
-                fill="#999")
+                fill=gridcolor)
         # (0, 200, 0, 100)
         self._canvas.create_line(self.graph_seg_to_canvas(0, 0, 0, 100), 
-                fill="#999")
+                fill=gridcolor)
 
         # tics on axes
         for i in range(0, 30):
             ccoords = self.graph_seg_to_canvas(i, 0, i, -5)
-            self._canvas.create_line(ccoords, fill="#999")
+            self._canvas.create_line(ccoords, fill=gridcolor)
         for i in range(0, 60, 5):
             ccoords = self.graph_seg_to_canvas(0, i, -0.5, i)
-            self._canvas.create_line(ccoords, fill="#999")
+            self._canvas.create_line(ccoords, fill=gridcolor)
 
         # grid lines (just speed for now)
         for i in range(0, 60, 5):
             ccoords = self.graph_seg_to_canvas(0, i, 30, i)
-            self._canvas.create_line(ccoords, fill="#999")
+            self._canvas.create_line(ccoords, fill=gridcolor)
 
         self._segboundaries = []
         self._speedlimitsegs = []
