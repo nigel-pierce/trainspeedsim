@@ -73,12 +73,13 @@ class SpeedDistViewFrame(tk.Frame):
         print("len(things): {}; len(lines): {}".format(len(things), len(lines)))
         things_and_lines = zip_longest(things, lines)
         prev_ps = None
+        orig_num_lines = len(lines)
         for i, (ps, l) in enumerate(things_and_lines):
-            if i == len(things)-1:
-                # there's SUPPOSED to be one fewer line than PosSpeed
-                break
             if prev_ps is not None:
-                if l is None:
+                if l is None and len(things) > orig_num_lines+1:
+                    # 2nd part of condition is to not make extra line when
+                    # num of PosSpeeds is one more than (starting) number
+                    # of lines
                     print(str(i)+"; l is None")
                     # more speed limit segs than lines, so make new lines
                     gcoords = coord_func(prev_ps, ps)
