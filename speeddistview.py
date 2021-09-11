@@ -74,19 +74,19 @@ class SpeedDistViewFrame(tk.Frame):
         for i, (ps, l) in enumerate(things_and_lines):
             if prev_ps is not None:
                 if l is None:
-                    print("l is None; "+str(i))
+                    print(str(i)+"; l is None")
                     # more speed limit segs than lines, so make new lines
                     gcoords = coord_func(prev_ps, ps)
                     ccoords = self.graph_seg_to_canvas(*gcoords)
                     line_id = self._canvas.create_line(ccoords, fill='black')
                     lines.append(line_id)
                 elif ps is None:
-                    print("ps is None; "+str(i))
+                    print(str(i)+"; ps is None")
                     # provided with fewer PosSpeeds/segs than lines that already
                     # exist, so exit loop and delete extra lines
                     break
                 else:
-                    print("neither l nor ps is None; "+str(i))
+                    print(str(i)+"; neither l nor ps is None")
                     # re-use line
                     line_id = lines[i-1] # b/c i >= 1 by the time we get here
                     gcoords = coord_func(prev_ps, ps)
