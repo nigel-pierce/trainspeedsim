@@ -54,12 +54,14 @@ class SpeedDistViewFrame(tk.Frame):
 
     def make_limit_lines(self, speed_limits):
         '''For now just draw some lines--Oh cool the canvas is kind of smart'''
+        print("making or reusing speed limit lines")
         self.make_or_reuse_lines(speed_limits, self._speedlimitsegs, 
                 lambda prev_ps, ps: (prev_ps.pos, prev_ps.speed, ps.pos, 
                     prev_ps.speed))
 
     def make_boundary_lines(self, speed_limits):
         '''yeah, so the vertical lines'''
+        print("making or reusing segment boundary lines")
         self.make_or_reuse_lines(speed_limits[:-1], self._segboundaries,
                 lambda prev_ps, ps: (ps.pos, prev_ps.speed, ps.pos, ps.speed))
 
@@ -72,16 +74,19 @@ class SpeedDistViewFrame(tk.Frame):
         for i, (ps, l) in enumerate(things_and_lines):
             if prev_ps is not None:
                 if l is None:
+                    print("l is None; "+str(i))
                     # more speed limit segs than lines, so make new lines
                     gcoords = coord_func(prev_ps, ps)
                     ccoords = self.graph_seg_to_canvas(*gcoords)
                     line_id = self._canvas.create_line(ccoords, fill='black')
                     lines.append(line_id)
                 elif ps is None:
+                    print("ps is None; "+str(i))
                     # provided with fewer PosSpeeds/segs than lines that already
                     # exist, so exit loop and delete extra lines
                     break
                 else:
+                    print("neither l nor ps is None; "+str(i))
                     # re-use line
                     line_id = lines[i-1] # b/c i >= 1 by the time we get here
                     gcoords = coord_func(prev_ps, ps)
@@ -91,6 +96,8 @@ class SpeedDistViewFrame(tk.Frame):
         if len(things) < len(lines):
             num_things = len(things)
             num_lines = len(lines)
+            print("#ps={} < #lines={}, so deleting lines [{}, {})".format(
+                num_things, num_lines, num_things, num_lines))
             # I'm not sure if this next part is off-by-one TODO
             for i in range(num_things, num_lines):
                 lines[i].delete()
