@@ -29,8 +29,8 @@ class SpeedDistViewFrame(tk.Frame):
         self._x_margin = 32 # from left
         self._y_margin = 32 # from bottom
 
-        gridcolor = "#aaa"
-        axiscolor = "#888"
+        gridcolor = "#bbb"
+        axiscolor = "#777"
 
         # axes of graph
         # (0, 200, 400, 200)
