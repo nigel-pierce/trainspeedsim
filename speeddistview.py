@@ -25,6 +25,10 @@ class SpeedDistViewFrame(tk.Frame):
         self._x_scale = 20 # mult of 10 so tenths of miles/km are unambiguous
         self._y_scale = 2 # mult of 1 :I
 
+        # ranges of graph
+        self._x_range = (5, 15)
+        self._y_range = (0, 60)
+
         # margin of graph, in canvas pixels
         self._x_margin = 32 # from left
         self._y_margin = 32 # from bottom
@@ -34,18 +38,22 @@ class SpeedDistViewFrame(tk.Frame):
 
         # axes of graph
         # (0, 200, 400, 200)
-        self._canvas.create_line(self.graph_seg_to_canvas(0, 0, 30, 0), 
-                fill=axiscolor)
+        self._canvas.create_line(self.graph_seg_to_canvas(self._x_range[0],
+            self._y_range[0], self._x_range[1], self._y_range[0]), 
+            fill=axiscolor)
         # (0, 200, 0, 100)
-        self._canvas.create_line(self.graph_seg_to_canvas(0, 0, 0, 100), 
-                fill=axiscolor)
+        self._canvas.create_line(self.graph_seg_to_canvas(self._x_range[0], 
+            self._y_range[0], self._x_range[0], self._y_range[1]), 
+            fill=axiscolor)
 
         # tics on axes
-        for i in range(0, 30):
-            ccoords = self.graph_seg_to_canvas(i, 0, i, -5)
+        for i in range(self._x_range[0], self._x_range[1]):
+            ccoords = self.graph_seg_to_canvas(i, self._y_range[0], i, 
+                    self._y_range[0]-5)
             self._canvas.create_line(ccoords, fill=axiscolor)
-        for i in range(0, 60, 5):
-            ccoords = self.graph_seg_to_canvas(0, i, -0.5, i)
+        for i in range(self._y_range[0], self._y_range[1], 5):
+            ccoords = self.graph_seg_to_canvas(self._x_range[0], i, 
+                    self._x_range[0]-0.5, i)
             self._canvas.create_line(ccoords, fill=axiscolor)
 
         # grid lines (just speed for now)
@@ -65,8 +73,8 @@ class SpeedDistViewFrame(tk.Frame):
     def graph_pt_to_canvas(self, x, y):
         '''Converts point on graph (origin in lower left) to point on canvas
         (origin in upper left) and scales etc.'''
-        return (x*self._x_scale+self._x_margin, 
-                300-self._y_margin-y*self._y_scale)
+        return ((x-self._x_range[0])*self._x_scale+self._x_margin, 
+                300-self._y_margin-(y-self._y_range[0])*self._y_scale)
 
     def make_limit_lines(self, speed_limits):
         '''For now just draw some lines--Oh cool the canvas is kind of smart'''
