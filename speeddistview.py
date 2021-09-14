@@ -22,8 +22,8 @@ class SpeedDistViewFrame(tk.Frame):
         self._canvas.pack(expand=True, fill=tk.BOTH)
 
         # graph to pixel scaling
-        self._x_scale = 20
-        self._y_scale = 2
+        self._x_scale = 20 # mult of 10 so tenths of miles/km are unambiguous
+        self._y_scale = 2 # mult of 1 :I
 
         # margin of graph, in canvas pixels
         self._x_margin = 32 # from left
