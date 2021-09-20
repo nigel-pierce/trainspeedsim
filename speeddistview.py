@@ -49,11 +49,14 @@ class SpeedDistViewFrame(tk.Frame):
         # tics on axes
         for i in range(self._x_range[0], self._x_range[1]):
             ccoords = self.graph_seg_to_canvas(i, self._y_range[0], i, 
-                    self._y_range[0]-5)
+                    self._y_range[0])
+            # 5 px high tic
+            ccoords = (ccoords[0], ccoords[1], ccoords[2], ccoords[3]+5)
             self._canvas.create_line(ccoords, fill=axiscolor)
         for i in range(self._y_range[0], self._y_range[1], 5):
             ccoords = self.graph_seg_to_canvas(self._x_range[0], i, 
-                    self._x_range[0]-0.5, i)
+                    self._x_range[0], i)
+            ccoords = (ccoords[0], ccoords[1], ccoords[2]-5, ccoords[3])
             self._canvas.create_line(ccoords, fill=axiscolor)
 
         # grid lines (just speed for now)
