@@ -153,6 +153,11 @@ class SpeedDistViewFrame(tk.Frame):
         #print("Lines tagged with {}[0]: {}".format(tagss,
             #self._canvas.find_withtag(tagss[0])))
         #print("Lines provided: {}".format(lines))
+        
+        # the all-important event binding(s)
+        # just try click for now
+        self._canvas.tag_bind(tagss[0], "<Button-1>", lambda x: \
+                print("line clicked at {}".format(x)))
 
 
 class SpeedDistView:
