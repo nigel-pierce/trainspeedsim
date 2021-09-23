@@ -150,9 +150,9 @@ class SpeedDistViewFrame(tk.Frame):
                 lines[i].delete()
             del lines[num_things:num_lines]
 
-        print("Lines tagged with {}[0]: {}".format(tagss,
-            self._canvas.find_withtag(tagss[0])))
-        print("Lines provided: {}".format(lines))
+        #print("Lines tagged with {}[0]: {}".format(tagss,
+            #self._canvas.find_withtag(tagss[0])))
+        #print("Lines provided: {}".format(lines))
 
 
 class SpeedDistView:
