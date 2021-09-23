@@ -117,10 +117,6 @@ class SpeedDistViewFrame(tk.Frame):
                     line_id = self._canvas.create_line(ccoords, fill='black',
                             tags=tagss)
                     lines.append(line_id)
-                    # the all-important event binding(s)
-                    # just try click for now
-                    self._canvas.tag_bind(line_id, "<Button-1>", lambda x: \
-                            print("line {} clicked at {}".format(line_id, x)))
                 elif ps is None:
                     #print(str(i)+"; ps is None")
                     # provided with fewer PosSpeeds/segs than lines that already
@@ -158,6 +154,11 @@ class SpeedDistViewFrame(tk.Frame):
             #self._canvas.find_withtag(tagss[0])))
         #print("Lines provided: {}".format(lines))
         
+        # the all-important event binding(s)
+        # just try click for now
+        self._canvas.tag_bind(tagss[0], "<Button-1>", lambda x: \
+                print("line {} clicked at {}".format(x.widget.find_withtag(
+                    'current'), x)))
 
 
 class SpeedDistView:
@@ -172,7 +173,7 @@ class SpeedDistView:
     def update(self, best_speeds, speed_limits):
         self._viewframe.make_boundary_lines(speed_limits)
         self._viewframe.make_limit_lines(speed_limits)
-        
+            
 class SpeedDistController(Controller):
     '''Controller for interaction between SpeedDistView and sim model'''
 
