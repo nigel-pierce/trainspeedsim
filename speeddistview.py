@@ -94,7 +94,7 @@ class SpeedDistViewFrame(tk.Frame):
         self.make_or_reuse_lines(speed_limits[:-1], self._segboundaries,
                 lambda prev_ps, ps: (ps.pos, prev_ps.speed, ps.pos, ps.speed))
 
-    def make_or_reuse_lines(self, things, lines, coord_func):
+    def make_or_reuse_lines(self, things, lines, coord_func, tagss=None):
         '''things is the list of PosSpeeds, lines is the list of line IDs,
         coord_func takes prev and current PosSpeeds and returns a 4-tuple
         in graph coordinates to represent the line'''
@@ -113,7 +113,8 @@ class SpeedDistViewFrame(tk.Frame):
                     # more speed limit segs than lines, so make new lines
                     gcoords = coord_func(prev_ps, ps)
                     ccoords = self.graph_seg_to_canvas(*gcoords)
-                    line_id = self._canvas.create_line(ccoords, fill='black')
+                    line_id = self._canvas.create_line(ccoords, fill='black',
+                            tags=tagss)
                     lines.append(line_id)
                 elif ps is None:
                     #print(str(i)+"; ps is None")
