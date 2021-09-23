@@ -126,6 +126,16 @@ class SpeedDistViewFrame(tk.Frame):
                     #print(str(i)+"; neither l nor ps is None")
                     # re-use line
                     line_id = lines[i-1] # b/c i >= 1 by the time we get here
+                    # ensure line not miscategorized if new tag provided (e.g.,
+                    # can't be tagged 'boundaryline' AND 'limitline')
+                    if tagss is not None:
+                        current_tags = self._canvas.gettags(line_id)
+                        if not set(tagss).issubset(set(current_tags)):
+                            # new tag(s) not (all) present in line's current
+                            # tags (take as contradiction)
+                            raise RuntimeError("New tag(s) {} conflict with"\
+                                    "line's current tag(s) {}".format(tagss,
+                                        current_tags))
                     gcoords = coord_func(prev_ps, ps)
                     ccoords = self.graph_seg_to_canvas(*gcoords)
                     self._canvas.coords(line_id, ccoords)
