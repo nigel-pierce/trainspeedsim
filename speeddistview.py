@@ -56,6 +56,7 @@ class SpeedDistViewFrame(tk.Frame):
         for i in range(self._y_range[0], self._y_range[1], 5):
             ccoords = self.graph_seg_to_canvas(self._x_range[0], i, 
                     self._x_range[0], i)
+            # 5 px wide tic
             ccoords = (ccoords[0], ccoords[1], ccoords[2]-5, ccoords[3])
             self._canvas.create_line(ccoords, fill=axiscolor)
 
@@ -82,14 +83,14 @@ class SpeedDistViewFrame(tk.Frame):
 
     def make_limit_lines(self, speed_limits):
         '''For now just draw some lines--Oh cool the canvas is kind of smart'''
-        print("making or reusing speed limit lines")
+        #print("making or reusing speed limit lines")
         self.make_or_reuse_lines(speed_limits, self._speedlimitsegs, 
                 lambda prev_ps, ps: (prev_ps.pos, prev_ps.speed, ps.pos, 
                     prev_ps.speed))
 
     def make_boundary_lines(self, speed_limits):
         '''yeah, so the vertical lines'''
-        print("making or reusing segment boundary lines")
+        #print("making or reusing segment boundary lines")
         self.make_or_reuse_lines(speed_limits[:-1], self._segboundaries,
                 lambda prev_ps, ps: (ps.pos, prev_ps.speed, ps.pos, ps.speed))
 
@@ -97,8 +98,8 @@ class SpeedDistViewFrame(tk.Frame):
         '''things is the list of PosSpeeds, lines is the list of line IDs,
         coord_func takes prev and current PosSpeeds and returns a 4-tuple
         in graph coordinates to represent the line'''
-        print("line ids: {}".format(lines))
-        print("len(things): {}; len(lines): {}".format(len(things), len(lines)))
+        #print("line ids: {}".format(lines))
+        #print("len(things): {}; len(lines): {}".format(len(things), len(lines)))
         things_and_lines = zip_longest(things, lines)
         prev_ps = None
         orig_num_lines = len(lines)
@@ -108,19 +109,19 @@ class SpeedDistViewFrame(tk.Frame):
                     # 2nd part of condition is to not make extra line when
                     # num of PosSpeeds is one more than (starting) number
                     # of lines
-                    print(str(i)+"; l is None")
+                    #print(str(i)+"; l is None")
                     # more speed limit segs than lines, so make new lines
                     gcoords = coord_func(prev_ps, ps)
                     ccoords = self.graph_seg_to_canvas(*gcoords)
                     line_id = self._canvas.create_line(ccoords, fill='black')
                     lines.append(line_id)
                 elif ps is None:
-                    print(str(i)+"; ps is None")
+                    #print(str(i)+"; ps is None")
                     # provided with fewer PosSpeeds/segs than lines that already
                     # exist, so exit loop and delete extra lines
                     break
                 else:
-                    print(str(i)+"; neither l nor ps is None")
+                    #print(str(i)+"; neither l nor ps is None")
                     # re-use line
                     line_id = lines[i-1] # b/c i >= 1 by the time we get here
                     gcoords = coord_func(prev_ps, ps)
