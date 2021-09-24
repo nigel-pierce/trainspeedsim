@@ -84,18 +84,28 @@ class SpeedDistViewFrame(tk.Frame):
     def make_limit_lines(self, speed_limits):
         '''For now just draw some lines--Oh cool the canvas is kind of smart'''
         #print("making or reusing speed limit lines")
+        # event handler
+        def drag_handler(event):
+            print("limit line {} clicked at {}".format(\
+                    event.widget.find_withtag('current'), event))
+
         self.make_or_reuse_lines(speed_limits, self._speedlimitsegs, 
                 lambda prev_ps, ps: (prev_ps.pos, prev_ps.speed, ps.pos, 
-                    prev_ps.speed), ("limitline",))
+                    prev_ps.speed), drag_handler, ("limitline",))
 
     def make_boundary_lines(self, speed_limits):
         '''yeah, so the vertical lines'''
+        # event handler
+        def drag_handler(event):
+            print("boundary line {} clicked at {}".format(\
+                    event.widget.find_withtag('current'), event))
         #print("making or reusing segment boundary lines")
         self.make_or_reuse_lines(speed_limits[:-1], self._segboundaries,
                 lambda prev_ps, ps: (ps.pos, prev_ps.speed, ps.pos, ps.speed),
-                ("boundaryline",))
+                drag_handler, ("boundaryline",))
 
-    def make_or_reuse_lines(self, things, lines, coord_func, tagss=None):
+    def make_or_reuse_lines(self, things, lines, coord_func, handler, 
+            tagss=None):
         '''things is the list of PosSpeeds, lines is the list of line IDs,
         coord_func takes prev and current PosSpeeds and returns a 4-tuple
         in graph coordinates to represent the line'''
@@ -156,9 +166,7 @@ class SpeedDistViewFrame(tk.Frame):
         
         # the all-important event binding(s)
         # just try click for now
-        self._canvas.tag_bind(tagss[0], "<Button-1>", lambda x: \
-                print("line {} clicked at {}".format(x.widget.find_withtag(
-                    'current'), x)))
+        self._canvas.tag_bind(tagss[0], "<Button-1>", handler)
 
 
 class SpeedDistView:
