@@ -86,12 +86,20 @@ class SpeedDistViewFrame(tk.Frame):
         self._lastx, self._lasty = event.x, event.y
         print("last mouse pos now {}".format((self._lastx, self._lasty)))
 
-    def _drag_line(self, event):
-        '''mouse has moved, try to move line to follow'''
+    def _drag_limit_line(self, event):
+        '''mouse has moved, try to move speed limit line to follow'''
         # identify line segment being dragged
         line = event.widget.find_withtag('current')
-        print("line {} dragged from {} to {}".format(line, (self._lastx, 
+        print("limit line {} dragged from {} to {}".format(line, (self._lastx, 
             self._lasty), (event.x, event.y)))
+
+        self._save_mousepos(event)
+
+    def _drag_boundary_line(self, event):
+        '''mouse has moved, try to move boundary line to follow'''
+        line = event.widget.find_withtag('current')
+        print("boundary line {} dragged from {} to {}".format(line, 
+            (self._lastx, self._lasty), (event.x, event.y)))
 
         self._save_mousepos(event)
 
@@ -109,8 +117,8 @@ class SpeedDistViewFrame(tk.Frame):
 
         self.make_or_reuse_lines(speed_limits, self._speedlimitsegs, 
                 lambda prev_ps, ps: (prev_ps.pos, prev_ps.speed, ps.pos, 
-                    prev_ps.speed), (self._save_mousepos, self._drag_line),
-                ("limitline",))
+                    prev_ps.speed), (self._save_mousepos, 
+                        self._drag_limit_line), ("limitline",))
 
     def make_boundary_lines(self, speed_limits):
         '''yeah, so the vertical lines'''
@@ -121,7 +129,8 @@ class SpeedDistViewFrame(tk.Frame):
         #print("making or reusing segment boundary lines")
         self.make_or_reuse_lines(speed_limits[:-1], self._segboundaries,
                 lambda prev_ps, ps: (ps.pos, prev_ps.speed, ps.pos, ps.speed),
-                (self._save_mousepos, self._drag_line), ("boundaryline",))
+                (self._save_mousepos, self._drag_boundary_line),
+                ("boundaryline",))
 
     def make_or_reuse_lines(self, things, lines, coord_func, handlers, 
             tagss=None):
