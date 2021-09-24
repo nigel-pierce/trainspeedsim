@@ -81,32 +81,47 @@ class SpeedDistViewFrame(tk.Frame):
         return ((x-self._x_range[0])*self._x_scale+self._x_margin, 
                 300-self._y_margin-(y-self._y_range[0])*self._y_scale)
 
+    def _save_mousepos(self, event):
+        '''Saves start/previous location of click & drag'''
+        self._lastx, self._lasty = event.x, event.y
+        print("last mouse pos now {}".format((self._lastx, self._lasty)))
+
+    def _drag_line(self, event):
+        '''mouse has moved, try to move line to follow'''
+        # identify line segment being dragged
+        line = event.widget.find_withtag('current')
+        print("line {} dragged from {} to {}".format(line, (self._lastx, 
+            self._lasty), (event.x, event.y)))
+
+        self._save_mousepos(event)
+
     def make_limit_lines(self, speed_limits):
         '''For now just draw some lines--Oh cool the canvas is kind of smart'''
         #print("making or reusing speed limit lines")
         # event handler
-        def b1down_handler(event):
-            print("limit line {} clicked at {}".format(\
-                    event.widget.find_withtag('current'), event))
+        #def b1down_handler(event):
+            #print("limit line {} clicked at {}".format(\
+                    #event.widget.find_withtag('current'), event))
 
-        def drag_handler(event):
-            print("limit line {} dragged at {}".format(\
-                    event.widget.find_withtag('current'), event))
+        #def drag_handler(event):
+            #print("limit line {} dragged at {}".format(\
+                    #event.widget.find_withtag('current'), event))
 
         self.make_or_reuse_lines(speed_limits, self._speedlimitsegs, 
                 lambda prev_ps, ps: (prev_ps.pos, prev_ps.speed, ps.pos, 
-                    prev_ps.speed), drag_handler, ("limitline",))
+                    prev_ps.speed), (self._save_mousepos, self._drag_line),
+                ("limitline",))
 
     def make_boundary_lines(self, speed_limits):
         '''yeah, so the vertical lines'''
         # event handler
-        def drag_handler(event):
-            print("boundary line {} clicked at {}".format(\
-                    event.widget.find_withtag('current'), event))
+        #def drag_handler(event):
+            #print("boundary line {} clicked at {}".format(\
+                    #event.widget.find_withtag('current'), event))
         #print("making or reusing segment boundary lines")
         self.make_or_reuse_lines(speed_limits[:-1], self._segboundaries,
                 lambda prev_ps, ps: (ps.pos, prev_ps.speed, ps.pos, ps.speed),
-                drag_handler, ("boundaryline",))
+                (self._save_mousepos, self._drag_line), ("boundaryline",))
 
     def make_or_reuse_lines(self, things, lines, coord_func, handlers, 
             tagss=None):
@@ -170,7 +185,9 @@ class SpeedDistViewFrame(tk.Frame):
         
         # the all-important event binding(s)
         # just try click for now
-        self._canvas.tag_bind(tagss[0], "<Button-1>", handlers.b1down)
+        self._canvas.tag_bind(tagss[0], "<Button-1>", handlers[0])
+        # and also drag
+        self._canvas.tag_bind(tagss[0], "<B1-Motion>", handlers[1])
 
 
 class SpeedDistView:
