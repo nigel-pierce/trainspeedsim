@@ -101,6 +101,10 @@ class SpeedDistViewFrame(tk.Frame):
         print("boundary line {} dragged from {} to {}".format(line, 
             (self._lastx, self._lasty), (event.x, event.y)))
 
+        # try to shift line, see if it's successful
+        # (...)
+        # only save position if it was successful (i.e. actually moves line)
+
         self._save_mousepos(event)
 
     def make_limit_lines(self, speed_limits):
