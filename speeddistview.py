@@ -6,6 +6,7 @@ from itertools import zip_longest
 from simulation import PosSpeed
 from editablesim import EditableTrack
 from controller import Controller
+from copy import copy
 
 class SpeedDistViewFrame(tk.Frame):
     '''Frame containing the canvas and whatever I decide to use for the
@@ -202,6 +203,29 @@ class SpeedDistViewFrame(tk.Frame):
         # and also drag
         self._canvas.tag_bind(tagss[0], "<B1-Motion>", handlers[1])
 
+class DraggableLine:
+    '''Draggable line values/logic abstract class'''
+
+    def __init__(self, canvas, gconfig, prev_ps, ps, line_type):
+        self._canvas = canvas
+        self._gconfig = gconfig
+        self._value = self._val_from_ps(prev_ps, ps)
+        gcoords = self._gcoords_from_ps(prev_ps, ps)
+        ccoords = self._gconfig.graph_seg_to_canvas(*gcoords)
+        self._id = self._canvas.create_line(ccoords, 
+                fill=self._gconfig.color[line_type], tags=(line_type,))
+
+    def get_id(self):
+        return copy(self._id)
+
+    def _val_from_ps(self, prev_ps, ps):
+        '''Pure virtual. Subclasses return value based on given PosSpeeds'''
+        raise NotImplementedError
+
+    def _gcoords_from_ps(self, prev_ps, ps):
+        '''Also pure virtual. Subclass returns tuple of graph coordinates 
+        (startx, starty, endx, endy) based on given PosSpeeds'''
+        raise NotImplementedError
 
 class SpeedDistView:
     '''The View, which controller updates, and which owns the frame containing
