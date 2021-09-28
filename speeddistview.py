@@ -227,6 +227,32 @@ class DraggableLine:
         (startx, starty, endx, endy) based on given PosSpeeds'''
         raise NotImplementedError
 
+class DraggableLimit(DraggableLine):
+    def __init__(self, canvas, gconfig, prev_ps, ps):
+        super().__init__(canvas, gconfig, prev_ps, ps, "limitline")
+
+    def _val_from_ps(self, prev_ps, ps):
+        '''return value based on given PosSpeeds'''
+        return prev_ps.speed
+
+    def _gcoords_from_ps(self, prev_ps, ps):
+        '''returns tuple of graph coordinates (startx, starty, endx, endy)
+        based on given PosSpeeds'''
+        return (prev_ps.pos, prev_ps.speed, ps.pos, prev_ps.speed)
+
+class DraggableBoundary(DraggableLine):
+    def __init__(self, canvas, gconfig, prev_ps, ps):
+        super().__init__(canvas, gconfig, prev_ps, ps, "boundaryline")
+
+    def _val_from_ps(self, prev_ps, ps):
+        '''return value based on given PosSpeeds'''
+        return ps.pos
+
+    def _gcoords_from_ps(self, prev_ps, ps):
+        '''returns tuple of graph coordinates (startx, starty, endx, endy)
+        based on given PosSpeeds'''
+        return (ps.pos, prev_ps.speed, ps.pos, ps.speed)
+
 class SpeedDistView:
     '''The View, which controller updates, and which owns the frame containing
     the canvas on which the lines are to be drawn'''
