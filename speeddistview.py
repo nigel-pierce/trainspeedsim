@@ -203,6 +203,14 @@ class SpeedDistViewFrame(tk.Frame):
         # and also drag
         self._canvas.tag_bind(tagss[0], "<B1-Motion>", handlers[1])
 
+class GraphConfig:
+    '''Graph configuration information like line colors, margins, conversion
+    between graph coordinates and canvas coordinates, etc.'''
+    
+    def __init__(self):
+        self.line_color = {'limitline': 'black', 'boundaryline': 'black'}
+        # TODO add and incorporate other colors and settings
+
 class DraggableLine:
     '''Draggable line values/logic abstract class'''
 
@@ -213,7 +221,7 @@ class DraggableLine:
         gcoords = self._gcoords_from_ps(prev_ps, ps)
         ccoords = self._gconfig.graph_seg_to_canvas(*gcoords)
         self._id = self._canvas.create_line(ccoords, 
-                fill=self._gconfig.color[line_type], tags=(line_type,))
+                fill=self._gconfig.line_color[line_type], tags=(line_type,))
 
     def get_id(self):
         return copy(self._id)
