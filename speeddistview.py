@@ -62,31 +62,6 @@ class SpeedDistViewFrame(tk.Frame):
         self._segboundaries = []
         self._speedlimitsegs = []
 
-    def _save_mousepos(self, event):
-        '''Saves start/previous location of click & drag'''
-        self._lastx, self._lasty = event.x, event.y
-        print("last mouse pos now {}".format((self._lastx, self._lasty)))
-
-    def _drag_limit_line(self, event):
-        '''mouse has moved, try to move speed limit line to follow'''
-        # identify line segment being dragged
-        line = event.widget.find_withtag('current')
-        print("limit line {} dragged from {} to {}".format(line, (self._lastx, 
-            self._lasty), (event.x, event.y)))
-
-        self._save_mousepos(event)
-
-    def _drag_boundary_line(self, event):
-        '''mouse has moved, try to move boundary line to follow'''
-        line = event.widget.find_withtag('current')
-        print("boundary line {} dragged from {} to {}".format(line, 
-            (self._lastx, self._lasty), (event.x, event.y)))
-
-        # try to shift line, see if it's successful
-        # (...)
-        # only save position if it was successful (i.e. actually moves line)
-
-        self._save_mousepos(event)
 
     def make_limit_lines(self, speed_limits):
         '''For now just draw some lines--Oh cool the canvas is kind of smart'''
@@ -221,14 +196,20 @@ class GraphConfig:
 class DraggableLine:
     '''Draggable line values/logic abstract class'''
 
-    def __init__(self, canvas, gconfig, prev_ps, ps, line_type):
+    def __init__(self, canvas, gconfig, peers, prev_ps, ps, line_type):
         self._canvas = canvas
         self._gconfig = gconfig
+        self._peers = peers
         self._value = self._val_from_ps(prev_ps, ps)
         gcoords = self._gcoords_from_ps(prev_ps, ps)
         ccoords = self._gconfig.graph_seg_to_canvas(*gcoords)
         self._id = self._canvas.create_line(ccoords, 
                 fill=self._gconfig.line_color[line_type], tags=(line_type,))
+        # the all-important event binding(s)
+        # click
+        self._canvas.tag_bind(self._id, "<Button-1>", self._save_mousepos)
+        # and also drag
+        self._canvas.tag_bind(self._id, "<B1-Motion>", self._drag_line)
 
     def get_id(self):
         return copy(self._id)
@@ -242,9 +223,31 @@ class DraggableLine:
         (startx, starty, endx, endy) based on given PosSpeeds'''
         raise NotImplementedError
 
+    def _drag_line_specific(self, event):
+        '''Pure virtual. Subclass handles drag appropriately (up/down,
+        left/right, ... I think I need this.'''
+        raise NotImplementedError
+
+    def _drag_line(self, event):
+        '''mouse has moved, try to move speed limit line to follow'''
+        # identify line segment being dragged
+        line = event.widget.find_withtag('current')
+        # this should match self._id
+        if line != self._id:
+            raise RuntimeError("line IDs do not match: self._id={}, found "\
+                    "id={}".format(self._id, line))
+
+        self._drag_line_specific(event)
+
+    def _save_mousepos(self, event):
+        '''Saves start/previous location of click & drag'''
+        self._lastx, self._lasty = event.x, event.y
+        print("last mouse pos now {}".format((self._lastx, self._lasty)))
+
+
 class DraggableLimit(DraggableLine):
-    def __init__(self, canvas, gconfig, prev_ps, ps):
-        super().__init__(canvas, gconfig, prev_ps, ps, "limitline")
+    def __init__(self, canvas, gconfig, peers, prev_ps, ps):
+        super().__init__(canvas, gconfig, peers, prev_ps, ps, "limitline")
 
     def _val_from_ps(self, prev_ps, ps):
         '''return value based on given PosSpeeds'''
@@ -255,9 +258,15 @@ class DraggableLimit(DraggableLine):
         based on given PosSpeeds'''
         return (prev_ps.pos, prev_ps.speed, ps.pos, prev_ps.speed)
 
+    def _drag_line_specific(self, event):
+        print("limit line {} dragged from {} to {}".format(self._id, 
+            (self._lastx, self._lasty), (event.x, event.y)))
+
+        self._save_mousepos(event)
+
 class DraggableBoundary(DraggableLine):
-    def __init__(self, canvas, gconfig, prev_ps, ps):
-        super().__init__(canvas, gconfig, prev_ps, ps, "boundaryline")
+    def __init__(self, canvas, gconfig, peers, prev_ps, ps):
+        super().__init__(canvas, gconfig, peers, prev_ps, ps, "boundaryline")
 
     def _val_from_ps(self, prev_ps, ps):
         '''return value based on given PosSpeeds'''
@@ -267,6 +276,17 @@ class DraggableBoundary(DraggableLine):
         '''returns tuple of graph coordinates (startx, starty, endx, endy)
         based on given PosSpeeds'''
         return (ps.pos, prev_ps.speed, ps.pos, ps.speed)
+
+    def _drag_line_specific(self, event):
+        '''mouse has moved, try to move boundary line to follow'''
+        print("boundary line {} dragged from {} to {}".format(self._id, 
+            (self._lastx, self._lasty), (event.x, event.y)))
+
+        # try to shift line, see if it's successful
+        # (...)
+        # only save position if it was successful (i.e. actually moves line)
+
+        self._save_mousepos(event)
 
 class SpeedDistView:
     '''The View, which controller updates, and which owns the frame containing
