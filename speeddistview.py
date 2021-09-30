@@ -29,32 +29,34 @@ class SpeedDistViewFrame(tk.Frame):
 
         # axes of graph
         # (0, 200, 400, 200)
-        self._canvas.create_line(self.graph_seg_to_canvas(self._x_range[0],
-            self._y_range[0], self._x_range[1], self._y_range[0]), 
+        self._canvas.create_line(self._gconfig.graph_seg_to_canvas(
+            self._gconfig._x_range[0], self._gconfig._y_range[0],
+            self._gconfig._x_range[1], self._gconfig._y_range[0]), 
             fill=axiscolor)
         # (0, 200, 0, 100)
-        self._canvas.create_line(self.graph_seg_to_canvas(self._x_range[0], 
-            self._y_range[0], self._x_range[0], self._y_range[1]), 
+        self._canvas.create_line(self._gconfig.graph_seg_to_canvas(
+            self._gconfig._x_range[0], self._gconfig._y_range[0],
+            self._gconfig._x_range[0], self._gconfig._y_range[1]), 
             fill=axiscolor)
 
         # tics on axes
-        for i in range(self.gconfig._x_range[0], self.gconfig._x_range[1]):
-            ccoords = self.gconfig.graph_seg_to_canvas(i, 
-                    self.gconfig._y_range[0], i, self._y_range[0])
+        for i in range(self._gconfig._x_range[0], self._gconfig._x_range[1]):
+            ccoords = self._gconfig.graph_seg_to_canvas(i, 
+                    self._gconfig._y_range[0], i, self._gconfig._y_range[0])
             # 5 px high tic
             ccoords = (ccoords[0], ccoords[1], ccoords[2], ccoords[3]+5)
             self._canvas.create_line(ccoords, fill=axiscolor)
-        for i in range(self.gconfig._y_range[0], self.gconfig._y_range[1], 5):
-            ccoords = self.gconfig.graph_seg_to_canvas(
-                    self.gconfig._x_range[0], i, self.gconfig._x_range[0], i)
+        for i in range(self._gconfig._y_range[0], self._gconfig._y_range[1], 5):
+            ccoords = self._gconfig.graph_seg_to_canvas(
+                    self._gconfig._x_range[0], i, self._gconfig._x_range[0], i)
             # 5 px wide tic
             ccoords = (ccoords[0], ccoords[1], ccoords[2]-5, ccoords[3])
             self._canvas.create_line(ccoords, fill=axiscolor)
 
         # grid lines (just speed for now)
-        for i in range(self._y_range[0], self._y_range[1], 5):
-            ccoords = self.gconfig.graph_seg_to_canvas(self._x_range[0], i, 
-                    self._x_range[1], i)
+        for i in range(self._gconfig._y_range[0], self._gconfig._y_range[1], 5):
+            ccoords = self._gconfig.graph_seg_to_canvas(
+                    self._gconfig._x_range[0], i, self._gconfig._x_range[1], i)
             self._canvas.create_line(ccoords, fill=gridcolor)
 
         self._segboundaries = []
@@ -134,9 +136,9 @@ class SpeedDistViewFrame(tk.Frame):
                     #print(str(i)+"; l is None")
                     # more speed limit segs than lines, so make new lines
                     gcoords = coord_func(prev_ps, ps)
-                    ccoords = self.gconfig.graph_seg_to_canvas(*gcoords)
+                    ccoords = self._gconfig.graph_seg_to_canvas(*gcoords)
                     line_id = self._canvas.create_line(ccoords, 
-                            fill=self.gconfig.line_color[tagss[0]],
+                            fill=self._gconfig.line_color[tagss[0]],
                             tags=tagss)
                     lines.append(line_id)
                 elif ps is None:
@@ -159,7 +161,7 @@ class SpeedDistViewFrame(tk.Frame):
                                     "line's current tag(s) {}".format(tagss,
                                         current_tags))
                     gcoords = coord_func(prev_ps, ps)
-                    ccoords = self.gconfig.graph_seg_to_canvas(*gcoords)
+                    ccoords = self._gconfig.graph_seg_to_canvas(*gcoords)
                     self._canvas.coords(line_id, ccoords)
             prev_ps = ps
         if len(things) < len(lines):
@@ -202,7 +204,7 @@ class GraphConfig:
         self._y_margin = 32 # from bottom
 
         # TODO add and incorporate other colors and settings
-
+    
     def graph_seg_to_canvas(self, x1, y1, x2, y2):
         '''Converts both points on graph to tuple of canvas points for the 
         purpose of lines'''
@@ -214,6 +216,7 @@ class GraphConfig:
         (origin in upper left) and scales etc.'''
         return ((x-self._x_range[0])*self._x_scale+self._x_margin, 
                 300-self._y_margin-(y-self._y_range[0])*self._y_scale)
+    
 
 class DraggableLine:
     '''Draggable line values/logic abstract class'''
