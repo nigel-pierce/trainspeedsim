@@ -74,11 +74,14 @@ class SpeedDistViewFrame(tk.Frame):
         #def drag_handler(event):
             #print("limit line {} dragged at {}".format(\
                     #event.widget.find_withtag('current'), event))
-
+        '''
         self.make_or_reuse_lines(speed_limits, self._speedlimitsegs, 
                 lambda prev_ps, ps: (prev_ps.pos, prev_ps.speed, ps.pos, 
                     prev_ps.speed), (self._save_mousepos, 
                         self._drag_limit_line), ("limitline",))
+                        '''
+        self.make_or_reuse_lines(speed_limits, self._speedlimitsegs, 
+                DraggableLimit)
 
     def make_boundary_lines(self, speed_limits):
         '''yeah, so the vertical lines'''
@@ -87,16 +90,24 @@ class SpeedDistViewFrame(tk.Frame):
             #print("boundary line {} clicked at {}".format(\
                     #event.widget.find_withtag('current'), event))
         #print("making or reusing segment boundary lines")
-        self.make_or_reuse_lines(speed_limits[:-1], self._segboundaries,
+        '''self.make_or_reuse_lines(speed_limits[:-1], self._segboundaries,
                 lambda prev_ps, ps: (ps.pos, prev_ps.speed, ps.pos, ps.speed),
                 (self._save_mousepos, self._drag_boundary_line),
                 ("boundaryline",))
+        '''
 
-    def make_or_reuse_lines(self, things, lines, coord_func, handlers, 
-            tagss=None):
+        self.make_or_reuse_lines(speed_limits[:-1], self._segboundaries, 
+                DraggableBoundary)
+
+    #def make_or_reuse_lines(self, things, lines, coord_func, handlers, 
+            #tagss=None):
         '''things is the list of PosSpeeds, lines is the list of line IDs,
         coord_func takes prev and current PosSpeeds and returns a 4-tuple
         in graph coordinates to represent the line'''
+    def make_or_reuse_lines(self, things, lines, LineType):
+        '''things is the list of PosSpeeds, lines is the list of 
+        (DraggableLine-descendant) line objects, LineType is the specific 
+        DraggableLine subclass'''
         #print("line ids: {}".format(lines))
         #print("len(things): {}; len(lines): {}".format(len(things), len(lines)))
         things_and_lines = zip_longest(things, lines)
@@ -110,12 +121,17 @@ class SpeedDistViewFrame(tk.Frame):
                     # of lines
                     #print(str(i)+"; l is None")
                     # more speed limit segs than lines, so make new lines
+
+                    lines.append(LineType(self._canvas, self._gconfig,
+                        lines, prev_ps, ps))
+
+                    '''
                     gcoords = coord_func(prev_ps, ps)
                     ccoords = self._gconfig.graph_seg_to_canvas(*gcoords)
                     line_id = self._canvas.create_line(ccoords, 
                             fill=self._gconfig.line_color[tagss[0]],
                             tags=tagss)
-                    lines.append(line_id)
+                    lines.append(line_id)'''
                 elif ps is None:
                     #print(str(i)+"; ps is None")
                     # provided with fewer PosSpeeds/segs than lines that already
@@ -124,9 +140,13 @@ class SpeedDistViewFrame(tk.Frame):
                 else:
                     #print(str(i)+"; neither l nor ps is None")
                     # re-use line
-                    line_id = lines[i-1] # b/c i >= 1 by the time we get here
+                    line_id = lines[i-1].get_id() # b/c i >= 1 by the time we
+                                # get here
                     # ensure line not miscategorized if new tag provided (e.g.,
                     # can't be tagged 'boundaryline' AND 'limitline')
+                    # actually this is redundant now that draggable lines
+                    # are encapsulated
+                    '''
                     if tagss is not None:
                         current_tags = self._canvas.gettags(line_id)
                         if not set(tagss).issubset(set(current_tags)):
@@ -135,9 +155,13 @@ class SpeedDistViewFrame(tk.Frame):
                             raise RuntimeError("New tag(s) {} conflict with"\
                                     "line's current tag(s) {}".format(tagss,
                                         current_tags))
+                    '''
+                    lines[i-1].set_ccoords_from_ps(prev_ps, ps)
+                    '''
                     gcoords = coord_func(prev_ps, ps)
                     ccoords = self._gconfig.graph_seg_to_canvas(*gcoords)
                     self._canvas.coords(line_id, ccoords)
+                    '''
             prev_ps = ps
         if len(things) < len(lines):
             num_things = len(things)
@@ -155,9 +179,9 @@ class SpeedDistViewFrame(tk.Frame):
         
         # the all-important event binding(s)
         # just try click for now
-        self._canvas.tag_bind(tagss[0], "<Button-1>", handlers[0])
+        #self._canvas.tag_bind(tagss[0], "<Button-1>", handlers[0])
         # and also drag
-        self._canvas.tag_bind(tagss[0], "<B1-Motion>", handlers[1])
+        #self._canvas.tag_bind(tagss[0], "<B1-Motion>", handlers[1])
 
 class GraphConfig:
     '''Graph configuration information like line colors, margins, conversion
@@ -214,6 +238,11 @@ class DraggableLine:
     def get_id(self):
         return copy(self._id)
 
+    def set_ccoords_from_ps(self, prev_ps, ps):
+        '''Move the line to new position based on PosSpeeds'''
+        self._canvas.coords(self._id, self._gconfig.graph_seg_to_canvas(
+            *self._gcoords_from_ps(prev_ps, ps)))
+
     def _val_from_ps(self, prev_ps, ps):
         '''Pure virtual. Subclasses return value based on given PosSpeeds'''
         raise NotImplementedError
@@ -231,11 +260,11 @@ class DraggableLine:
     def _drag_line(self, event):
         '''mouse has moved, try to move speed limit line to follow'''
         # identify line segment being dragged
-        line = event.widget.find_withtag('current')
+        line_id = event.widget.find_withtag('current')[0]
         # this should match self._id
-        if line != self._id:
+        if line_id != self._id:
             raise RuntimeError("line IDs do not match: self._id={}, found "\
-                    "id={}".format(self._id, line))
+                    "id={}".format(self._id, line_id))
 
         self._drag_line_specific(event)
 
