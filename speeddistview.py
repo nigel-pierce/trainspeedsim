@@ -251,12 +251,12 @@ class DraggableLine:
         '''Move the line to new position based on PosSpeeds'''
         self._canvas.coords(self._id, self._gconfig.graph_seg_to_canvas(
             *self._gcoords_from_ps(prev_ps, ps)))
-    """
+
     def set_val_from_ps(self, prev_ps, ps):
-        '''Pure virtual. Update value tuple (val, (start, end)) but not 
+        '''Update value but not 
         canvas line'''
-        raise NotImplementedError
-    """
+        self._value = self._val_from_ps(prev_ps, ps)
+
     def replace_val_from_ps(self, prev_ps, ps):
         '''Change value tuple AND canvas line'''
         self.set_val_from_ps(prev_ps, ps)
@@ -297,10 +297,6 @@ class DraggableLimit(DraggableLine):
     def __init__(self, canvas, gconfig, peers, controller, prev_ps, ps):
         super().__init__(canvas, gconfig, peers, controller, prev_ps, ps, 
                 "limitline")
-
-    def set_val_from_ps(self, prev_ps, ps):
-        '''Update value tuple (val, (start, end)) but not canvas line'''
-        self._value = self._val_from_ps(prev_ps, ps)
 
     def _val_from_ps(self, prev_ps, ps):
         '''return value based on given PosSpeeds. Tuple of (speed, (startx,
