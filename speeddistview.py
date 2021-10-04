@@ -306,7 +306,7 @@ class DraggableLimit(DraggableLine):
         mp = (self._value[1][0]+self._value[1][1])/2
         from decimal import Decimal
         speed = Decimal(gpoint[1])
-        speed_diff = round(speed-self._value[0])
+        speed_diff = Decimal(round(speed-self._value[0]))
         print("speeddistview.py: speed_diff={}, is a {}".format(speed_diff,
             type(speed_diff).__name__))
         if self._controller.shift_speed_limit(mp, speed_diff) == True:
