@@ -300,12 +300,15 @@ class DraggableLimit(DraggableLine):
 
     def _drag_line_specific(self, event):
         gpoint = self._gconfig.canvas_pt_to_graph(event.x, event.y)
+        print("-----------")
+        print("Graph point of mouse is {}".format(gpoint))
         mouse_mp = gpoint[0] # this one shouldn't matter since speed limit line
             # only concerned with moving up or down
             # so it'll just be midpoint of segment
         mp = (self._value[1][0]+self._value[1][1])/2
         from decimal import Decimal
         speed = Decimal(gpoint[1])
+        print("current speed limit={}".format(self._value[0]))
         speed_diff = Decimal(round(speed-self._value[0]))
         print("speeddistview.py: speed_diff={}, is a {}".format(speed_diff,
             type(speed_diff).__name__))
@@ -317,7 +320,7 @@ class DraggableLimit(DraggableLine):
             # (since called shift_speed_limit() and this observes model, 
             # self._value got updated so I'll use that for y)
             # 0 is a throw-away value
-            canvas_y = self._gconfig.graph_pt_to_canvas(0, round(speed))
+            canvas_y = self._gconfig.graph_pt_to_canvas(0, round(speed))[1]
             # this next bit is a kloodge b/c I'm trying to get _save_mousepos()
             # to do something it wasn't meant to do
             from collections import namedtuple
