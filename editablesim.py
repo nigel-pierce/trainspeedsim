@@ -454,6 +454,10 @@ class EditableTrack(Track, Observable):
         # seg now cannot be None
         # famous last words
 
+        if speed_diff == 0:
+            # no change
+            return False
+
         new_speed = seg.get_speed() + speed_diff
         
         if new_speed < 0:
@@ -465,6 +469,7 @@ class EditableTrack(Track, Observable):
         else:
             # we're good
             seg.set_speed(new_speed)
+            return True
 
     # Shifts a boundary of a track seg and of its neighbor if applicable
     # Affects at most 2 track segs
