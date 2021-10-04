@@ -252,7 +252,12 @@ class EditableTrack(Track, Observable):
             self = args[0] # that should do it if func is always a method
             try:
                 retval = func(*args, **kwargs)
-                self.notify_observers("ChangeSuccess")
+                if retval is None or retval == True:
+                    # None b/c editing methods haven't all been updated to
+                    # return bool
+                    self.notify_observers("ChangeSuccess")
+                else:
+                    self.notify_observers("NoChange")
             except Exception as e:
                 if len(self._observers) > 0:
                     self.notify_observers("ChangeFail", e)
@@ -261,6 +266,10 @@ class EditableTrack(Track, Observable):
                     raise e
             # TODO not sure how to distinguish runs of func() as to change
             # or no change (methods currently return nothing)
+            # decided True is change success, False is no change, exception
+            # is change fail
+            # TODO make all editing methods return True or False
+            return retval
         return return_f
 
     def _editableify(self):
