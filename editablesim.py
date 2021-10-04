@@ -427,6 +427,12 @@ class EditableTrack(Track, Observable):
         # _intersecting_segs() should check for invalid mp
         intersecting = self._intersecting_segs(mp)
 
+        print("editablesim.py: speed_diff={}, is a {}".format(speed_diff,
+            type(speed_diff).__name__))
+        if type(speed_diff) is Speed:
+            print("    speed_diff._val is a {}".format(
+                type(speed_diff._val).__name__))
+
         seg = None
         if len(intersecting) == 0:
             # should've been detected by _intersecting_segs()

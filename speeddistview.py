@@ -123,7 +123,7 @@ class SpeedDistViewFrame(tk.Frame):
                     # more speed limit segs than lines, so make new lines
 
                     lines.append(LineType(self._canvas, self._gconfig,
-                        lines, prev_ps, ps))
+                        lines, self._controller, prev_ps, ps))
 
                     '''
                     gcoords = coord_func(prev_ps, ps)
@@ -304,20 +304,25 @@ class DraggableLimit(DraggableLine):
             # only concerned with moving up or down
             # so it'll just be midpoint of segment
         mp = (self._value[1][0]+self._value[1][1])/2
-        speed = gpoint[1]
-        if self._controller.shift_speed_limit(mp,
-                round(speed-self._value[0])) == True:
+        from decimal import Decimal
+        speed = Decimal(gpoint[1])
+        speed_diff = round(speed-self._value[0])
+        print("speeddistview.py: speed_diff={}, is a {}".format(speed_diff,
+            type(speed_diff).__name__))
+        if self._controller.shift_speed_limit(mp, speed_diff) == True:
+            print("limit line {} dragged from {} to {}".format(self._id, 
+                (self._lastx, self._lasty), (event.x, event.y)))
             # save new "mouse" position (but really the new y of the line 
             # and x of mouse)
             # (since called shift_speed_limit() and this observes model, 
             # self._value got updated so I'll use that for y)
-            print("limit line {} dragged from {} to {}".format(self._id, 
-                (self._lastx, self._lasty), (event.x, event.y)))
+            # 0 is a throw-away value
+            canvas_y = self._gconfig.graph_pt_to_canvas(0, round(speed))
             # this next bit is a kloodge b/c I'm trying to get _save_mousepos()
             # to do something it wasn't meant to do
             from collections import namedtuple
             Xy = namedtuple("Xy", ['x', 'y'])
-            self._save_mousepos(Xy(event.x, speed))
+            self._save_mousepos(Xy(event.x, canvas_y))
         else:
             # don't save mouse position or whatever b/c speed needs to change
             # by 1 or more (hence event.y needs to represent vertical change
@@ -377,6 +382,8 @@ class SpeedDistController(Controller):
         '''Requests model to shift speed limit seg intersecting mp by 
         speed_diff. Returns whether request resulted in a shift (True) or no
         change (False)'''
+        print("speeddistview.py controller shift_speed_limit(): speed_diff={}"\
+                " is a {}".format(speed_diff, type(speed_diff).__name__))
         from convunits import Pos, Speed
         return self._model.shift_speed_limit(Pos(mp, 'mi').to_sm(),
                 Speed(speed_diff, 'mi/h').to_sm())
