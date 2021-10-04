@@ -215,15 +215,24 @@ class GraphConfig:
         (origin in upper left) and scales etc.'''
         return ((x-self._x_range[0])*self._x_scale+self._x_margin, 
                 300-self._y_margin-(y-self._y_range[0])*self._y_scale)
+
+    def canvas_pt_to_graph(self, x, y):
+        '''Converts point on canvas (origin upper left) to point on graph 
+        (origin lower left) (i.e. (mp, speed))
+        If x or y is out of bounds of graph, oh well'''
+        return ((x-self._x_margin)/self._x_scale+self._x_range[0],
+                (y-300+self._y_margin)/-self._y_scale+self._y_range[0])
     
 
 class DraggableLine:
     '''Draggable line values/logic abstract class'''
 
-    def __init__(self, canvas, gconfig, peers, prev_ps, ps, line_type):
+    def __init__(self, canvas, gconfig, peers, controller, prev_ps, ps,
+            line_type):
         self._canvas = canvas
         self._gconfig = gconfig
         self._peers = peers
+        self._controller = controller
         self._value = self._val_from_ps(prev_ps, ps)
         gcoords = self._gcoords_from_ps(prev_ps, ps)
         ccoords = self._gconfig.graph_seg_to_canvas(*gcoords)
@@ -275,12 +284,14 @@ class DraggableLine:
 
 
 class DraggableLimit(DraggableLine):
-    def __init__(self, canvas, gconfig, peers, prev_ps, ps):
-        super().__init__(canvas, gconfig, peers, prev_ps, ps, "limitline")
+    def __init__(self, canvas, gconfig, peers, controller, prev_ps, ps):
+        super().__init__(canvas, gconfig, peers, controller, prev_ps, ps, 
+                "limitline")
 
     def _val_from_ps(self, prev_ps, ps):
-        '''return value based on given PosSpeeds'''
-        return prev_ps.speed
+        '''return value based on given PosSpeeds. Tuple of (speed, (startx,
+        endx))'''
+        return (prev_ps.speed, (prev_ps.pos, ps.pos))
 
     def _gcoords_from_ps(self, prev_ps, ps):
         '''returns tuple of graph coordinates (startx, starty, endx, endy)
@@ -288,14 +299,36 @@ class DraggableLimit(DraggableLine):
         return (prev_ps.pos, prev_ps.speed, ps.pos, prev_ps.speed)
 
     def _drag_line_specific(self, event):
-        print("limit line {} dragged from {} to {}".format(self._id, 
-            (self._lastx, self._lasty), (event.x, event.y)))
-
-        self._save_mousepos(event)
+        gpoint = self._gconfig.canvas_pt_to_graph(event.x, event.y)
+        mouse_mp = gpoint[0] # this one shouldn't matter since speed limit line
+            # only concerned with moving up or down
+            # so it'll just be midpoint of segment
+        mp = (self._value[1][0]+self._value[1][1])/2
+        speed = gpoint[1]
+        if self._controller.shift_speed_limit(mp,
+                round(speed-self._value[0])) == True:
+            # save new "mouse" position (but really the new y of the line 
+            # and x of mouse)
+            # (since called shift_speed_limit() and this observes model, 
+            # self._value got updated so I'll use that for y)
+            print("limit line {} dragged from {} to {}".format(self._id, 
+                (self._lastx, self._lasty), (event.x, event.y)))
+            # this next bit is a kloodge b/c I'm trying to get _save_mousepos()
+            # to do something it wasn't meant to do
+            from collections import namedtuple
+            Xy = namedtuple("Xy", ['x', 'y'])
+            self._save_mousepos(Xy(event.x, speed))
+        else:
+            # don't save mouse position or whatever b/c speed needs to change
+            # by 1 or more (hence event.y needs to represent vertical change
+            # of enough pixels)
+            print("Not dragged far enough. {} to {}".format((self._lastx, 
+                self._lasty), (event.x, event.y)))
 
 class DraggableBoundary(DraggableLine):
-    def __init__(self, canvas, gconfig, peers, prev_ps, ps):
-        super().__init__(canvas, gconfig, peers, prev_ps, ps, "boundaryline")
+    def __init__(self, canvas, gconfig, peers, controller, prev_ps, ps):
+        super().__init__(canvas, gconfig, peers, controller, prev_ps, ps, 
+                "boundaryline")
 
     def _val_from_ps(self, prev_ps, ps):
         '''return value based on given PosSpeeds'''
