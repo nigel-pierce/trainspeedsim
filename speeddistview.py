@@ -340,6 +340,14 @@ class SpeedDistController(Controller):
     def _update_view(self):
         self._view.update([], self._model.get_limits())
 
+    def shift_speed_limit(self, mp, speed_diff):
+        '''Requests model to shift speed limit seg intersecting mp by 
+        speed_diff. Returns whether request resulted in a shift (True) or no
+        change (False)'''
+        from convunits import Pos, Speed
+        return self._model.shift_speed_limit(Pos(mp, 'mi').to_sm(),
+                Speed(speed_diff, 'mi/h').to_sm())
+
 if __name__=="__main__":
     model = EditableTrack("short_maxspeeds.csv", "imperial")
     root = tk.Tk()
