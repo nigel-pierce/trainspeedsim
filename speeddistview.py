@@ -6,6 +6,7 @@ from itertools import zip_longest
 from simulation import PosSpeed
 from editablesim import EditableTrack
 from controller import Controller
+from copy import copy
 
 class SpeedDistViewFrame(tk.Frame):
     '''Frame containing the canvas and whatever I decide to use for the
@@ -21,83 +22,92 @@ class SpeedDistViewFrame(tk.Frame):
         self._canvas = tk.Canvas(self, bg="white", width=400, height=300)
         self._canvas.pack(expand=True, fill=tk.BOTH)
 
-        # graph to pixel scaling
-        self._x_scale = 30 # mult of 10 so tenths of miles/km are unambiguous
-        self._y_scale = 4 # mult of 1 :I
-
-        # ranges of graph
-        self._x_range = (5, 15)
-        self._y_range = (0, 60)
-
-        # margin of graph, in canvas pixels
-        self._x_margin = 32 # from left
-        self._y_margin = 32 # from bottom
+        self._gconfig = GraphConfig()
 
         gridcolor = "#bbb"
         axiscolor = "#777"
 
         # axes of graph
         # (0, 200, 400, 200)
-        self._canvas.create_line(self.graph_seg_to_canvas(self._x_range[0],
-            self._y_range[0], self._x_range[1], self._y_range[0]), 
+        self._canvas.create_line(self._gconfig.graph_seg_to_canvas(
+            self._gconfig._x_range[0], self._gconfig._y_range[0],
+            self._gconfig._x_range[1], self._gconfig._y_range[0]), 
             fill=axiscolor)
         # (0, 200, 0, 100)
-        self._canvas.create_line(self.graph_seg_to_canvas(self._x_range[0], 
-            self._y_range[0], self._x_range[0], self._y_range[1]), 
+        self._canvas.create_line(self._gconfig.graph_seg_to_canvas(
+            self._gconfig._x_range[0], self._gconfig._y_range[0],
+            self._gconfig._x_range[0], self._gconfig._y_range[1]), 
             fill=axiscolor)
 
         # tics on axes
-        for i in range(self._x_range[0], self._x_range[1]):
-            ccoords = self.graph_seg_to_canvas(i, self._y_range[0], i, 
-                    self._y_range[0])
+        for i in range(self._gconfig._x_range[0], self._gconfig._x_range[1]):
+            ccoords = self._gconfig.graph_seg_to_canvas(i, 
+                    self._gconfig._y_range[0], i, self._gconfig._y_range[0])
             # 5 px high tic
             ccoords = (ccoords[0], ccoords[1], ccoords[2], ccoords[3]+5)
             self._canvas.create_line(ccoords, fill=axiscolor)
-        for i in range(self._y_range[0], self._y_range[1], 5):
-            ccoords = self.graph_seg_to_canvas(self._x_range[0], i, 
-                    self._x_range[0], i)
+        for i in range(self._gconfig._y_range[0], self._gconfig._y_range[1], 5):
+            ccoords = self._gconfig.graph_seg_to_canvas(
+                    self._gconfig._x_range[0], i, self._gconfig._x_range[0], i)
             # 5 px wide tic
             ccoords = (ccoords[0], ccoords[1], ccoords[2]-5, ccoords[3])
             self._canvas.create_line(ccoords, fill=axiscolor)
 
         # grid lines (just speed for now)
-        for i in range(self._y_range[0], self._y_range[1], 5):
-            ccoords = self.graph_seg_to_canvas(self._x_range[0], i, 
-                    self._x_range[1], i)
+        for i in range(self._gconfig._y_range[0], self._gconfig._y_range[1], 5):
+            ccoords = self._gconfig.graph_seg_to_canvas(
+                    self._gconfig._x_range[0], i, self._gconfig._x_range[1], i)
             self._canvas.create_line(ccoords, fill=gridcolor)
 
         self._segboundaries = []
         self._speedlimitsegs = []
 
-    def graph_seg_to_canvas(self, x1, y1, x2, y2):
-        '''Converts both points on graph to tuple of canvas points for the 
-        purpose of lines'''
-        return (*self.graph_pt_to_canvas(x1, y1), 
-                *self.graph_pt_to_canvas(x2, y2))
-
-    def graph_pt_to_canvas(self, x, y):
-        '''Converts point on graph (origin in lower left) to point on canvas
-        (origin in upper left) and scales etc.'''
-        return ((x-self._x_range[0])*self._x_scale+self._x_margin, 
-                300-self._y_margin-(y-self._y_range[0])*self._y_scale)
 
     def make_limit_lines(self, speed_limits):
         '''For now just draw some lines--Oh cool the canvas is kind of smart'''
         #print("making or reusing speed limit lines")
+        # event handler
+        #def b1down_handler(event):
+            #print("limit line {} clicked at {}".format(\
+                    #event.widget.find_withtag('current'), event))
+
+        #def drag_handler(event):
+            #print("limit line {} dragged at {}".format(\
+                    #event.widget.find_withtag('current'), event))
+        '''
         self.make_or_reuse_lines(speed_limits, self._speedlimitsegs, 
                 lambda prev_ps, ps: (prev_ps.pos, prev_ps.speed, ps.pos, 
-                    prev_ps.speed))
+                    prev_ps.speed), (self._save_mousepos, 
+                        self._drag_limit_line), ("limitline",))
+                        '''
+        self.make_or_reuse_lines(speed_limits, self._speedlimitsegs, 
+                DraggableLimit)
 
     def make_boundary_lines(self, speed_limits):
         '''yeah, so the vertical lines'''
+        # event handler
+        #def drag_handler(event):
+            #print("boundary line {} clicked at {}".format(\
+                    #event.widget.find_withtag('current'), event))
         #print("making or reusing segment boundary lines")
-        self.make_or_reuse_lines(speed_limits[:-1], self._segboundaries,
-                lambda prev_ps, ps: (ps.pos, prev_ps.speed, ps.pos, ps.speed))
+        '''self.make_or_reuse_lines(speed_limits[:-1], self._segboundaries,
+                lambda prev_ps, ps: (ps.pos, prev_ps.speed, ps.pos, ps.speed),
+                (self._save_mousepos, self._drag_boundary_line),
+                ("boundaryline",))
+        '''
 
-    def make_or_reuse_lines(self, things, lines, coord_func):
+        self.make_or_reuse_lines(speed_limits[:-1], self._segboundaries, 
+                DraggableBoundary)
+
+    #def make_or_reuse_lines(self, things, lines, coord_func, handlers, 
+            #tagss=None):
         '''things is the list of PosSpeeds, lines is the list of line IDs,
         coord_func takes prev and current PosSpeeds and returns a 4-tuple
         in graph coordinates to represent the line'''
+    def make_or_reuse_lines(self, things, lines, LineType):
+        '''things is the list of PosSpeeds, lines is the list of 
+        (DraggableLine-descendant) line objects, LineType is the specific 
+        DraggableLine subclass'''
         #print("line ids: {}".format(lines))
         #print("len(things): {}; len(lines): {}".format(len(things), len(lines)))
         things_and_lines = zip_longest(things, lines)
@@ -111,10 +121,17 @@ class SpeedDistViewFrame(tk.Frame):
                     # of lines
                     #print(str(i)+"; l is None")
                     # more speed limit segs than lines, so make new lines
+
+                    lines.append(LineType(self._canvas, self._gconfig,
+                        lines, self._controller, prev_ps, ps))
+
+                    '''
                     gcoords = coord_func(prev_ps, ps)
-                    ccoords = self.graph_seg_to_canvas(*gcoords)
-                    line_id = self._canvas.create_line(ccoords, fill='black')
-                    lines.append(line_id)
+                    ccoords = self._gconfig.graph_seg_to_canvas(*gcoords)
+                    line_id = self._canvas.create_line(ccoords, 
+                            fill=self._gconfig.line_color[tagss[0]],
+                            tags=tagss)
+                    lines.append(line_id)'''
                 elif ps is None:
                     #print(str(i)+"; ps is None")
                     # provided with fewer PosSpeeds/segs than lines that already
@@ -123,10 +140,28 @@ class SpeedDistViewFrame(tk.Frame):
                 else:
                     #print(str(i)+"; neither l nor ps is None")
                     # re-use line
-                    line_id = lines[i-1] # b/c i >= 1 by the time we get here
+                    line_id = lines[i-1].get_id() # b/c i >= 1 by the time we
+                                # get here
+                    # ensure line not miscategorized if new tag provided (e.g.,
+                    # can't be tagged 'boundaryline' AND 'limitline')
+                    # actually this is redundant now that draggable lines
+                    # are encapsulated
+                    '''
+                    if tagss is not None:
+                        current_tags = self._canvas.gettags(line_id)
+                        if not set(tagss).issubset(set(current_tags)):
+                            # new tag(s) not (all) present in line's current
+                            # tags (take as contradiction)
+                            raise RuntimeError("New tag(s) {} conflict with"\
+                                    "line's current tag(s) {}".format(tagss,
+                                        current_tags))
+                    '''
+                    lines[i-1].replace_val_from_ps(prev_ps, ps)
+                    '''
                     gcoords = coord_func(prev_ps, ps)
-                    ccoords = self.graph_seg_to_canvas(*gcoords)
+                    ccoords = self._gconfig.graph_seg_to_canvas(*gcoords)
                     self._canvas.coords(line_id, ccoords)
+                    '''
             prev_ps = ps
         if len(things) < len(lines):
             num_things = len(things)
@@ -138,6 +173,200 @@ class SpeedDistViewFrame(tk.Frame):
                 lines[i].delete()
             del lines[num_things:num_lines]
 
+        #print("Lines tagged with {}[0]: {}".format(tagss,
+            #self._canvas.find_withtag(tagss[0])))
+        #print("Lines provided: {}".format(lines))
+        
+        # the all-important event binding(s)
+        # just try click for now
+        #self._canvas.tag_bind(tagss[0], "<Button-1>", handlers[0])
+        # and also drag
+        #self._canvas.tag_bind(tagss[0], "<B1-Motion>", handlers[1])
+
+class GraphConfig:
+    '''Graph configuration information like line colors, margins, conversion
+    between graph coordinates and canvas coordinates, etc.'''
+    
+    def __init__(self):
+        self.line_color = {'limitline': 'black', 'boundaryline': 'black'}
+
+        # graph to pixel scaling
+        self._x_scale = 30 # mult of 10 so tenths of miles/km are unambiguous
+        self._y_scale = 4 # mult of 1 :I
+
+        # ranges of graph
+        self._x_range = (5, 15)
+        self._y_range = (0, 60)
+
+        # margin of graph, in canvas pixels
+        self._x_margin = 32 # from left
+        self._y_margin = 32 # from bottom
+
+        # TODO add and incorporate other colors and settings
+    
+    def graph_seg_to_canvas(self, x1, y1, x2, y2):
+        '''Converts both points on graph to tuple of canvas points for the 
+        purpose of lines'''
+        return (*self.graph_pt_to_canvas(x1, y1), 
+                *self.graph_pt_to_canvas(x2, y2))
+
+    def graph_pt_to_canvas(self, x, y):
+        '''Converts point on graph (origin in lower left) to point on canvas
+        (origin in upper left) and scales etc.'''
+        return ((x-self._x_range[0])*self._x_scale+self._x_margin, 
+                300-self._y_margin-(y-self._y_range[0])*self._y_scale)
+
+    def canvas_pt_to_graph(self, x, y):
+        '''Converts point on canvas (origin upper left) to point on graph 
+        (origin lower left) (i.e. (mp, speed))
+        If x or y is out of bounds of graph, oh well'''
+        return ((x-self._x_margin)/self._x_scale+self._x_range[0],
+                (y-300+self._y_margin)/-self._y_scale+self._y_range[0])
+    
+
+class DraggableLine:
+    '''Draggable line values/logic abstract class'''
+
+    def __init__(self, canvas, gconfig, peers, controller, prev_ps, ps,
+            line_type):
+        self._canvas = canvas
+        self._gconfig = gconfig
+        self._peers = peers
+        self._controller = controller
+        self._value = self._val_from_ps(prev_ps, ps)
+        gcoords = self._gcoords_from_ps(prev_ps, ps)
+        ccoords = self._gconfig.graph_seg_to_canvas(*gcoords)
+        self._id = self._canvas.create_line(ccoords, 
+                fill=self._gconfig.line_color[line_type], tags=(line_type,))
+        # the all-important event binding(s)
+        # click
+        self._canvas.tag_bind(self._id, "<Button-1>", self._save_mousepos)
+        # and also drag
+        self._canvas.tag_bind(self._id, "<B1-Motion>", self._drag_line)
+
+    def get_id(self):
+        return copy(self._id)
+
+    def set_ccoords_from_ps(self, prev_ps, ps):
+        '''Move the line to new position based on PosSpeeds'''
+        self._canvas.coords(self._id, self._gconfig.graph_seg_to_canvas(
+            *self._gcoords_from_ps(prev_ps, ps)))
+
+    def set_val_from_ps(self, prev_ps, ps):
+        '''Update value but not 
+        canvas line'''
+        self._value = self._val_from_ps(prev_ps, ps)
+
+    def replace_val_from_ps(self, prev_ps, ps):
+        '''Change value tuple AND canvas line'''
+        self.set_val_from_ps(prev_ps, ps)
+        self.set_ccoords_from_ps(prev_ps, ps)
+
+    def _val_from_ps(self, prev_ps, ps):
+        '''Pure virtual. Subclasses return value based on given PosSpeeds'''
+        raise NotImplementedError
+
+    def _gcoords_from_ps(self, prev_ps, ps):
+        '''Also pure virtual. Subclass returns tuple of graph coordinates 
+        (startx, starty, endx, endy) based on given PosSpeeds'''
+        raise NotImplementedError
+
+    def _drag_line_specific(self, event):
+        '''Pure virtual. Subclass handles drag appropriately (up/down,
+        left/right, ... I think I need this.'''
+        raise NotImplementedError
+
+    def _drag_line(self, event):
+        '''mouse has moved, try to move speed limit line to follow'''
+        # identify line segment being dragged
+        line_id = event.widget.find_withtag('current')[0]
+        # this should match self._id
+        if line_id != self._id:
+            raise RuntimeError("line IDs do not match: self._id={}, found "\
+                    "id={}".format(self._id, line_id))
+
+        self._drag_line_specific(event)
+
+    def _save_mousepos(self, event):
+        '''Saves start/previous location of click & drag'''
+        self._lastx, self._lasty = event.x, event.y
+        print("last mouse pos now {}".format((self._lastx, self._lasty)))
+
+
+class DraggableLimit(DraggableLine):
+    def __init__(self, canvas, gconfig, peers, controller, prev_ps, ps):
+        super().__init__(canvas, gconfig, peers, controller, prev_ps, ps, 
+                "limitline")
+
+    def _val_from_ps(self, prev_ps, ps):
+        '''return value based on given PosSpeeds. Tuple of (speed, (startx,
+        endx))'''
+        return (prev_ps.speed, (prev_ps.pos, ps.pos))
+
+    def _gcoords_from_ps(self, prev_ps, ps):
+        '''returns tuple of graph coordinates (startx, starty, endx, endy)
+        based on given PosSpeeds'''
+        return (prev_ps.pos, prev_ps.speed, ps.pos, prev_ps.speed)
+
+    def _drag_line_specific(self, event):
+        gpoint = self._gconfig.canvas_pt_to_graph(event.x, event.y)
+        print("-----------")
+        print("Graph point of mouse is {}".format(gpoint))
+        mouse_mp = gpoint[0] # this one shouldn't matter since speed limit line
+            # only concerned with moving up or down
+            # so it'll just be midpoint of segment
+        mp = (self._value[1][0]+self._value[1][1])/2
+        from decimal import Decimal
+        speed = Decimal(gpoint[1])
+        print("current speed limit={}".format(self._value[0]))
+        speed_diff = Decimal(round(speed-self._value[0]))
+        print("speeddistview.py: speed_diff={}, is a {}".format(speed_diff,
+            type(speed_diff).__name__))
+        if self._controller.shift_speed_limit(mp, speed_diff) == True:
+            print("limit line {} dragged from {} to {}".format(self._id, 
+                (self._lastx, self._lasty), (event.x, event.y)))
+            # save new "mouse" position (but really the new y of the line 
+            # and x of mouse)
+            # (since called shift_speed_limit() and this observes model, 
+            # self._value got updated so I'll use that for y)
+            # 0 is a throw-away value
+            canvas_y = self._gconfig.graph_pt_to_canvas(0, round(speed))[1]
+            # this next bit is a kloodge b/c I'm trying to get _save_mousepos()
+            # to do something it wasn't meant to do
+            from collections import namedtuple
+            Xy = namedtuple("Xy", ['x', 'y'])
+            self._save_mousepos(Xy(event.x, canvas_y))
+        else:
+            # don't save mouse position or whatever b/c speed needs to change
+            # by 1 or more (hence event.y needs to represent vertical change
+            # of enough pixels)
+            print("Not dragged far enough. {} to {}".format((self._lastx, 
+                self._lasty), (event.x, event.y)))
+
+class DraggableBoundary(DraggableLine):
+    def __init__(self, canvas, gconfig, peers, controller, prev_ps, ps):
+        super().__init__(canvas, gconfig, peers, controller, prev_ps, ps, 
+                "boundaryline")
+
+    def _val_from_ps(self, prev_ps, ps):
+        '''return value based on given PosSpeeds'''
+        return ps.pos
+
+    def _gcoords_from_ps(self, prev_ps, ps):
+        '''returns tuple of graph coordinates (startx, starty, endx, endy)
+        based on given PosSpeeds'''
+        return (ps.pos, prev_ps.speed, ps.pos, ps.speed)
+
+    def _drag_line_specific(self, event):
+        '''mouse has moved, try to move boundary line to follow'''
+        print("boundary line {} dragged from {} to {}".format(self._id, 
+            (self._lastx, self._lasty), (event.x, event.y)))
+
+        # try to shift line, see if it's successful
+        # (...)
+        # only save position if it was successful (i.e. actually moves line)
+
+        self._save_mousepos(event)
 
 class SpeedDistView:
     '''The View, which controller updates, and which owns the frame containing
@@ -151,7 +380,7 @@ class SpeedDistView:
     def update(self, best_speeds, speed_limits):
         self._viewframe.make_boundary_lines(speed_limits)
         self._viewframe.make_limit_lines(speed_limits)
-        
+            
 class SpeedDistController(Controller):
     '''Controller for interaction between SpeedDistView and sim model'''
 
@@ -161,6 +390,16 @@ class SpeedDistController(Controller):
 
     def _update_view(self):
         self._view.update([], self._model.get_limits())
+
+    def shift_speed_limit(self, mp, speed_diff):
+        '''Requests model to shift speed limit seg intersecting mp by 
+        speed_diff. Returns whether request resulted in a shift (True) or no
+        change (False)'''
+        print("speeddistview.py controller shift_speed_limit(): speed_diff={}"\
+                " is a {}".format(speed_diff, type(speed_diff).__name__))
+        from convunits import Pos, Speed
+        return self._model.shift_speed_limit(Pos(mp, 'mi').to_sm(),
+                Speed(speed_diff, 'mi/h').to_sm())
 
 if __name__=="__main__":
     model = EditableTrack("short_maxspeeds.csv", "imperial")
