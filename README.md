@@ -1,8 +1,10 @@
-# trainspeedsim
-Outputs train speed along track given speed limits at points along the track
+# trainspeedsim and trainspeedsimg
+trainspeedsim outputs train speed along track given speed limits at points along the track.
+trainspeedsimg uses the internals of trainspeedsim, supplemented with editing capability, in a GUI desktop program using Tkinter. It is in an incomplete, though runnable, state.
 
-Usage
------
+## trainspeedsim
+
+### Usage
 
 `trainspeedsim [-h|--help | OPTIONS] INPUT_FILE`  
 `OPTIONS:`  
@@ -31,8 +33,7 @@ Example contents of input file (call it `limits.csv`):
 
 "Resolution" is smallest unit of distance over which the train's acceleration is calculated. In `limits.csv`, a suitable resolution would be 0.1 mile, or 528 feet. (This value is indeed the default.) All milepost numbers in the input must be multiples of this resolution.
 
-Example
--------
+### Example
 
 Command:
 
@@ -76,8 +77,7 @@ Output:
 `102.2, 24.771684715343113`  
 `102.3, 0.0`  
 
-Design
-------
+### Design
 
 The program uses an object-oriented design. The primary singleton is the Simulation, which owns the singletons Train, Track, and Config, and generates the PosSpeeds as the output. The core classes of Simulation, Train, Track, TrackSeg, and PosSpeed were the first classes designed and remained virtually unchanged over the course of development.
 
