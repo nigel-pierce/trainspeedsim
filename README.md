@@ -1,24 +1,24 @@
-# trainspeedsim and trainspeedsimg
+# trainspeedsim and trainspeedsim-g
 trainspeedsim outputs train speed along track given speed limits at points along the track.
 
-trainspeedsimg uses the internals of trainspeedsim, supplemented with editing capability, in a GUI desktop program using Tkinter. It is in an incomplete, though runnable, state.
+trainspeedsim-g uses the internals of trainspeedsim, supplemented with editing capability, in a GUI desktop program using Tkinter. It is in an incomplete, though runnable, state.
 
-trainspeedsimg will be covered first.
+trainspeedsim-g will be covered first.
 
-## trainspeedsimg
+## trainspeedsim-g
 
-trainspeedsimg provides an editable sequence of track speed limit sections in the form of:
+trainspeedsim-g provides an editable sequence of track speed limit sections in the form of:
 
 * A graph, displaying the speed limit sections, which are click-and-draggable. It will soon display a live view of the simulation results.
 * A table of numeric entry spinboxes. These provide incrementable editing of speed limits and section boundaries.
 
 Overall it is designed following Model-View-Controller. The core simulation is the model, and each pane of the GUI is a view-controller pair. All views are automatically updated by their controllers in the Observer pattern: all controllers observe the same model. This way, edits in one view instantly are applied to all views.
 
-trainspeedsimg's interface:
+trainspeedsim-g's interface:
 ![The GUI](gui-shot-00.png)
 
 Like trainspeedsim below, UML class diagramming was used to design the program. It has grown as the program has become increasingly complex, though the core MVC pattern is still apparent. GUI-specific classes are not shown for brevity.
-![trainspeedsimg's UML diagram](mvc_diagram.png)
+![trainspeedsim-g's UML diagram](mvc_diagram.png)
 
 ## trainspeedsim
 
