@@ -14,7 +14,7 @@ trainspeedsim-g provides an editable sequence of track speed limit sections in t
 
 Overall it is designed following Model-View-Controller. The core simulation is the model, and each pane of the GUI is a view-controller pair. All views are automatically updated by their controllers in the Observer pattern: all controllers observe the same model. This way, edits in one view instantly are applied to all views.
 
-trainspeedsim-g's interface:
+trainspeedsim-g's interface, showing a representation of short_maxspeeds.csv. On the right is the table view; "MP Boundary" is Mile Post, speed limit is miles per hour. The left pane is the Speed/Distance view; the y-axis shows speed in 5 mph increments, and the x-axis shows distance ranging from 5 to 14 miles:
 ![The GUI](gui-shot-00.png)
 
 Like trainspeedsim below, UML class diagramming was used to design the program. It has grown as the program has become increasingly complex, though the core MVC pattern is still apparent. GUI-specific classes are not shown for brevity.
