@@ -1,8 +1,28 @@
-# trainspeedsim
-Outputs train speed along track given speed limits at points along the track
+# trainspeedsim and trainspeedsim-g
+trainspeedsim outputs train speed along track given speed limits at points along the track.
 
-Usage
------
+trainspeedsim-g uses the internals of trainspeedsim, supplemented with editing capability, in a GUI desktop program using Tkinter. It is in an incomplete, though runnable, state.
+
+trainspeedsim-g will be covered first.
+
+## trainspeedsim-g
+
+trainspeedsim-g provides an editable sequence of track speed limit sections in the form of:
+
+* A graph, displaying the speed limit sections, which are click-and-draggable. It will soon display a live view of the simulation results.
+* A table of numeric entry spinboxes. These provide incrementable editing of speed limits and section boundaries.
+
+Overall it is designed following Model-View-Controller. The core simulation is the model, and each pane of the GUI is a view-controller pair. All views are automatically updated by their controllers in the Observer pattern: all controllers observe the same model. This way, edits in one view instantly are applied to all views.
+
+trainspeedsim-g's interface, showing a representation of short_maxspeeds.csv. On the right is the table view; "MP Boundary" is Mile Post, speed limit is miles per hour. The left pane is the Speed/Distance view; the y-axis shows speed in 5 mph increments, and the x-axis shows distance ranging from 5 to 14 miles:
+![The GUI](gui-shot-00.png)
+
+Like trainspeedsim below, UML class diagramming was used to design the program. It has grown as the program has become increasingly complex, though the core MVC pattern is still apparent. GUI-specific classes are not shown for brevity.
+![trainspeedsim-g's UML diagram](mvc_diagram.png)
+
+## trainspeedsim
+
+### Usage
 
 `trainspeedsim [-h|--help | OPTIONS] INPUT_FILE`  
 `OPTIONS:`  
@@ -31,8 +51,7 @@ Example contents of input file (call it `limits.csv`):
 
 "Resolution" is smallest unit of distance over which the train's acceleration is calculated. In `limits.csv`, a suitable resolution would be 0.1 mile, or 528 feet. (This value is indeed the default.) All milepost numbers in the input must be multiples of this resolution.
 
-Example
--------
+### Example
 
 Command:
 
@@ -76,8 +95,7 @@ Output:
 `102.2, 24.771684715343113`  
 `102.3, 0.0`  
 
-Design
-------
+### Design
 
 The program uses an object-oriented design. The primary singleton is the Simulation, which owns the singletons Train, Track, and Config, and generates the PosSpeeds as the output. The core classes of Simulation, Train, Track, TrackSeg, and PosSpeed were the first classes designed and remained virtually unchanged over the course of development.
 
